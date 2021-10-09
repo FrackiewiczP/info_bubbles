@@ -1,1 +1,4 @@
-# info_bubbles
+# Authors
+Paweł Frąckiewicz
+Jan Janiszewski
+Ignacy Sujecki

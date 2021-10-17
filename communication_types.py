@@ -16,16 +16,18 @@ List of classes:
 import numpy as np
 
 
-def Communication():
+class Communication():
     def CreateInfoBit(user_position):
         return np.zeros((1,2))
 
 
-def IndividualCommunication(Communication):
+class IndividualCommunication(Communication):
     """
     Individual form od communication.
 
     In each simulation step it returns random InfoBit for every user
     """
+
+
     def CreateInfoBit(user_postion):
         return np.random.rand(1,2)*2 -1

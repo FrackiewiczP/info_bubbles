@@ -57,3 +57,4 @@ class UserAgent(Agent):
             return True
         else:
             return False
+

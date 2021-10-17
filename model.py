@@ -42,3 +42,4 @@ class TripleFilterModel(Model):
                           user_latitudes[i], self.sharpness_parameter)
             self.schedule.add(a)
             self.users[i] = a
+

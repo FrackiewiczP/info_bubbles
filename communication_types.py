@@ -17,8 +17,9 @@ import numpy as np
 
 
 class Communication():
+
     def CreateInfoBit(user_position):
-        return np.zeros((1,2))
+        return np.zeros((1, 2))
 
 
 class IndividualCommunication(Communication):
@@ -28,6 +29,5 @@ class IndividualCommunication(Communication):
     In each simulation step it returns random InfoBit for every user
     """
 
-
     def CreateInfoBit(user_postion):
-        return np.random.rand(1,2)*2 -1
+        return np.random.rand(1, 2) * 2 - 1

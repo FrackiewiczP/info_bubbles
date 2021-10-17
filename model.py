@@ -29,6 +29,8 @@ class TripleFilterModel(Model):
         self.sharpness_parameter = sharpness_parameter
         self.memory_size = memory_size
         self.users = {}
+        self.user_positions = {}
+        self.users_moved = set()
 
         self.schedule = RandomActivation(self)
 
@@ -38,8 +40,22 @@ class TripleFilterModel(Model):
         user_latitudes = np.random.normal(self.latitude_of_acceptance, 0.2, size=self.num_of_users)
 
         for i in range(self.num_of_users):
-            a = UserAgent(i, self, self.communication_form, np.random.rand(1, 2) * 2 - 1, self.memory_size,
+            starting_position = np.random.rand(1, 2) * 2 - 1
+            a = UserAgent(i, self, self.communication_form, starting_position, self.memory_size,
                           user_latitudes[i], self.sharpness_parameter)
-            self.schedule.add(a)
             self.users[i] = a
+            self.user_positions[i] = starting_position
 
+    def step(self):
+
+        for i in range(self.num_of_users):
+            self.users[i].communicate()
+
+        for i in np.random.shuffle(range(self.num_of_users)):
+            self.users[i].send_info_to_friends()
+
+        for moved_user in self.users_moved:
+            current_position = moved_user.update_position()
+            self.user_positions[moved_user.unique_id] = current_position
+
+        self.users_moved.clear()

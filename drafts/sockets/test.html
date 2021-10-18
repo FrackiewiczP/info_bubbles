@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1 id="message"></h1>
+        <button onclick="connect()">Connect</button>
+        <button onClick="disconnect()">Disconnect</button>
+        <form action="handleForm()">
+            Number of users: <input name="numberOfUsers" type="number">
+        <input type="submit" value="Submit">
+        </form>
+    </body>
+</html>
+
+<script src="https://cdn.socket.io/4.2.0/socket.io.min.js" integrity="sha384-PiBR5S00EtOj2Lto9Uu81cmoyZqR57XcOna1oAuVuIEjzj0wpqDVfD0JA9eXlRsj" crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf-8">
+
+    const socket = io(
+        "http://0.0.0.0:5000",
+        { autoConnect: false });
+
+    socket.on("connect", () => {
+    console.log("connected");
+    var element = document.getElementById("message");
+    element.textContent = socket.id.toString();
+    });
+
+    socket.on("disconnect", () => {
+    console.log("disconnected");
+    var element = document.getElementById("message");
+    element.textContent = "DISCONNECTED";
+    });
+
+    function connect()
+    {
+        console.log("connect")
+        socket.connect();
+    }
+    function disconnect()
+    {
+        console.log("disconnect")
+        socket.disconnect();
+    }
+    function handleForm()
+    {
+        console.log("Form Handled")
+    }
+</script>

@@ -1,0 +1,29 @@
+body {
+  background-color: #3abeff;
+  color: black;
+  font-family: Arial, Helvetica, sans-serif; }
+
+h1 {
+  font-size: 60px; }
+
+.title {
+  text-align: center; }
+
+.main-content {
+  margin-left: 10%;
+  margin-right: 10%;
+  height: auto; }
+
+.main-content-grid {
+  display: grid;
+  grid-template-columns: 70% auto;
+  justify-items: center; }
+
+#simulation-canvas {
+  display: block;
+  border-width: 10px;
+  border-style: solid;
+  border-color: black;
+  background-color: white; }
+
+/*# sourceMappingURL=index.css.map */

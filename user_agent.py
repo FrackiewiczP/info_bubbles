@@ -55,6 +55,7 @@ class UserAgent(Agent):
 
     def update_position(self):
         self.user_position = self.user_memory.calculate_user_position()
+
         return self.user_position
 
     def try_to_integrate_info_bit(self, info_bit):

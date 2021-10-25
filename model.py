@@ -60,14 +60,9 @@ class TripleFilterModel(Model):
 
 
         print("--- %s seconds ---" % (time.time() - start_time))
-        friends_num=list()
-        for u in range(self.num_of_users):
-            #print(str(len(self.users[u].user_friends)))
-            friends_num.append((len(self.users[u].user_friends)))
-        print(np.mean(friends_num))
 
         self.datacollector = DataCollector(
-            model_reporters={"Positions": "user_positions"})
+            model_reporters={"positions": "user_positions"})
 
 
     def step(self):
@@ -93,7 +88,6 @@ class TripleFilterModel(Model):
         print("unfriending time --- %s seconds ---" % (time.time() - start_time))
         self.users_moved.clear()
         self.datacollector.collect(self)
+        self.schedule.step()
 
 
-def get_agent_position(agent):
-    return agent.user_position

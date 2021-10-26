@@ -16,6 +16,7 @@ from user_agent import UserAgent
 from mesa.time import RandomActivation
 import numpy as np
 import pandas as pd
+import pickle
 import time
 import tracemalloc
 
@@ -40,6 +41,8 @@ class TripleFilterModel(Model):
         self.user_positions = {}
         self.users_moved = set()
 
+        self.user_positions_in_prev={}
+
         self.schedule = RandomActivation(self)
 
         self.datacollector = DataCollector(
@@ -58,8 +61,9 @@ class TripleFilterModel(Model):
                           user_latitudes[i], self.sharpness_parameter)
             self.users[i] = a
             self.schedule.add(a)
-            self.user_positions[i] = initial_position
+            self.user_positions[i] =  np.reshape(initial_position,2)
 
+        self.user_positions_in_prev[0]= dict(self.user_positions)
         start_time = time.time()
         self.network = RandomNetwork(self.link_delete_prob, self.users, self.number_of_links)
 
@@ -82,16 +86,20 @@ class TripleFilterModel(Model):
             user = self.users[moved_user_id]
             current_position = user.update_position()
             self.user_positions[user.unique_id] = current_position
+            self.user_positions_in_prev[self.iterations]=dict(self.user_positions)
         print("recalculating time--- %s seconds ---" % (time.time() - start_time))
         start_time = time.time()
         self.network.unfriending()
         print("unfriending time --- %s seconds ---" % (time.time() - start_time))
         self.users_moved.clear()
-        self.datacollector.collect(self)
-        self.schedule.step()
+        #self.datacollector.collect(self)
+       # self.schedule.step()
 
     def save_output(self):
-        df = self.datacollector.get_agent_vars_dataframe()
-        df["x_pos"] = df.user_pos.apply(lambda x: x[0])
-        df["y_pos"] = df.user_pos.apply(lambda x: x[1])
-        df.drop("user_pos", axis=1).to_csv("positions.csv")
+        df = pd.DataFrame.from_dict(self.user_positions_in_prev, orient="index")
+        df=df.melt(value_vars=df.columns,value_name="position",var_name="agent_id")
+        df["x_pos"] = df.position.apply(lambda x: x[0])
+        df["y_pos"] = df.position.apply(lambda x: x[1])
+        df = df.drop(["position"], axis=1)
+        df["step"] = list(range(self.iterations+1)) * self.num_of_users
+        df.to_csv("positions.csv")

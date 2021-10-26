@@ -15,29 +15,11 @@ class RandomNetwork():
         self.unfriend_chance = unfriend_chance
         self.links = list()
         self.users = users
-        self.create_initial_friend_links2(users, no_of_links)
+        self.create_initial_friend_links(users, no_of_links)
+
+
 
     def create_initial_friend_links(self, users, no_of_links):
-        """
-        Initial info links creation algorithm vectorised, number of info links is normally distributed among population
-        """
-        no_of_users = len(users)
-        tracemalloc.start()
-        for i in range(no_of_users):
-            print(str(i))
-            probs = np.random.rand(no_of_users - (i + 1))
-            j = 1
-            for p in probs:
-                if p <= (no_of_links / no_of_users):
-                    users[i].user_friends.append(i + j)
-                    users[i + j].user_friends.append(i)
-                    self.links.append((i, j + i))
-                j += 1
-        current, peak = tracemalloc.get_traced_memory()
-        print(f"Peak memory usage was {peak / 10 ** 6} MB")
-        tracemalloc.stop()
-
-    def create_initial_friend_links2(self, users, no_of_links):
         no_of_users = len(users)
         tracemalloc.start()
         vertices = list(range(no_of_users))

@@ -15,8 +15,10 @@ from network_types import RandomNetwork
 from user_agent import UserAgent
 from mesa.time import RandomActivation
 import numpy as np
+import pandas as pd
 import time
 import tracemalloc
+
 
 class TripleFilterModel(Model):
     """
@@ -31,8 +33,8 @@ class TripleFilterModel(Model):
         self.latitude_of_acceptance = latitude_of_acceptance
         self.sharpness_parameter = sharpness_parameter
         self.memory_size = memory_size
-        self.number_of_links=number_of_links
-        self.link_delete_prob=link_delete_prob
+        self.number_of_links = number_of_links
+        self.link_delete_prob = link_delete_prob
         self.iterations = 0
         self.users = {}
         self.user_positions = {}
@@ -40,7 +42,9 @@ class TripleFilterModel(Model):
 
         self.schedule = RandomActivation(self)
 
-
+        self.datacollector = DataCollector(
+            model_reporters={"positions": "user_positions"},
+            agent_reporters={"user_pos": "user_position"})
 
         if form_of_communication == "individual":
             self.communication_form = IndividualCommunication(self)
@@ -53,24 +57,20 @@ class TripleFilterModel(Model):
             a = UserAgent(i, self, self.communication_form, initial_position, self.memory_size,
                           user_latitudes[i], self.sharpness_parameter)
             self.users[i] = a
+            self.schedule.add(a)
             self.user_positions[i] = initial_position
 
         start_time = time.time()
-        self.network=RandomNetwork(self.link_delete_prob,self.users,self.number_of_links)
-
+        self.network = RandomNetwork(self.link_delete_prob, self.users, self.number_of_links)
 
         print("--- %s seconds ---" % (time.time() - start_time))
-
-        self.datacollector = DataCollector(
-            model_reporters={"positions": "user_positions"})
-
 
     def step(self):
         self.iterations += 1
         start_time = time.time()
         for i in range(self.num_of_users):
             self.users[i].communicate()
-        print("communciating time  --- %s seconds ---" % (time.time() - start_time))
+        print("communicating time  --- %s seconds ---" % (time.time() - start_time))
         start_time = time.time()
         user_order = list(range(self.num_of_users))
         np.random.shuffle(user_order)
@@ -83,11 +83,15 @@ class TripleFilterModel(Model):
             current_position = user.update_position()
             self.user_positions[user.unique_id] = current_position
         print("recalculating time--- %s seconds ---" % (time.time() - start_time))
-        start_time=time.time()
+        start_time = time.time()
         self.network.unfriending()
         print("unfriending time --- %s seconds ---" % (time.time() - start_time))
         self.users_moved.clear()
         self.datacollector.collect(self)
         self.schedule.step()
 
-
+    def save_output(self):
+        df = self.datacollector.get_agent_vars_dataframe()
+        df["x_pos"] = df.user_pos.apply(lambda x: x[0])
+        df["y_pos"] = df.user_pos.apply(lambda x: x[1])
+        df.drop("user_pos", axis=1).to_csv("positions.csv")

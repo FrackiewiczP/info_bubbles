@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Information Bubble Simulator</title>
+        <link rel="stylesheet" href="../css/index.css">
+    </head>
+    <body>
+        <h1 class="title">Information Bubble Simulator</h1>
+        <div class="main-content">
+            <div class="main-content-grid">
+                <canvas id="simulation-canvas" width="750" height="750"></canvas>
+                <form action="/action_page.php">
+                    <label for="agent-num">Liczba agentów</label>
+                    <input type="number" id="agent-num" value="100"><br>
+                    <button type="button" style="padding: 10px;" onclick="startSimulation()">Rozpocznij symulację</button>
+                </form>                
+            </div>
+        </div>
+        <script src="../javascript/index.js"></script>
+    </body>
+</html>

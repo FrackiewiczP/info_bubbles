@@ -1,0 +1,9 @@
+
+.idea\*
+
+.ipynb_checkpoints\*
+
+*.csv
+*.pyc
+*.csv
+*.csv

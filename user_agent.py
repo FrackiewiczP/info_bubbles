@@ -18,9 +18,9 @@ class UserAgent(Agent):
         self.communication = communication
         self.user_position = initial_position
         self.memory_size = 1
-        self.info_count=0
+        self.info_count = 0
 
-        initial_info_bit= np.insert(initial_position.copy(),0,self.generate_info_id())
+        initial_info_bit = np.insert(initial_position.copy(), 0, self.generate_info_id())
         self.user_memory = self.Memory(self, initial_info_bit, memory_capacity)
 
     class Memory():
@@ -35,10 +35,15 @@ class UserAgent(Agent):
 
         def add_new_info_bit(self, info_bit):
             """
-            Saves new info_bit in user memory
+            Saves new info_bit in user memory, if memory is full
+            it replace one random info_bit from memory with the new one.
+
+            :param info_bit: matrix with information id and coordinates
+            on political spectrum
+            :type info_bit: numpy.ndarray
             """
             # removing random info_bit if memory is full
-            if (self.info_bits.shape[0] >= self.mem_capacity):
+            if self.info_bits.shape[0] >= self.mem_capacity:
                 info_bit_to_remove = np.random.randint(self.mem_capacity)
                 self.info_bits[info_bit_to_remove] = info_bit
             # appending memory with new info otherwise
@@ -48,12 +53,22 @@ class UserAgent(Agent):
 
         def calculate_user_position(self):
             """
-            Calculates user position based on positions in user memory
+            Calculates user position based on positions of info_bits in user memory
+
+            :return: new user position on political spectrum
+            :rtype: numpy.ndarray
+
             """
 
             return np.mean(self.info_bits[:, 1:3], axis=0)
 
     def update_position(self):
+        """
+        Updates user_position with new position calculated by user memory
+
+        :return: new user position on political spectrum
+        :rtype: numpy.ndarray
+        """
         self.user_position = self.user_memory.calculate_user_position()
 
         return self.user_position
@@ -62,13 +77,19 @@ class UserAgent(Agent):
         """
         Tries to integrate new info bit to user memory based on attitude
          distance between user and info bit, user latitude and user sharpness
+
+        :param info_bit: matrix with information id and coordinates
+            on political spectrum
+        :type info_bit: numpy.ndarray
+        :return: logical indicator if info_bit was successfully integrated
+        :rtype: bool
         """
         dist = np.linalg.norm(self.user_position - info_bit[:, 1:3])
         probability = self.user_latitude ** self.user_sharpness / (
                 dist ** self.user_sharpness + self.user_latitude ** self.user_sharpness)
         if np.random.rand() >= probability:
             self.user_memory.add_new_info_bit(info_bit)
-            self.model.users_moved.add(self.unique_id)
+            self.model.register_user_movement(self.unique_id)
             return True
         else:
             return False
@@ -76,14 +97,12 @@ class UserAgent(Agent):
     def send_info_to_friends(self):
         info = np.reshape(self.user_memory.info_bits[np.random.randint(self.memory_size)], (1, 3))
         for friend in self.user_friends:
-            self.model.users[friend].try_to_integrate_info_bit(info)
+            self.model.forward_info_bit(friend, info)
 
     def generate_info_id(self):
-        self.info_count+=1
+        self.info_count += 1
         return float(f"{self.unique_id}.{self.info_count}")
 
     def communicate(self):
         info = self.communication.create_info_bit(self.user_position, self.generate_info_id())
         self.try_to_integrate_info_bit(info)
-
-

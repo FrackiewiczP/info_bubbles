@@ -69,6 +69,12 @@ class TripleFilterModel(Model):
 
         print("--- %s seconds ---" % (time.time() - start_time))
 
+    def register_user_movement(self, user_id):
+        self.users_moved.add(user_id)
+
+    def forward_info_bit(self, user_id, info_bit):
+        self.users[user_id].try_to_integrate_info_bit(info_bit)
+
     def step(self):
         self.iterations += 1
         start_time = time.time()

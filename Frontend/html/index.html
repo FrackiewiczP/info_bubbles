@@ -9,7 +9,7 @@
         <div class="main-content">
             <div class="main-content-grid">
                 <!--First column-->
-                <svg id="simulation-svg"></svg>
+                <canvas id="simulation-canvas" width="750" height="750"></canvas>
                 <!--Second column-->
                 <div class="second-column">
                     <form action="/action_page.php">
@@ -82,5 +82,20 @@
             console.log("disconnected");
             document.getElementById("connection-square").style.backgroundColor = "red";
         });
+
+        socket.on("simulation_finished", (data) => {
+            console.log(data);
+            clearCanvas();
+            for(const u in data){
+                addUser(data[u][0], data[u][1]);
+            }
+        });
+
+        function startSimulation()
+        {
+            let numUsers = document.getElementById("agent-num").value;
+            socket.emit("start_simulation", numUsers);
+            console.log("Event sent");
+        }
     </script>
 </html>

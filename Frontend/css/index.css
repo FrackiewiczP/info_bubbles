@@ -7,7 +7,7 @@ h1 {
   font-size: 60px; }
 
 p {
-  margin-top: 50px; }
+  margin-top: 30px; }
 
 input {
   width: 100px;
@@ -53,12 +53,22 @@ button:hover {
   display: flex;
   flex-direction: column; }
 
-#simulation-canvas {
+#simulation-svg {
   display: block;
-  background-color: white; }
+  background-color: white;
+  width: 750px;
+  height: 750px; }
+
+#connection-square {
+  position: absolute;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  display: inline-block; }
 
 input[type=range] {
-  margin-top: 100px;
+  margin-top: 0px;
   width: 100%;
   position: inherit;
   color: #00ddff;

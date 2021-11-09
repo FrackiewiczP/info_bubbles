@@ -3,6 +3,7 @@
     <head>
         <title>Information Bubble Simulator</title>
         <link rel="stylesheet" href="../css/index.css">
+        <script src="../javascript/index.js" defer></script>
     </head>
     <body>
         <h1 class="title">Information Bubble Simulator</h1>
@@ -15,23 +16,23 @@
                     <form action="/action_page.php">
                         <div class="input-group">
                             <label for="agent-num">Liczba agentów</label>
-                            <input type="number" id="agent-num" value="100"><br>
+                            <input type="number" class="input-field" id="agent-num" value="100"><br>
                             <label for="step-num">Liczba kroków</label>
-                            <input type="number" id="step-num" value="100"><br>
+                            <input type="number" class="input-field" id="step-num" value="100" oninput="updateMaxStep()"><br>
                         </div>
                         <p>Przyjmowanie nowych informacji</p>
                         <div class="input-group">
                             <label for="info-latitude">Tolerancja</label>
-                            <input type="number" id="info-latitude" value="0.5" min="0" max="1" step="0.1"><br>
+                            <input type="number" class="input-field" id="info-latitude" value="0.5" min="0" max="1" step="0.1"><br>
                             <label for="info-sharpness">Ostrość</label>
-                            <input type="number" id="info-sharpness" value="5"><br>
+                            <input type="number" class="input-field" id="info-sharpness" value="5"><br>
                         </div>
                         <p>Przyjmowanie nowych przyjaciół</p>
                         <div class="input-group">
                             <label for="friend-latitude">Tolerancja</label>
-                            <input type="number" id="friend-latitude" value="0.5" min="0" max="1" step="0.1"><br>
+                            <input type="number" class="input-field" id="friend-latitude" value="0.5" min="0" max="1" step="0.1"><br>
                             <label for="friend-sharpness">Ostrość</label>
-                            <input type="number" id="friend-sharpness" value="5"><br>
+                            <input type="number" class="input-field" id="friend-sharpness" value="5"><br>
                         </div>
                         <p>Sposób wymiany informacji</p>
                         <div class="input-group">
@@ -68,34 +69,4 @@
         Ignacy Sujecki <br>
         Politechnika Warszawska, 2022 <br>
     </footer>
-    <script src="../javascript/index.js"></script>
-    <script src="https://cdn.socket.io/4.2.0/socket.io.min.js" integrity="sha384-PiBR5S00EtOj2Lto9Uu81cmoyZqR57XcOna1oAuVuIEjzj0wpqDVfD0JA9eXlRsj" crossorigin="anonymous"></script>
-    <script type="text/javascript" charset="utf-8">  
-        const socket = io("http://127.0.0.1:5000");
-
-        socket.on("connect", () => {
-            console.log("connected");
-            document.getElementById("connection-square").style.backgroundColor = "green";
-        });
-
-        socket.on("disconnect", () => {
-            console.log("disconnected");
-            document.getElementById("connection-square").style.backgroundColor = "red";
-        });
-
-        socket.on("simulation_finished", (data) => {
-            console.log(data);
-            clearCanvas();
-            for(const u in data){
-                addUser(data[u][0], data[u][1]);
-            }
-        });
-
-        function startSimulation()
-        {
-            let numUsers = document.getElementById("agent-num").value;
-            socket.emit("start_simulation", numUsers);
-            console.log("Event sent");
-        }
-    </script>
 </html>

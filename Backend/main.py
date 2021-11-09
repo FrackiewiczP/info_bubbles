@@ -21,7 +21,7 @@ async def start_simulation(sid, data):
     ret = {}
     for i in range(int(data)):
         ret[i] = [random.random(), random.random()]
-    await sio.emit('simulation_finished', ret)
+    await sio.emit('simulation_finished', ret, room=sid)
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=5000, log_level="info")

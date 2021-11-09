@@ -66,6 +66,12 @@ button:hover {
     flex-direction: column;
 }
 
+.input-field{
+    background-color: black;
+    border: 1px solid $blue-text;
+    color: $blue-text;
+}
+
 #simulation-canvas{
     display: block;
     background-color: white;

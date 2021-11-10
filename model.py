@@ -112,7 +112,8 @@ class TripleFilterModel(Model):
             user = self.users[moved_user_id]
             current_position = user.update_position()
             self.user_positions[user.unique_id] = current_position
-            self.user_positions_in_prev[self.iterations] = dict(self.user_positions)
+
+        self.user_positions_in_prev[self.iterations] = dict(self.user_positions)
         print("recalculating time--- %s seconds ---" % (time.time() - start_time))
         start_time = time.time()
         self.network.unfriending()

@@ -9,8 +9,16 @@ import numpy as np
 
 
 class UserAgent(Agent):
-    def __init__(self, unique_id, model, communication, initial_position, memory_capacity, user_latitude,
-                 user_sharpness):
+    def __init__(
+        self,
+        unique_id,
+        model,
+        communication,
+        initial_position,
+        memory_capacity,
+        user_latitude,
+        user_sharpness,
+    ):
         super().__init__(unique_id, model)
         self.user_friends = list()
         self.user_latitude = user_latitude
@@ -20,10 +28,12 @@ class UserAgent(Agent):
         self.memory_size = 1
         self.info_count = 0
 
-        initial_info_bit = np.insert(initial_position.copy(), 0, self.generate_info_id())
+        initial_info_bit = np.insert(
+            initial_position.copy(), 0, self.generate_info_id()
+        )
         self.user_memory = self.Memory(self, initial_info_bit, memory_capacity)
 
-    class Memory():
+    class Memory:
         """
         Internal class representing user memory and providing methods to modify and read it
         """
@@ -86,8 +96,9 @@ class UserAgent(Agent):
         """
         dist = np.linalg.norm(self.user_position - info_bit[:, 1:3])
         probability = self.user_latitude ** self.user_sharpness / (
-                dist ** self.user_sharpness + self.user_latitude ** self.user_sharpness)
-        if np.random.rand() >= probability:
+            dist ** self.user_sharpness + self.user_latitude ** self.user_sharpness
+        )
+        if np.random.rand() <= probability:
             self.user_memory.add_new_info_bit(info_bit)
             self.model.register_user_movement(self.unique_id)
             return True
@@ -95,7 +106,9 @@ class UserAgent(Agent):
             return False
 
     def send_info_to_friends(self):
-        info = np.reshape(self.user_memory.info_bits[np.random.randint(self.memory_size)], (1, 3))
+        info = np.reshape(
+            self.user_memory.info_bits[np.random.randint(self.memory_size)], (1, 3)
+        )
         for friend in self.user_friends:
             self.model.forward_info_bit(friend, info)
 
@@ -104,5 +117,7 @@ class UserAgent(Agent):
         return float(f"{self.unique_id}.{self.info_count}")
 
     def communicate(self):
-        info = self.communication.create_info_bit(self.user_position, self.generate_info_id())
+        info = self.communication.create_info_bit(
+            self.user_position, self.generate_info_id()
+        )
         self.try_to_integrate_info_bit(info)

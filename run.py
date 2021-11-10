@@ -7,7 +7,7 @@ import numpy as np
 if __name__ == "__main__":
     number_of_agents = 100
 
-    number_of_steps = 100
+    number_of_steps = 10000
 
     model = TripleFilterModel(number_of_agents, "individual")
     start_time = time.time()
@@ -20,5 +20,3 @@ if __name__ == "__main__":
     print(f"Peak memory usage was {peak / 10 ** 6} MB")
     tracemalloc.stop()
     model.save_output()
-
-

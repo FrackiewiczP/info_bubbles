@@ -9,18 +9,16 @@ import random
 import tracemalloc
 
 
-class RandomNetwork():
-
+class RandomNetwork:
     def __init__(self, unfriend_chance, users, no_of_links):
         self.unfriend_chance = unfriend_chance
         self.links = list()
         self.users = users
         self.create_initial_friend_links(users, no_of_links)
 
-
-
     def create_initial_friend_links(self, users, no_of_links):
         no_of_users = len(users)
+
         tracemalloc.start()
         vertices = list(range(no_of_users))
         ranks = dict.fromkeys(vertices, 0)
@@ -61,7 +59,8 @@ class RandomNetwork():
         latitude = self.users[user1_id].user_latitude
         sharpness = self.users[user1_id].user_sharpness
         probability = latitude ** sharpness / (
-                dist ** sharpness + latitude ** sharpness)
+            dist ** sharpness + latitude ** sharpness
+        )
         if np.random.rand() <= probability:
             # unfriend two people
             self.users[user1_id].user_friends.remove(user2_id)
@@ -69,7 +68,9 @@ class RandomNetwork():
             # creating new friendship
             possible_new_friends = set()
             for friend in self.users[user1_id].user_friends:
-                possible_new_friends = possible_new_friends.union(set(self.users[friend].user_friends))
+                possible_new_friends = possible_new_friends.union(
+                    set(self.users[friend].user_friends)
+                )
             if user2_id in possible_new_friends:
                 possible_new_friends.remove(user2_id)
             if user1_id in possible_new_friends:

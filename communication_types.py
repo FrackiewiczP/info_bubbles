@@ -16,8 +16,7 @@ List of classes:
 import numpy as np
 
 
-class Communication():
-
+class Communication:
     def __init__(self, model):
         self.model = model
 

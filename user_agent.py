@@ -25,20 +25,19 @@ class UserAgent(Agent):
         self.user_sharpness = user_sharpness
         self.communication = communication
         self.user_position = initial_position
-        self.memory_size = 1
         self.info_count = 0
 
         initial_info_bit = np.insert(
             initial_position.copy(), 0, self.generate_info_id()
         )
-        self.user_memory = self.Memory(self, initial_info_bit, memory_capacity)
+        self.user_memory = self.Memory(initial_info_bit, memory_capacity)
 
     class Memory:
         """
         Internal class representing user memory and providing methods to modify and read it
         """
 
-        def __init__(self, user_agent, first_info_bit, mem_capacity):
+        def __init__(self, first_info_bit, mem_capacity):
             self.mem_capacity = mem_capacity
             self.info_bits = np.reshape(first_info_bit, (1, 3))
 

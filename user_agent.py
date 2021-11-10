@@ -40,8 +40,17 @@ class UserAgent(Agent):
 
         def __init__(self, user_agent, first_info_bit, mem_capacity):
             self.mem_capacity = mem_capacity
-            self.user_agent = user_agent
             self.info_bits = np.reshape(first_info_bit, (1, 3))
+
+        def get_size(self):
+            """
+            Returns number of info_bits currently saved in memory
+
+            :return:   number of info_bits in memory
+            :rtype: int
+            """
+
+            return self.info_bits.shape[0]
 
         def add_new_info_bit(self, info_bit):
             """
@@ -59,7 +68,6 @@ class UserAgent(Agent):
             # appending memory with new info otherwise
             else:
                 self.info_bits = np.concatenate([self.info_bits, info_bit], axis=0)
-                self.user_agent.memory_size += 1
 
         def calculate_user_position(self):
             """
@@ -107,7 +115,8 @@ class UserAgent(Agent):
 
     def send_info_to_friends(self):
         info = np.reshape(
-            self.user_memory.info_bits[np.random.randint(self.memory_size)], (1, 3)
+            self.user_memory.info_bits[np.random.randint(self.user_memory.get_size())],
+            (1, 3),
         )
         for friend in self.user_friends:
             self.model.forward_info_bit(friend, info)

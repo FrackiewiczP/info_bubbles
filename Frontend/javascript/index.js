@@ -28,3 +28,9 @@ function startSimulation()
         addUser();
     }
 }
+
+function updateCurrentStep()
+{
+    let currentStep = document.getElementById("step-slider").value;
+    document.getElementById("current-step").textContent = currentStep.toString();
+}

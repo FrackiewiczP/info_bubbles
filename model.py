@@ -29,8 +29,8 @@ class TripleFilterModel(Model):
 
     def __init__(
         self,
-        number_of_users,
-        form_of_communication="individual",
+        num_of_users,
+        communication_form="individual",
         latitude_of_acceptance=0.5,
         sharpness_parameter=20,
         memory_size=10,
@@ -38,7 +38,7 @@ class TripleFilterModel(Model):
         link_delete_prob=0.01,
     ):
 
-        self.num_of_users = number_of_users
+        self.num_of_users = num_of_users
         self.latitude_of_acceptance = latitude_of_acceptance
         self.sharpness_parameter = sharpness_parameter
         self.memory_size = memory_size
@@ -58,7 +58,7 @@ class TripleFilterModel(Model):
             agent_reporters={"user_pos": "user_position"},
         )
 
-        if form_of_communication == "individual":
+        if communication_form == "individual":
             self.communication_form = IndividualCommunication(self)
         # standard deviation temporary hard coded
         user_latitudes = np.random.normal(

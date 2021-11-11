@@ -7,7 +7,7 @@ h1 {
   font-size: 60px; }
 
 p {
-  margin-top: 50px; }
+  margin-top: 30px; }
 
 input {
   width: 100px;
@@ -57,8 +57,16 @@ button:hover {
   display: block;
   background-color: white; }
 
+#connection-square {
+  position: absolute;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  display: inline-block; }
+
 input[type=range] {
-  margin-top: 100px;
+  margin-top: 0px;
   width: 100%;
   position: inherit;
   color: #00ddff;

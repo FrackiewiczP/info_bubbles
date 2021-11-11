@@ -55,7 +55,7 @@ class RandomNetwork:
         """
         user1_pos = self.users[user1_id].user_position
         user2_pos = self.users[user2_id].user_position
-        dist = np.linalg.norm(user1_pos - user2_pos)
+        dist = np.linalg.norm( user1_pos - user2_pos)
         latitude = self.users[user1_id].user_latitude
         sharpness = self.users[user1_id].user_sharpness
         probability = latitude ** sharpness / (

@@ -10,7 +10,7 @@ List of models:
 
 from mesa import Model
 from mesa.datacollection import DataCollector
-from communication_types import IndividualCommunication
+from communication_types import IndividualCommunication, CentralCommunication
 from network_types import RandomNetwork
 from user_agent import UserAgent
 from mesa.time import RandomActivation
@@ -28,7 +28,7 @@ class TripleFilterModel(Model):
     def __init__(
         self,
         num_of_users,
-        communication_form="individual",
+        communication_form="central",
         latitude_of_acceptance=0.5,
         sharpness_parameter=20,
         memory_size=10,
@@ -55,21 +55,16 @@ class TripleFilterModel(Model):
             model_reporters={"positions": "user_positions"},
             agent_reporters={"user_pos": "user_position"},
         )
-
-        if communication_form == "individual":
-            self.communication_form = IndividualCommunication(self)
         # standard deviation temporary hard coded
         user_latitudes = np.random.normal(
             self.latitude_of_acceptance, 0.2, size=self.num_of_users
         )
-
         for i in range(self.num_of_users):
             initial_position = np.random.rand(1, 2) * 2 - 1
 
             a = UserAgent(
                 i,
                 self,
-                self.communication_form,
                 initial_position,
                 self.memory_size,
                 user_latitudes[i],
@@ -78,6 +73,11 @@ class TripleFilterModel(Model):
             self.users[i] = a
             self.schedule.add(a)
             self.user_positions[i] = np.reshape(initial_position, 2)
+
+        if communication_form == "individual":
+            self.communication_form = IndividualCommunication(self.users)
+        if communication_form == "central":
+            self.communication_form = CentralCommunication(self.users)
 
         self.user_positions_in_prev[0] = dict(self.user_positions)
         start_time = time.time()
@@ -96,8 +96,7 @@ class TripleFilterModel(Model):
     def step(self):
         self.iterations += 1
         start_time = time.time()
-        for i in range(self.num_of_users):
-            self.users[i].communicate()
+        self.communication_form.GetInfo()
         print("communicating time  --- %s seconds ---" % (time.time() - start_time))
         start_time = time.time()
         user_order = list(range(self.num_of_users))

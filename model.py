@@ -16,9 +16,7 @@ from user_agent import UserAgent
 from mesa.time import RandomActivation
 import numpy as np
 import pandas as pd
-import pickle
 import time
-import tracemalloc
 
 
 class TripleFilterModel(Model):

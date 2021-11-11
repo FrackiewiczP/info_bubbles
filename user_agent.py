@@ -6,6 +6,7 @@ Module with agents representing users implementations
 
 from mesa import Agent
 import numpy as np
+from integration_function import check_integration
 
 
 class UserAgent(Agent):
@@ -101,11 +102,13 @@ class UserAgent(Agent):
         :return: logical indicator if info_bit was successfully integrated
         :rtype: bool
         """
-        dist = np.linalg.norm(self.user_position - info_bit[:, 1:3])
-        probability = self.user_latitude ** self.user_sharpness / (
-            dist ** self.user_sharpness + self.user_latitude ** self.user_sharpness
-        )
-        if np.random.rand() <= probability:
+
+        if check_integration(
+            self.user_position,
+            info_bit[:, 1:3],
+            self.user_latitude,
+            self.user_sharpness,
+        ):
             self.user_memory.add_new_info_bit(info_bit)
             self.model.register_user_movement(self.unique_id)
             return True

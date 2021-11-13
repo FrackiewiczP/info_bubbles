@@ -1,3 +1,4 @@
+import numpy as np
 
 class IdGenerator:
     id =0
@@ -6,14 +7,13 @@ class IdGenerator:
         return IdGenerator.id
 
 class Information:
-    idGenerator = 1
 
     def __init__(self,position: list):
         self.id = IdGenerator.get()
-        self.position = position
+        self.__position = np.array(position)
 
-    def getPosition(self,axis:int):
-        return self.position[axis]
+    def getPosition(self):
+        return self.__position
 
     def __eq__(self, other):
         if self.id == other.id:
@@ -21,4 +21,4 @@ class Information:
         return False
 
     def __str__(self):
-        return "{Information id:" + self.id +"position: "+self.position+"}"
+        return "{Information id:" + self.id +"position: "+self.position+"}\n"

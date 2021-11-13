@@ -96,7 +96,7 @@ class TripleFilterModel(Model):
     def step(self):
         self.iterations += 1
         start_time = time.time()
-        self.communication_form.GetInfo()
+        self.communication_form.integrate_new_info()
         print("communicating time  --- %s seconds ---" % (time.time() - start_time))
         start_time = time.time()
         user_order = list(range(self.num_of_users))

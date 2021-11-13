@@ -30,8 +30,8 @@ class UserAgent(Agent):
         self.info_count = 0
 
         position = list()
-        position.append(randint(-100, 100) / 100)
-        position.append(randint(-100, 100) / 100)
+        position.append(random()*2-1)
+        position.append(random()*2-1)
         initial_info_bit = Information(position)
         self.user_memory = self.Memory(initial_info_bit, memory_capacity)
 
@@ -83,15 +83,14 @@ class UserAgent(Agent):
             :rtype: numpy.ndarray
 
             """
-            pos = [0,0]
-            for i in self.info_bits:
-                pos[0] += i.getPosition(0)
-                pos[1] += i.getPosition(1)
+            pos = np.array([0,0])
+            for x in self.info_bits:
+                pos.__add__(x.getPosition())
             pos[1] = pos[1]/len(self.info_bits)
-            pos[0] = pos[0]/len(self.info_bits)
-            return  np.array(pos)
-            #return np.ndarray(data= pos,dtype= float, shape=(1,2))
+            pos[0] = pos[0] / len(self.info_bits)
+            return pos
             #return np.mean(self.info_bits[:, 1:3], axis=0)
+
         def getRandom(self):
             return choice(self.info_bits)
 
@@ -120,7 +119,7 @@ class UserAgent(Agent):
 
         if check_integration(
             self.user_position,
-            info_bit.position,
+            info_bit.getPosition(),
             self.user_latitude,
             self.user_sharpness,
         ):

@@ -53,6 +53,11 @@ button:hover {
   display: flex;
   flex-direction: column; }
 
+.input-field {
+  background-color: black;
+  border: 1px solid #00ddff;
+  color: #00ddff; }
+
 #simulation-canvas {
   display: block;
   background-color: white; }

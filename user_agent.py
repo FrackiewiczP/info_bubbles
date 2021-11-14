@@ -3,10 +3,10 @@ Module with agents representing users implementations
 
 
 """
-from random import random, randint, choice
+from random import random, choice
 
-from mesa import Agent
 import numpy as np
+from mesa import Agent
 
 from information import Information
 from integration_function import check_integration
@@ -14,13 +14,13 @@ from integration_function import check_integration
 
 class UserAgent(Agent):
     def __init__(
-        self,
-        unique_id,
-        model,
-        initial_position,
-        memory_capacity,
-        user_latitude,
-        user_sharpness,
+            self,
+            unique_id,
+            model,
+            initial_position,
+            memory_capacity,
+            user_latitude,
+            user_sharpness,
     ):
         super().__init__(unique_id, model)
         self.user_friends = list()
@@ -30,8 +30,8 @@ class UserAgent(Agent):
         self.info_count = 0
 
         position = list()
-        position.append(random()*2-1)
-        position.append(random()*2-1)
+        position.append(random() * 2 - 1)
+        position.append(random() * 2 - 1)
         initial_info_bit = Information(position)
         self.user_memory = self.Memory(initial_info_bit, memory_capacity)
 
@@ -71,7 +71,7 @@ class UserAgent(Agent):
             # appending memory with new info otherwise
             else:
                 for i in self.info_bits:
-                    if(i==info_bit):
+                    if (i == info_bit):
                         return
                 self.info_bits.append(info_bit)
 
@@ -83,13 +83,13 @@ class UserAgent(Agent):
             :rtype: numpy.ndarray
 
             """
-            pos = np.array([0,0])
+            pos = np.array([0, 0])
             for x in self.info_bits:
                 pos.__add__(x.getPosition())
-            pos[1] = pos[1]/len(self.info_bits)
+            pos[1] = pos[1] / len(self.info_bits)
             pos[0] = pos[0] / len(self.info_bits)
             return pos
-            #return np.mean(self.info_bits[:, 1:3], axis=0)
+            # return np.mean(self.info_bits[:, 1:3], axis=0)
 
         def getRandom(self):
             return choice(self.info_bits)
@@ -118,10 +118,10 @@ class UserAgent(Agent):
         """
 
         if check_integration(
-            self.user_position,
-            info_bit.getPosition(),
-            self.user_latitude,
-            self.user_sharpness,
+                self.user_position,
+                info_bit.getPosition(),
+                self.user_latitude,
+                self.user_sharpness,
         ):
             self.user_memory.add_new_info_bit(info_bit)
             self.model.register_user_movement(self.unique_id)
@@ -133,4 +133,3 @@ class UserAgent(Agent):
         info = self.user_memory.getRandom()
         for friend in self.user_friends:
             self.model.forward_info_bit(friend, info)
-

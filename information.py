@@ -1,14 +1,17 @@
 import numpy as np
 
+
 class IdGenerator:
-    id =0
+    id = 0
+
     def get():
-        IdGenerator.id +=1
+        IdGenerator.id += 1
         return IdGenerator.id
+
 
 class Information:
 
-    def __init__(self,position: list):
+    def __init__(self, position: list):
         self.id = IdGenerator.get()
         self.__position = np.array(position)
 
@@ -21,4 +24,4 @@ class Information:
         return False
 
     def __str__(self):
-        return "{Information id:" + self.id +"position: "+self.position+"}\n"
+        return "{Information id:" + self.id + "position: " + self.position + "}\n"

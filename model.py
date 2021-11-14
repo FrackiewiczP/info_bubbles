@@ -8,15 +8,17 @@ List of models:
 
 """
 
+import time
+
+import numpy as np
+import pandas as pd
 from mesa import Model
 from mesa.datacollection import DataCollector
+from mesa.time import RandomActivation
+
 from communication_types import IndividualCommunication, CentralCommunication
 from network_types import RandomNetwork
 from user_agent import UserAgent
-from mesa.time import RandomActivation
-import numpy as np
-import pandas as pd
-import time
 
 
 class TripleFilterModel(Model):
@@ -26,14 +28,14 @@ class TripleFilterModel(Model):
     """
 
     def __init__(
-        self,
-        num_of_users,
-        communication_form="central",
-        latitude_of_acceptance=0.5,
-        sharpness_parameter=20,
-        memory_size=10,
-        number_of_links=10,
-        link_delete_prob=0.01,
+            self,
+            num_of_users,
+            communication_form="individual",
+            latitude_of_acceptance=0.5,
+            sharpness_parameter=20,
+            memory_size=10,
+            number_of_links=10,
+            link_delete_prob=0.01,
     ):
 
         self.num_of_users = num_of_users

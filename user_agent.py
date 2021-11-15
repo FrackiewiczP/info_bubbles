@@ -83,13 +83,12 @@ class UserAgent(Agent):
             :rtype: numpy.ndarray
 
             """
-            pos = np.array([0, 0])
-            for x in self.info_bits:
-                pos.__add__(x.getPosition())
-            pos[1] = pos[1] / len(self.info_bits)
-            pos[0] = pos[0] / len(self.info_bits)
-            return pos
-            # return np.mean(self.info_bits[:, 1:3], axis=0)
+            a = []
+            for i in self.info_bits:
+                b = i.getPosition()
+                a.append(b)
+            a = np.asarray(a)
+            return np.mean(a, axis= 0)
 
         def getRandom(self):
             return choice(self.info_bits)

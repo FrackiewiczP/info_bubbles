@@ -34,7 +34,8 @@ class CentralCommunication(Communication):
         position.append(random.random() * 2 - 1)
         position.append(random.random() * 2 - 1)
         info = Information(position)
-        for u in self.users:
+        for index in self.users:
+            u = self.users[index]
             u.try_to_integrate_info_bit(info)
 
 

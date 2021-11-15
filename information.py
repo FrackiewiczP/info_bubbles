@@ -2,11 +2,11 @@ import numpy as np
 
 
 class IdGenerator:
-    id = 0
+    __id = 0
 
     def get():
-        IdGenerator.id += 1
-        return IdGenerator.id
+        IdGenerator.__id += 1
+        return IdGenerator.__id
 
 
 class Information:

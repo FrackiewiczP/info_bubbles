@@ -1,6 +1,7 @@
 const { io } = require("socket.io-client");
 
 const socket = io("http://127.0.0.1:5000");
+let currentResult;
 
 socket.on("connect", () => {
     console.log("connected");
@@ -13,11 +14,14 @@ socket.on("disconnect", () => {
 });
 
 socket.on("simulation_finished", (data) => {
-    console.log(data);
-    clearCanvas();
-    for(const u in data){
-        addUser(data[u][0], data[u][1]);
-    }
+    currentResult = data[0];
+    let first_step = data[0][0];
+    let stepCount = data[1];
+
+    drawSimulationStep(first_step);
+    document.getElementById("step-slider").value = 1;
+    document.getElementById("step-slider").max = stepCount;
+    updateCurrentStep();
 });
 
 function clearCanvas()
@@ -36,26 +40,30 @@ function addUser(x, y)
 
     ctx.beginPath();
     ctx.arc(x*canvas.width, y*canvas.height, radius, 0, 2 * Math.PI, false);
-    ctx.fillStyle = "#" + Math.floor(Math.random()*16777215).toString(16);
+    ctx.fillStyle = "#FF0000";
     ctx.fill();
+}
+
+function drawSimulationStep(data)
+{
+    clearCanvas();
+    for(const u in data){
+        addUser(data[u][0], data[u][1]);
+    }
 }
 
 window.updateCurrentStep = () =>
 {
     let currentStep = document.getElementById("step-slider").value;
     document.getElementById("current-step").textContent = currentStep.toString();
-}
 
-window.updateMaxStep = () =>
-{
-    console.log("Max step")
-    let maxStep = document.getElementById("step-num").value;
-    document.getElementById("step-slider").max = maxStep;
+    drawSimulationStep(currentResult[currentStep-1]);
 }
 
 window.startSimulation = () =>
 {
     let numUsers = document.getElementById("agent-num").value;
-    socket.emit("start_simulation", numUsers);
+    let numSteps = document.getElementById("step-num").value;
+    socket.emit("start_simulation", {num_of_users: parseInt(numUsers), num_of_steps: parseInt(numSteps)});
     console.log("Event sent");
 }

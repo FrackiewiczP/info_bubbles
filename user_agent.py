@@ -8,6 +8,7 @@ from random import random, choice
 import numpy as np
 from mesa import Agent
 
+import information
 from information import Information
 from integration_function import check_integration
 
@@ -34,6 +35,8 @@ class UserAgent(Agent):
         position.append(random() * 2 - 1)
         initial_info_bit = Information(position)
         self.user_memory = self.Memory(initial_info_bit, memory_capacity)
+        self.user_position = self.user_memory.calculate_user_position()
+
 
     class Memory:
         """
@@ -43,7 +46,7 @@ class UserAgent(Agent):
         def __init__(self, first_info_bit, mem_capacity):
             self.mem_capacity = mem_capacity
             self.info_bits = list()
-            self.info_bits.append(first_info_bit)
+            self.info_bits.append(first_info_bit.getAllData())
 
         def get_size(self):
             """
@@ -55,7 +58,7 @@ class UserAgent(Agent):
 
             return len(self.info_bits)
 
-        def add_new_info_bit(self, info_bit):
+        def add_new_info_bit(self, info_bit:Information):
             """
             Saves new info_bit in user memory, if memory is full
             it replace one random info_bit from memory with the new one.
@@ -67,13 +70,13 @@ class UserAgent(Agent):
             # removing random info_bit if memory is full
             if len(self.info_bits) >= self.mem_capacity:
                 info_bit_to_remove = np.random.randint(self.mem_capacity)
-                self.info_bits[info_bit_to_remove] = info_bit
+                self.info_bits[info_bit_to_remove] = info_bit.getAllData()
             # appending memory with new info otherwise
             else:
                 for i in self.info_bits:
-                    if (i == info_bit):
+                    if (i[0] == info_bit.getAllData()[0]):
                         return
-                self.info_bits.append(info_bit)
+                self.info_bits.append(info_bit.getAllData())
 
         def calculate_user_position(self):
             """
@@ -83,15 +86,10 @@ class UserAgent(Agent):
             :rtype: numpy.ndarray
 
             """
-            a = []
-            for i in self.info_bits:
-                b = i.getPosition()
-                a.append(b)
-            a = np.asarray(a)
-            return np.mean(a, axis= 0)
+            return np.mean(self.info_bits, axis= 0)[1:3]
 
         def getRandom(self):
-            return choice(self.info_bits)
+            return  Information.copy(choice(self.info_bits))
 
     def update_position(self):
         """

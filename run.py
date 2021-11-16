@@ -1,8 +1,7 @@
 from model import TripleFilterModel
 import time
 import tracemalloc
-import pandas as pd
-import numpy as np
+
 
 if __name__ == "__main__":
     number_of_agents = 10000

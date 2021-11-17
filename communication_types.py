@@ -18,7 +18,7 @@ from information import Information
 
 
 class Communication:
-    def __init__(self, users: set):
+    def __init__(self, users: dict):
         self.users = users
 
     def integrate_new_info(self):
@@ -26,7 +26,7 @@ class Communication:
 
 
 class CentralCommunication(Communication):
-    def __init__(self, users: set):
+    def __init__(self, users: dict):
         super().__init__(users)
 
     def integrate_new_info(self):
@@ -46,7 +46,7 @@ class IndividualCommunication(Communication):
     In each simulation step it returns random InfoBit for every user
     """
 
-    def __init__(self, users: set):
+    def __init__(self, users: dict):
         super().__init__(users)
 
     def integrate_new_info(self):

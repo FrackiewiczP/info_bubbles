@@ -19,25 +19,25 @@ class Information:
 
         if data is None:
             # first column is unique id, second and third represents information position
-            data = np.random.rand(1, 3) * 2 - 1
-            data[0, 0] = IdGenerator.get()
+            data = np.random.rand(3) * 2 - 1
+            data[0] = IdGenerator.get()
 
-        self.__data = data.reshape(1, 3)
+        self.__data = data.reshape(3)
 
     def get_position(self):
-        return self.__data[0, 1:2]
+        return self.__data[1:2]
 
     def to_numpy(self):
-        return self.__data
+        return self.__data.reshape((1, 3))
 
     def __eq__(self, other):
-        return self.__data[0, 0] == other.__data[0, 0]
+        return self.__data[0] == other.__data[0]
 
     def __str__(self):
         return (
             "{Information id:"
-            + self.__data[0, 0]
+            + self.__data[0]
             + "position: "
-            + self.__data[0, 1:2]
+            + self.__data[1:2]
             + "}\n"
         )

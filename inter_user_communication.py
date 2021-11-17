@@ -1,13 +1,13 @@
 import random
 
-import information
+from information import Information
 
 
 class InterUserCommunication:
     def __init__(self, users: dict):
         self.users = users
 
-    def send_info_to_friends(self, friends: dict, info: information):
+    def send_info_to_friends(self, friends: list, info: Information):
         pass
 
 
@@ -15,7 +15,7 @@ class ToAllCommunication(InterUserCommunication):
     def __init__(self, users: dict):
         super(ToAllCommunication, self).__init__(users)
 
-    def send_info_to_friends(self, friends: list, info: information):
+    def send_info_to_friends(self, friends: list, info: Information):
         for friend in friends:
             self.users[friend].try_to_integrate_info_bit(info)
 

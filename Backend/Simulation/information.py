@@ -30,6 +30,9 @@ class Information:
     def to_numpy(self):
         return self.__data.reshape((1, 3))
 
+    def get_id(self):
+        return self.__data[0]
+
     def __eq__(self, other):
         return self.__data[0] == other.__data[0]
 

@@ -94,6 +94,9 @@ class UserAgent(Agent):
                 self.info_bits[np.random.randint(self.get_size()), :].reshape((1, 3))
             )
 
+        def get_info_bits_ids(self):
+            return self.info_bits[:, 0]
+
     def get_random_information(self):
 
         return self.user_memory.get_random_information()
@@ -113,7 +116,10 @@ class UserAgent(Agent):
 
         """
         Tries to integrate new info bit to user memory based on attitude
-         distance between user and info bit, user latitude and user sharpness
+        distance between user and info bit, user latitude and user sharpness.
+
+        Unless id of info is already present in user memory in this case method
+        returns False before trying to integrate new info_bit
 
         :param info_bit: matrix with information id and coordinates
             on political spectrum
@@ -122,6 +128,9 @@ class UserAgent(Agent):
         :rtype: bool
         """
 
+        # if user already knows this info
+        if info_bit.get_id() in self.user_memory.get_info_bits_ids():
+            return False
         if check_integration(
             self.user_position,
             info_bit.get_position(),

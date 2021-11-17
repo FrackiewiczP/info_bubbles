@@ -12,9 +12,9 @@ import tracemalloc
 
 from numpy.core import numeric
 from integration_function import check_integration
-from information import Information
 import communication_types
 import numpy as np
+
 import time
 
 def create_random_friend_links(users: dict, no_of_links: int):
@@ -22,7 +22,7 @@ def create_random_friend_links(users: dict, no_of_links: int):
         tracemalloc.start()
         vertices = list(range(no_of_users))
         ranks = dict.fromkeys(vertices, 0)
-        links=list()
+        links = list()
         while len(vertices) > 1:
             new_link = np.random.choice(vertices, size=2, replace=False)
             users[new_link[0]].user_friends.append(new_link[1])
@@ -53,7 +53,7 @@ def send_info_to_random_friend(users: dict, user_id: int ):
 def send_info_to_all_friends(users: dict, user_id: int):
         friends = users[user_id].user_friends
         info = users[user_id].get_random_information()
-        users_to_move= set()
+        users_to_move = set()
         for friend in friends:
             if users[friend].try_to_integrate_info_bit(info):
                 users_to_move.add(friend)
@@ -110,15 +110,11 @@ class Website:
         return self.user_positions
 
     def find_links_to_remove(self):
-        n = len(self.links)
-        probs = np.random.rand(n)
-        links_to_remove = list()
-        for i in range(n):
-            if probs[i] <= self.unfriend_chance:
-                links_to_remove.append((self.links[i][0], self.links[i][1]))
-                self.try_to_integrate_user(self.links[i][0], self.links[i][1])
-        for link in links_to_remove:
-            self.links.remove(link)
+        for link in self.links:
+            if np.random.rand(1) <= self.unfriend_chance:
+                self.try_to_integrate_user(link[0], link[1])
+                self.links.remove(link)
+       
 
     def try_to_integrate_user(self, user1_id: int, user2_id: int):
         """

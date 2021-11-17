@@ -13,15 +13,29 @@ List of classes:
 
 """
 
-import numpy as np
+import random
+
+from information import Information
 
 
 class Communication:
-    def __init__(self, model):
-        self.model = model
+    def __init__(self, users: dict):
+        self.users = users
 
-    def CreateInfoBit(self, user_position):
-        return np.zeros((1, 3))
+    def integrate_new_info(self):
+        pass
+
+
+class CentralCommunication(Communication):
+    def __init__(self, users: dict):
+        super().__init__(users)
+
+    def integrate_new_info(self):
+
+        info = Information()
+        for index in self.users:
+            u = self.users[index]
+            u.try_to_integrate_info_bit(info)
 
 
 class IndividualCommunication(Communication):
@@ -31,8 +45,11 @@ class IndividualCommunication(Communication):
     In each simulation step it returns random InfoBit for every user
     """
 
-    def create_info_bit(self, user_postion, info_bit_id):
-        info_bit = np.random.rand(1, 3) * 2 - 1
-        info_bit[0, 0] = info_bit_id
+    def __init__(self, users: dict):
+        super().__init__(users)
 
-        return info_bit
+    def integrate_new_info(self):
+        for index in self.users:
+            u = self.users[index]
+            info = Information()
+            u.try_to_integrate_info_bit(info)

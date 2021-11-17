@@ -4,9 +4,11 @@ Module with network types implementations
 
 
 """
-import numpy as np
+
 import random
 import tracemalloc
+
+import numpy as np
 
 
 class RandomNetwork:

@@ -30,10 +30,8 @@ class CentralCommunication(Communication):
         super().__init__(users)
 
     def integrate_new_info(self):
-        position = list()
-        position.append(random.random() * 2 - 1)
-        position.append(random.random() * 2 - 1)
-        info = Information(position)
+
+        info = Information()
         for index in self.users:
             u = self.users[index]
             u.try_to_integrate_info_bit(info)
@@ -52,8 +50,5 @@ class IndividualCommunication(Communication):
     def integrate_new_info(self):
         for index in self.users:
             u = self.users[index]
-            position = list()
-            position.append(random.random() * 2 - 1)
-            position.append(random.random() * 2 - 1)
-            info = Information(position)
+            info = Information()
             u.try_to_integrate_info_bit(info)

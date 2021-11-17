@@ -10,26 +10,36 @@ class IdGenerator:
 
 
 class Information:
+    def __init__(self, data: np.ndarray = None):
+        """
+        By default it creates new information in random position
 
-    def copy(data):
-        i = Information([1,1])
-        i.__data = data.copy().reshape((3, 1))
-        return i
+        But it is possible to pass ndarray of existing information to create copy
+        """
 
-    def __init__(self, position: list):
-        position.insert(0,IdGenerator.get())
-        self.__data = np.array(position).reshape((3, 1))
+        if data is None:
+            # first column is unique id, second and third represents information position
+            data = np.random.rand(1, 3) * 2 - 1
+            data[0, 0] = IdGenerator.get()
 
-    def getPosition(self):
-        return self.__data[1:2]
+        self.__data = data.reshape(1, 3)
 
-    def getAllData(self):
+    def get_position(self):
+        return self.__data[0, 1:2]
+
+    def to_numpy(self):
         return self.__data
 
     def __eq__(self, other):
-        if self.__data[0] == other.__data[0]:
+        if self.__data[0, 0] == other.__data[0, 0]:
             return True
         return False
 
     def __str__(self):
-        return "{Information id:" + self.__data[0] + "position: " + self.__data[1:2] + "}\n"
+        return (
+            "{Information id:"
+            + self.__data[0, 0]
+            + "position: "
+            + self.__data[0, 1:2]
+            + "}\n"
+        )

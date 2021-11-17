@@ -29,15 +29,15 @@ class TripleFilterModel(Model):
     """
 
     def __init__(
-            self,
-            num_of_users,
-            communication_form="individual",
-            latitude_of_acceptance=0.5,
-            sharpness_parameter=20,
-            memory_size=10,
-            number_of_links=10,
-            link_delete_prob=0.01,
-            inter_user_communication_form = "toOneRandom"
+        self,
+        num_of_users,
+        communication_form="individual",
+        latitude_of_acceptance=0.5,
+        sharpness_parameter=20,
+        memory_size=10,
+        number_of_links=10,
+        link_delete_prob=0.01,
+        inter_user_communication_form="toOneRandom",
     ):
 
         self.num_of_users = num_of_users
@@ -111,8 +111,11 @@ class TripleFilterModel(Model):
         user_order = list(range(self.num_of_users))
         np.random.shuffle(user_order)
         for i in user_order:
-            self.inter_user_communication.send_info_to_friends(self.users[i].user_friends,self.users[i].user_memory.getRandom())
-            #self.users[i].send_info_to_friends()
+            self.inter_user_communication.send_info_to_friends(
+                self.users[i].user_friends,
+                self.users[i].user_memory.get_random_information(),
+            )
+            # self.users[i].send_info_to_friends()
         print("sending time  --- %s seconds ---" % (time.time() - start_time))
         start_time = time.time()
         for moved_user_id in self.users_moved:

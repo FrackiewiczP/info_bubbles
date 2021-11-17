@@ -3,25 +3,21 @@ Module with agents representing users implementations
 
 
 """
-from random import random, choice
-
 import numpy as np
 from mesa import Agent
-
-import information
 from information import Information
 from integration_function import check_integration
 
 
 class UserAgent(Agent):
     def __init__(
-            self,
-            unique_id,
-            model,
-            initial_position,
-            memory_capacity,
-            user_latitude,
-            user_sharpness,
+        self,
+        unique_id,
+        model,
+        initial_position,
+        memory_capacity,
+        user_latitude,
+        user_sharpness,
     ):
         super().__init__(unique_id, model)
         self.user_friends = list()
@@ -30,23 +26,17 @@ class UserAgent(Agent):
         self.user_position = initial_position
         self.info_count = 0
 
-        position = list()
-        position.append(random() * 2 - 1)
-        position.append(random() * 2 - 1)
-        initial_info_bit = Information(position)
-        self.user_memory = self.Memory(initial_info_bit, memory_capacity)
+        self.user_memory = self.Memory(Information(), memory_capacity)
         self.user_position = self.user_memory.calculate_user_position()
-
 
     class Memory:
         """
         Internal class representing user memory and providing methods to modify and read it
         """
 
-        def __init__(self, first_info_bit, mem_capacity):
+        def __init__(self, first_info_bit: Information, mem_capacity: int):
             self.mem_capacity = mem_capacity
-            self.info_bits = list()
-            self.info_bits.append(first_info_bit.getAllData())
+            self.info_bits = first_info_bit.to_numpy()
 
         def get_size(self):
             """
@@ -56,9 +46,9 @@ class UserAgent(Agent):
             :rtype: int
             """
 
-            return len(self.info_bits)
+            return self.info_bits.shape[0]
 
-        def add_new_info_bit(self, info_bit:Information):
+        def add_new_info_bit(self, info_bit: Information):
             """
             Saves new info_bit in user memory, if memory is full
             it replace one random info_bit from memory with the new one.
@@ -68,15 +58,14 @@ class UserAgent(Agent):
             :type info_bit: numpy.ndarray
             """
             # removing random info_bit if memory is full
-            if len(self.info_bits) >= self.mem_capacity:
+            if self.get_size() >= self.mem_capacity:
                 info_bit_to_remove = np.random.randint(self.mem_capacity)
-                self.info_bits[info_bit_to_remove] = info_bit.getAllData()
+                self.info_bits[info_bit_to_remove] = info_bit.to_numpy()
             # appending memory with new info otherwise
             else:
-                for i in self.info_bits:
-                    if (i[0] == info_bit.getAllData()[0]):
-                        return
-                self.info_bits.append(info_bit.getAllData())
+                self.info_bits = np.concatenate(
+                    [self.info_bits, info_bit.to_numpy()], axis=0
+                )
 
         def calculate_user_position(self):
             """
@@ -86,10 +75,19 @@ class UserAgent(Agent):
             :rtype: numpy.ndarray
 
             """
-            return np.mean(self.info_bits, axis= 0)[1:3]
+            return np.mean(self.info_bits[:, 1:3], axis=0)
 
         def get_random_information(self):
-            return  Information.copy(choice(self.info_bits))
+            """
+            Creates Information based on random row from info_bits
+
+            :return: New Information based on existing one
+            :rtype: Information
+
+            """
+            return Information(
+                self.info_bits[np.random.randint(self.get_size()), :].reshape((1, 3))
+            )
 
     def update_position(self):
         """
@@ -115,18 +113,13 @@ class UserAgent(Agent):
         """
 
         if check_integration(
-                self.user_position,
-                info_bit.getPosition(),
-                self.user_latitude,
-                self.user_sharpness,
+            self.user_position,
+            info_bit.get_position(),
+            self.user_latitude,
+            self.user_sharpness,
         ):
             self.user_memory.add_new_info_bit(info_bit)
             self.model.register_user_movement(self.unique_id)
             return True
         else:
             return False
-
-    def send_info_to_friends(self):
-        info = self.user_memory.getRandom()
-        for friend in self.user_friends:
-            self.model.forward_info_bit(friend, info)

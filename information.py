@@ -31,9 +31,7 @@ class Information:
         return self.__data
 
     def __eq__(self, other):
-        if self.__data[0, 0] == other.__data[0, 0]:
-            return True
-        return False
+        return self.__data[0, 0] == other.__data[0, 0]
 
     def __str__(self):
         return (

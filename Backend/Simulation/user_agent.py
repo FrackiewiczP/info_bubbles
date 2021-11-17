@@ -94,6 +94,10 @@ class UserAgent(Agent):
                 self.info_bits[np.random.randint(self.get_size()), :].reshape((1, 3))
             )
 
+    def get_random_information(self):
+
+        return self.user_memory.get_random_information()
+
     def update_position(self):
         """
         Updates user_position with new position calculated by user memory
@@ -125,7 +129,6 @@ class UserAgent(Agent):
             self.user_sharpness,
         ):
             self.user_memory.add_new_info_bit(info_bit)
-            self.model.register_user_movement(self.unique_id)
             return True
         else:
             return False

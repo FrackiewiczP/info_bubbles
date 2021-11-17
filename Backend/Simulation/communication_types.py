@@ -33,9 +33,12 @@ class CentralCommunication(Communication):
     def integrate_new_info(self):
 
         info = Information()
+        users_to_moved = set()
         for index in self.users:
             u = self.users[index]
-            u.try_to_integrate_info_bit(info)
+            if u.try_to_integrate_info_bit(info):
+                users_to_moved.add(index)
+        return users_to_moved
 
 
 class IndividualCommunication(Communication):
@@ -49,7 +52,11 @@ class IndividualCommunication(Communication):
         super().__init__(users)
 
     def integrate_new_info(self):
+        users_to_moved = set()
         for index in self.users:
             u = self.users[index]
             info = Information()
             u.try_to_integrate_info_bit(info)
+            if u.try_to_integrate_info_bit(info):
+                users_to_moved.add(index)
+        return users_to_moved

@@ -88,7 +88,7 @@ class UserAgent(Agent):
             """
             return np.mean(self.info_bits, axis= 0)[1:3]
 
-        def getRandom(self):
+        def get_random_information(self):
             return  Information.copy(choice(self.info_bits))
 
     def update_position(self):

@@ -31,18 +31,14 @@ class UserAgent(Agent):
         self.user_memory = self.Memory(Information(), memory_capacity)
         self.user_position = self.user_memory.calculate_user_position()
 
-       
-
     class Memory:
         """
         Internal class representing user memory and providing methods to modify and read it
         """
 
-
         def __init__(self, first_info_bit: Information, mem_capacity: int):
             self.mem_capacity = mem_capacity
             self.info_bits = first_info_bit.to_numpy()
-
 
         def get_size(self):
             """
@@ -53,7 +49,6 @@ class UserAgent(Agent):
             """
 
             return self.info_bits.shape[0]
-
 
         def add_new_info_bit(self, info_bit: Information):
 
@@ -75,8 +70,6 @@ class UserAgent(Agent):
                 self.info_bits = np.concatenate(
                     [self.info_bits, info_bit.to_numpy()], axis=0
                 )
-
-
 
         def calculate_user_position(self):
             """
@@ -101,7 +94,6 @@ class UserAgent(Agent):
                 self.info_bits[np.random.randint(self.get_size()), :].reshape((1, 3))
             )
 
-
     def update_position(self):
         """
         Updates user_position with new position calculated by user memory
@@ -112,7 +104,6 @@ class UserAgent(Agent):
         self.user_position = self.user_memory.calculate_user_position()
 
         return self.user_position
-
 
     def try_to_integrate_info_bit(self, info_bit: Information):
 
@@ -138,6 +129,3 @@ class UserAgent(Agent):
             return True
         else:
             return False
-
-
-   

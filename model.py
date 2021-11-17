@@ -23,7 +23,6 @@ from network_types import RandomNetwork
 from user_agent import UserAgent
 
 
-
 class TripleFilterModel(Model):
     """
     Triple filter modelling of echo chambers and filter bubbles in social networks
@@ -40,7 +39,6 @@ class TripleFilterModel(Model):
         number_of_links=10,
         link_delete_prob=0.01,
         inter_user_communication_form="toOneRandom",
-
     ):
 
         self.num_of_users = num_of_users
@@ -63,7 +61,6 @@ class TripleFilterModel(Model):
             agent_reporters={"user_pos": "user_position"},
         )
 
-
         # standard deviation temporary hard coded
         user_latitudes = np.random.normal(
             self.latitude_of_acceptance, 0.2, size=self.num_of_users
@@ -84,7 +81,6 @@ class TripleFilterModel(Model):
             self.schedule.add(a)
             self.user_positions[i] = np.reshape(initial_position, 2)
 
-
         if communication_form == "individual":
             self.communication_form = IndividualCommunication(self.users)
         if communication_form == "central":
@@ -94,8 +90,6 @@ class TripleFilterModel(Model):
             self.inter_user_communication = ToOneRandomCommunication(self.users)
         if inter_user_communication_form == "ToAll":
             self.inter_user_communication = ToAllCommunication(self.users)
-
-
 
         self.user_positions_in_prev[0] = dict(self.user_positions)
         start_time = time.time()

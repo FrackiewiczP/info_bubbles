@@ -11,7 +11,6 @@ import tracemalloc
 import numpy as np
 
 
-
 class RandomNetwork:
     def __init__(self, unfriend_chance, users, no_of_links):
         self.unfriend_chance = unfriend_chance
@@ -62,7 +61,7 @@ class RandomNetwork:
         latitude = self.users[user1_id].user_latitude
         sharpness = self.users[user1_id].user_sharpness
         probability = latitude ** sharpness / (
-                dist ** sharpness + latitude ** sharpness
+            dist ** sharpness + latitude ** sharpness
         )
         if np.random.rand() <= probability:
             # unfriend two people

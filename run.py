@@ -1,3 +1,4 @@
+
 import time
 import tracemalloc
 
@@ -9,6 +10,7 @@ if __name__ == "__main__":
     number_of_steps = 100
 
     model = TripleFilterModel(number_of_agents, "central")
+
     start_time = time.time()
     tracemalloc.start()
     for i in range(number_of_steps):

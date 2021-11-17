@@ -12,6 +12,7 @@ List of classes:
 
 
 """
+
 import random
 
 from information import Information
@@ -37,6 +38,7 @@ class CentralCommunication(Communication):
             u.try_to_integrate_info_bit(info)
 
 
+
 class IndividualCommunication(Communication):
     """
     Individual form od communication.
@@ -52,3 +54,4 @@ class IndividualCommunication(Communication):
             u = self.users[index]
             info = Information()
             u.try_to_integrate_info_bit(info)
+

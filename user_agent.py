@@ -3,9 +3,11 @@ Module with agents representing users implementations
 
 
 """
+
 import numpy as np
 from mesa import Agent
 from information import Information
+
 from integration_function import check_integration
 
 
@@ -29,14 +31,18 @@ class UserAgent(Agent):
         self.user_memory = self.Memory(Information(), memory_capacity)
         self.user_position = self.user_memory.calculate_user_position()
 
+       
+
     class Memory:
         """
         Internal class representing user memory and providing methods to modify and read it
         """
 
+
         def __init__(self, first_info_bit: Information, mem_capacity: int):
             self.mem_capacity = mem_capacity
             self.info_bits = first_info_bit.to_numpy()
+
 
         def get_size(self):
             """
@@ -48,7 +54,9 @@ class UserAgent(Agent):
 
             return self.info_bits.shape[0]
 
+
         def add_new_info_bit(self, info_bit: Information):
+
             """
             Saves new info_bit in user memory, if memory is full
             it replace one random info_bit from memory with the new one.
@@ -58,6 +66,7 @@ class UserAgent(Agent):
             :type info_bit: numpy.ndarray
             """
             # removing random info_bit if memory is full
+
             if self.get_size() >= self.mem_capacity:
                 info_bit_to_remove = np.random.randint(self.mem_capacity)
                 self.info_bits[info_bit_to_remove] = info_bit.to_numpy()
@@ -67,6 +76,8 @@ class UserAgent(Agent):
                     [self.info_bits, info_bit.to_numpy()], axis=0
                 )
 
+
+
         def calculate_user_position(self):
             """
             Calculates user position based on positions of info_bits in user memory
@@ -75,6 +86,7 @@ class UserAgent(Agent):
             :rtype: numpy.ndarray
 
             """
+
             return np.mean(self.info_bits[:, 1:3], axis=0)
 
         def get_random_information(self):
@@ -89,6 +101,7 @@ class UserAgent(Agent):
                 self.info_bits[np.random.randint(self.get_size()), :].reshape((1, 3))
             )
 
+
     def update_position(self):
         """
         Updates user_position with new position calculated by user memory
@@ -100,7 +113,9 @@ class UserAgent(Agent):
 
         return self.user_position
 
+
     def try_to_integrate_info_bit(self, info_bit: Information):
+
         """
         Tries to integrate new info bit to user memory based on attitude
          distance between user and info bit, user latitude and user sharpness
@@ -123,3 +138,6 @@ class UserAgent(Agent):
             return True
         else:
             return False
+
+
+   

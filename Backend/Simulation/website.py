@@ -9,9 +9,6 @@ Class representing
 
 import random
 import tracemalloc
-
-
-from numpy.core import numeric
 from integration_function import check_integration
 import communication_types
 import numpy as np
@@ -72,7 +69,7 @@ class Website:
         self,
         users: dict,
         no_of_links: int,
-        unfriend_chance: numeric,
+        unfriend_chance: float,
         initial_connections: str,
         communication_mode: str,
         users_communication_mode: str,

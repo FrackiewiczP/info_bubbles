@@ -30,7 +30,7 @@ class TripleFilterModel(Model):
         memory_size=10,
         number_of_links=10,
         link_delete_prob=0.01,
-        inter_user_communication_form="toOneRandom",
+        inter_user_communication_form="to_one_random",
         initial_connections="random",
         sd_of_user_latitudes=0.2,
     ):
@@ -51,7 +51,7 @@ class TripleFilterModel(Model):
         )
 
         for i in range(self.num_of_users):
-            initial_position = np.random.rand(1, 2) * 2 - 1
+            initial_position = np.random.rand(2) * 2 - 1
 
             a = UserAgent(
                 i,
@@ -63,7 +63,7 @@ class TripleFilterModel(Model):
             )
             users[i] = a
 
-            user_positions[i] = np.reshape(initial_position, 2)
+            user_positions[i] = initial_position
 
         self.website = Website(
             users,

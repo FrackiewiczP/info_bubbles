@@ -19,48 +19,52 @@ import numpy as np
 import time
 
 
-def create_random_friend_links(users: dict, no_of_links: int):
-    no_of_users = len(users)
-    tracemalloc.start()
-    vertices = list(range(no_of_users))
-    ranks = dict.fromkeys(vertices, 0)
-    links = list()
-    while len(vertices) > 1:
-        new_link = np.random.choice(vertices, size=2, replace=False)
-        users[new_link[0]].user_friends.append(new_link[1])
-        users[new_link[1]].user_friends.append(new_link[0])
-        links.append((new_link[0], new_link[1]))
-        ranks[new_link[0]] += 1
-        ranks[new_link[1]] += 1
-        if ranks[new_link[0]] == no_of_links:
-            vertices.remove(new_link[0])
-        if ranks[new_link[1]] == no_of_links:
-            vertices.remove(new_link[1])
+class InitialFriendLinks:
+    @staticmethod
+    def create_random_friend_links(users: dict, no_of_links: int):
+        no_of_users = len(users)
+        tracemalloc.start()
+        vertices = list(range(no_of_users))
+        ranks = dict.fromkeys(vertices, 0)
+        links = list()
+        while len(vertices) > 1:
+            new_link = np.random.choice(vertices, size=2, replace=False)
+            users[new_link[0]].user_friends.append(new_link[1])
+            users[new_link[1]].user_friends.append(new_link[0])
+            links.append((new_link[0], new_link[1]))
+            ranks[new_link[0]] += 1
+            ranks[new_link[1]] += 1
+            if ranks[new_link[0]] == no_of_links:
+                vertices.remove(new_link[0])
+            if ranks[new_link[1]] == no_of_links:
+                vertices.remove(new_link[1])
 
-    current, peak = tracemalloc.get_traced_memory()
-    print(f"Peak memory usage was {peak / 10 ** 6} MB")
-    tracemalloc.stop()
-    return links
-
-
-def send_info_to_random_friend(users: dict, user_id: int):
-    friends = users[user_id].user_friends
-    info = users[user_id].get_random_information()
-    friend = random.choice(friends)
-    users_to_move = set()
-    if users[friend].try_to_integrate_info_bit(info):
-        users_to_move.add(friend)
-    return users_to_move
+        current, peak = tracemalloc.get_traced_memory()
+        print(f"Peak memory usage was {peak / 10 ** 6} MB")
+        tracemalloc.stop()
+        return links
 
 
-def send_info_to_all_friends(users: dict, user_id: int):
-    friends = users[user_id].user_friends
-    info = users[user_id].get_random_information()
-    users_to_move = set()
-    for friend in friends:
+class InterUserCommunication:
+    @staticmethod
+    def send_info_to_random_friend(users: dict, user_id: int):
+        friends = users[user_id].user_friends
+        info = users[user_id].get_random_information()
+        friend = random.choice(friends)
+        users_to_move = set()
         if users[friend].try_to_integrate_info_bit(info):
             users_to_move.add(friend)
-    return users_to_move
+        return users_to_move
+
+    @staticmethod
+    def send_info_to_all_friends(users: dict, user_id: int):
+        friends = users[user_id].user_friends
+        info = users[user_id].get_random_information()
+        users_to_move = set()
+        for friend in friends:
+            if users[friend].try_to_integrate_info_bit(info):
+                users_to_move.add(friend)
+        return users_to_move
 
 
 class Website:
@@ -69,7 +73,7 @@ class Website:
         users: dict,
         no_of_links: int,
         unfriend_chance: numeric,
-        initial_connections: int,
+        initial_connections: str,
         communication_mode: str,
         users_communication_mode: str,
         user_positions: dict,
@@ -80,15 +84,15 @@ class Website:
         self.user_positions = user_positions
 
         match initial_connections:
-            case "random" : self.links = create_random_friend_links(users, no_of_links)
+            case "random" : self.links = InitialFriendLinks.create_random_friend_links(users, no_of_links)
 
         match communication_mode:
             case "individual" : self.communication_form = communication_types.IndividualCommunication(users)
             case "central" : self.communication_form = communication_types.CentralCommunication(users)
 
         match users_communication_mode:
-            case "toOneRandom" : self.users_communication = send_info_to_random_friend
-            case "ToAll" : self.users_communication = send_info_to_all_friends
+            case "to_one_random" : self.users_communication = InterUserCommunication.send_info_to_random_friend
+            case "to_all" : self.users_communication = InterUserCommunication.send_info_to_all_friends
 
     def step(self):
         start_time = time.time()
@@ -116,8 +120,8 @@ class Website:
     def find_links_to_remove(self):
         for link in self.links:
             if np.random.rand(1) <= self.unfriend_chance:
-                self.try_to_integrate_user(link[0], link[1])
-                self.links.remove(link)
+                if self.try_to_unfriend_users(link[0], link[1]):
+                    self.links.remove(link)
 
     def try_to_unfriend_users(self, user1_id: int, user2_id: int):
         """
@@ -129,6 +133,8 @@ class Website:
         sharpness = self.users[user1_id].user_sharpness
         if check_integration(user1_pos, user2_pos, latitude, sharpness):
             self.unfriend_users(user1_id, user2_id)
+            return True
+        return False
 
     def unfriend_users(self, user1_id: int, user2_id: int):
         """

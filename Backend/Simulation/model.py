@@ -82,7 +82,6 @@ class TripleFilterModel(Model):
         self.user_positions_in_prev[self.iterations] = self.website.step()
 
     def save_output(self):
-
         df = pd.DataFrame.from_dict(self.user_positions_in_prev, orient="index")
         df = df.melt(value_vars=df.columns, value_name="position", var_name="agent_id")
         df["x_pos"] = df.position.apply(lambda x: x[0])

@@ -98,7 +98,6 @@ class UserAgent(Agent):
             return self.info_bits[:, 0]
 
     def get_random_information(self):
-
         return self.user_memory.get_random_information()
 
     def update_position(self):

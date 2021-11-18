@@ -13,8 +13,6 @@ List of classes:
 
 """
 
-import random
-
 from information import Information
 
 

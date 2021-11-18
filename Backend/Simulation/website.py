@@ -91,13 +91,9 @@ class Website:
             case "ToAll" : self.users_communication = send_info_to_all_friends
 
     def step(self):
-
         start_time = time.time()
-
         users_to_moved = self.communication_form.integrate_new_info()
-
         print("communicating time  --- %s seconds ---" % (time.time() - start_time))
-
         start_time = time.time()
         users_order = list(self.users.keys())
         np.random.shuffle(users_order)
@@ -105,21 +101,16 @@ class Website:
             users_to_moved = users_to_moved.union(
                 self.users_communication(self.users, i)
             )
-
         print("sending time  --- %s seconds ---" % (time.time() - start_time))
-
         start_time = time.time()
         for moved_user_id in users_to_moved:
             user = self.users[moved_user_id]
             current_position = user.update_position()
             self.user_positions[user.unique_id] = current_position
-
         print("recalculating time--- %s seconds ---" % (time.time() - start_time))
-
         start_time = time.time()
         self.find_links_to_remove()
         print("unfriending time --- %s seconds ---" % (time.time() - start_time))
-
         return self.user_positions
 
     def find_links_to_remove(self):
@@ -128,7 +119,7 @@ class Website:
                 self.try_to_integrate_user(link[0], link[1])
                 self.links.remove(link)
 
-    def try_to_integrate_user(self, user1_id: int, user2_id: int):
+    def try_to_unfriend_users(self, user1_id: int, user2_id: int):
         """
         Check if one user wants to unfriend other
         """

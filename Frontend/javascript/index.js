@@ -4404,7 +4404,16 @@ window.startSimulation = () =>
 {
     let numUsers = document.getElementById("agent-num").value;
     let numSteps = document.getElementById("step-num").value;
-    socket.emit("start_simulation", {num_of_users: parseInt(numUsers), num_of_steps: parseInt(numSteps)});
+    let infoLatitude = document.getElementById("info-latitude").value;
+    let infoSharpness = document.getElementById("info-sharpness").value;
+    socket.emit(
+        "start_simulation",
+        {
+            num_of_users: parseInt(numUsers),
+            num_of_steps: parseInt(numSteps),
+            info_latitude: parseFloat(infoLatitude),
+            info_sharpness: parseFloat(infoSharpness),
+        });
     console.log("Event sent");
 }
 

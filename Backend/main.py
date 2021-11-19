@@ -9,8 +9,8 @@ sio = socketio.AsyncServer(cors_allowed_origins='*', async_mode='asgi')
 app = socketio.ASGIApp(sio)
 simulations = {}
 
-def perform_simulation(num_of_agents, num_of_steps):
-    sim = Simulation(num_of_agents, num_of_steps)
+def perform_simulation(num_of_agents, num_of_steps, info_latitude, info_sharpness):
+    sim = Simulation(num_of_agents, num_of_steps, info_latitude, info_sharpness)
     res = sim.run_simulation()
     return res
 
@@ -46,7 +46,11 @@ def disconnect(sid):
 async def start_simulation(sid, data):
     print(sid)
     print(data)
-    result = perform_simulation(data["num_of_users"], data["num_of_steps"])
+    result = perform_simulation(
+        data["num_of_users"],
+        data["num_of_steps"],
+        data["info_latitude"],
+        data["info_sharpness"])
     await sio.emit('simulation_finished', [result, data["num_of_steps"]], room=sid)
 
 if __name__ == "__main__":

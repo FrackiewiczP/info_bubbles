@@ -6,10 +6,18 @@ from Simulation.model import TripleFilterModel
 
 
 class Simulation:
-    def __init__(self, number_of_agents, number_of_steps):
+    def __init__(self, number_of_agents, number_of_steps, info_latitude, info_sharpness):
         self.number_of_agents = number_of_agents
         self.number_of_steps = number_of_steps
-        self.model = TripleFilterModel(number_of_agents, "central")
+        self.info_latitude = info_latitude,
+        self.info_sharpness = info_sharpness,
+        self.model = TripleFilterModel(
+            num_of_users=self.number_of_agents,
+            communication_form="individual",
+            latitude_of_acceptance=self.info_latitude,
+            sharpness_parameter=self.info_sharpness,
+            sd_of_user_latitudes=0 # for now, let's keep the model simple, so it's easier to grasp and debug
+            )
     
     def run_simulation(self):
         start_time = time.time()

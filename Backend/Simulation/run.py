@@ -4,7 +4,7 @@ import tracemalloc
 from model import TripleFilterModel
 
 if __name__ == "__main__":
-    number_of_agents = 100
+    number_of_agents = 10
 
     number_of_steps = 100
 

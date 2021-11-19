@@ -115,7 +115,7 @@ class Website:
         start_time = time.time()
         self.find_links_to_remove()
         print("unfriending time --- %s seconds ---" % (time.time() - start_time))
-        return self.user_positions
+        return self.user_positions.copy()
 
     def find_links_to_remove(self):
         for link in self.links:

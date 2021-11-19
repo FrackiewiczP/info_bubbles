@@ -1,3 +1,5 @@
+
+
 /.sass-cache
 node_modules/
 
@@ -139,3 +141,21 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+
+
+.idea\*
+
+
+
+.ipynb_checkpoints/
+
+*.csv
+*.pyc
+*.csv
+*.csv
+
+*.iml
+*.png
+
+positions.csv

@@ -3,17 +3,24 @@ import socketio
 import uvicorn
 import random
 
+from Simulation.simulation import Simulation
+
 sio = socketio.AsyncServer(cors_allowed_origins='*', async_mode='asgi')
 app = socketio.ASGIApp(sio)
 simulations = {}
 
-def perform_simulation(num_of_users, num_of_steps):
+def perform_simulation(num_of_agents, num_of_steps):
+    sim = Simulation(num_of_agents, num_of_steps)
+    res = sim.run_simulation()
+    return res
+
+def perform_mock_simulation(num_of_users, num_of_steps):
     result = []
     for i in range(num_of_steps):
         curr_step = {}
         if i == 0:
             for j in range(num_of_users):
-                curr_step[j] = [random.random(), random.random()]
+                curr_step[j] = [random.random()*2-1, random.random()*2-1]
         else:
             for j in range(num_of_users):
                 curr_step[j] = [result[i-1][j][0]+get_random_step(), result[i-1][j][1]+get_random_step()]

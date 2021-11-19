@@ -34,12 +34,13 @@ function clearCanvas()
 
 function addUser(x, y)
 {
+    let processData = (d, maxValue) => (d+1)*maxValue/2;
     let canvas = document.getElementById("simulation-canvas");
     let ctx = canvas.getContext("2d");
-    const radius = 5;
+    const radius = 3;
 
     ctx.beginPath();
-    ctx.arc(x*canvas.width, y*canvas.height, radius, 0, 2 * Math.PI, false);
+    ctx.arc(processData(x, canvas.width), processData(y, canvas.height), radius, 0, 2 * Math.PI, false);
     ctx.fillStyle = "#FF0000";
     ctx.fill();
 }

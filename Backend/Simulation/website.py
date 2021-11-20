@@ -12,8 +12,8 @@ import tracemalloc
 
 
 from numpy.core import numeric
-from integration_function import check_integration
-import communication_types
+from Simulation.integration_function import check_integration
+import Simulation.communication_types as communication_types
 import numpy as np
 
 import time
@@ -49,6 +49,8 @@ class InterUserCommunication:
     @staticmethod
     def send_info_to_random_friend(users: dict, user_id: int):
         friends = users[user_id].user_friends
+        if(len(friends)==0):
+            return list()
         info = users[user_id].get_random_information()
         friend = random.choice(friends)
         users_to_move = set()

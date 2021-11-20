@@ -4373,12 +4373,13 @@ function clearCanvas()
 
 function addUser(x, y)
 {
+    let processData = (d, maxValue) => (d+1)*maxValue/2;
     let canvas = document.getElementById("simulation-canvas");
     let ctx = canvas.getContext("2d");
-    const radius = 5;
+    const radius = 3;
 
     ctx.beginPath();
-    ctx.arc(x*canvas.width, y*canvas.height, radius, 0, 2 * Math.PI, false);
+    ctx.arc(processData(x, canvas.width), processData(y, canvas.height), radius, 0, 2 * Math.PI, false);
     ctx.fillStyle = "#FF0000";
     ctx.fill();
 }
@@ -4401,9 +4402,29 @@ window.updateCurrentStep = () =>
 
 window.startSimulation = () =>
 {
-    let numUsers = document.getElementById("agent-num").value;
+    let numAgents = document.getElementById("agent-num").value;
     let numSteps = document.getElementById("step-num").value;
-    socket.emit("start_simulation", {num_of_users: parseInt(numUsers), num_of_steps: parseInt(numSteps)});
+    let numLinks = document.getElementById("links-num").value;
+    let memCapacity = document.getElementById("mem-capacity").value;
+    let friendLoseProb = document.getElementById("friend-lose-prob").value;
+    let communicationForm = document.querySelector('input[name="info-sharing-mode"]:checked').value;
+    let interUserCommunicationForm = document.querySelector('input[name="inter-user-sharing-mode"]:checked').value;
+    let accLatitude = document.getElementById("acc-latitude").value;
+    let accSharpness = document.getElementById("acc-sharpness").value;
+
+    socket.emit(
+        "start_simulation",
+        {
+            number_of_agents: parseInt(numAgents),
+            number_of_steps: parseInt(numSteps),
+            number_of_links: parseInt(numLinks),
+            mem_capacity: parseInt(memCapacity),
+            friend_lose_prob: parseFloat(friendLoseProb),
+            communication_form: communicationForm,
+            inter_user_communication_form: interUserCommunicationForm,
+            acc_latitude: parseFloat(accLatitude),
+            acc_sharpness: parseFloat(accSharpness),
+        });
     console.log("Event sent");
 }
 

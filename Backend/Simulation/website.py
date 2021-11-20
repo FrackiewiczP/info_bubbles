@@ -77,6 +77,7 @@ class Website:
         communication_mode: str,
         users_communication_mode: str,
         user_positions: dict,
+        list_of_infos_in_symulation: list = None #używana tylko w przypadku "fromFileCentral" communication_mode
     ):
         self.unfriend_chance = unfriend_chance
         self.links = list()
@@ -89,6 +90,7 @@ class Website:
         match communication_mode:
             case "individual" : self.communication_form = communication_types.IndividualCommunication(users)
             case "central" : self.communication_form = communication_types.CentralCommunication(users)
+            case "fromFileCentral" : self.communication_form = communication_types.FromFileCentralCommunication(users,list_of_infos_in_symulation)
 
         match users_communication_mode:
             case "to_one_random" : self.users_communication = InterUserCommunication.send_info_to_random_friend

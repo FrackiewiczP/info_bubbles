@@ -21,10 +21,29 @@ class TripleFilterModel(Model):
 
     """
 
+    def create_from_file(file_name):
+        start_data = {}
+        with open('workfile') as f:
+            start_data = json.load(f)
+
+        return model(start_data.num_of_users,
+                     start_data.communication_form,
+                     start_data.list_of_infos_in_symulation,
+                     start_data.latitude_of_acceptance,
+                     start_data.sharpness_parameter,
+                     start_data.memory_size,
+                     start_data.number_of_links,
+                     start_data.link_delete_prob,
+                     start_data.inter_user_communication_form,
+                     start_data.initial_connections,
+                     start_data.sd_of_user_latitudes
+                     )
+
     def __init__(
         self,
         num_of_users,
         communication_form="individual",
+        list_of_infos_in_symulation = None,
         latitude_of_acceptance=0.5,
         sharpness_parameter=20,
         memory_size=10,
@@ -32,7 +51,7 @@ class TripleFilterModel(Model):
         link_delete_prob=0.01,
         inter_user_communication_form="to_one_random",
         initial_connections="random",
-        sd_of_user_latitudes=0.2,
+        sd_of_user_latitudes=0.2
     ):
 
         self.num_of_users = num_of_users
@@ -73,6 +92,7 @@ class TripleFilterModel(Model):
             communication_form,
             inter_user_communication_form,
             user_positions,
+            list_of_infos_in_symulation
         )
 
         self.user_positions_in_prev[0] = dict(user_positions)

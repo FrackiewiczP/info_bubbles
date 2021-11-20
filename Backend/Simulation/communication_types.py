@@ -14,7 +14,7 @@ List of classes:
 """
 
 from information import Information
-
+import numpy as np
 
 class Communication:
     def __init__(self, users: dict):
@@ -22,6 +22,23 @@ class Communication:
 
     def integrate_new_info(self):
         pass
+
+class FromFileCentralCommunication(Communication):
+    def __init__(self, users: dict, info_in_steps:list):
+        super().__init__(users)
+        self.info = np.array(info_in_steps)
+        self.step =0
+
+    def integrate_new_info(self):
+        info = Information(self.info[self.step,0:3])
+        self.step +=1
+        users_to_move = set()
+        for index in self.users:
+            u = self.users[index]
+            if u.try_to_integrate_info_bit(info):
+                users_to_move.add(index)
+        return users_to_move
+
 
 
 class CentralCommunication(Communication):

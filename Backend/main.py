@@ -9,8 +9,21 @@ sio = socketio.AsyncServer(cors_allowed_origins='*', async_mode='asgi')
 app = socketio.ASGIApp(sio)
 simulations = {}
 
-def perform_simulation(num_of_agents, num_of_steps, info_latitude, info_sharpness):
-    sim = Simulation(num_of_agents, num_of_steps, info_latitude, info_sharpness)
+def parse_data_from_frontend(data):
+    return Simulation(
+        number_of_agents=data["number_of_agents"],
+        number_of_steps=data["number_of_steps"],
+        number_of_links=data["number_of_links"],
+        mem_capacity=data["mem_capacity"],
+        friend_lose_prob=data["friend_lose_prob"],
+        communication_form=data["communication_form"],
+        inter_user_communication_form=data["inter_user_communication_form"],
+        acc_latitude=data["acc_latitude"],
+        acc_sharpness=data["acc_sharpness"]
+    )
+
+def perform_simulation(data):
+    sim = parse_data_from_frontend(data)
     res = sim.run_simulation()
     return res
 
@@ -46,12 +59,8 @@ def disconnect(sid):
 async def start_simulation(sid, data):
     print(sid)
     print(data)
-    result = perform_simulation(
-        data["num_of_users"],
-        data["num_of_steps"],
-        data["info_latitude"],
-        data["info_sharpness"])
-    await sio.emit('simulation_finished', [result, data["num_of_steps"]], room=sid)
+    result = perform_simulation(data)
+    await sio.emit('simulation_finished', [result, data["number_of_steps"]], room=sid)
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=5000, log_level="info")

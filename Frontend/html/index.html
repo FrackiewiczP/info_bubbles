@@ -19,27 +19,35 @@
                             <input type="number" class="input-field" id="agent-num" value="100"><br>
                             <label for="step-num">Liczba kroków</label>
                             <input type="number" class="input-field" id="step-num" value="100"><br>
+                            <label for="links-num">Liczba przyjaciół</label>
+                            <input type="number" class="input-field" id="links-num" value="10"><br>
                         </div>
-                        <p>Przyjmowanie nowych informacji</p>
                         <div class="input-group">
-                            <label for="info-latitude">Tolerancja</label>
-                            <input type="number" class="input-field" id="info-latitude" value="0.5" min="0" max="1" step="0.1"><br>
-                            <label for="info-sharpness">Ostrość</label>
-                            <input type="number" class="input-field" id="info-sharpness" value="5"><br>
+                            <label for="mem-capacity">Rozmiar pamięci</label>
+                            <input type="number" class="input-field" id="mem-capacity" value="10"><br>
+                            <label for="friend-lose-prob">Prawdopodobieństwo <br> utraty przyjaciela</label>
+                            <input type="number" class="input-field" id="friend-lose-prob" value="0.5" min="0" max="1" step="0.1"><br>
                         </div>
-                        <p>Przyjmowanie nowych przyjaciół</p>
+                        <p>Forma komunikacji</p>
                         <div class="input-group">
-                            <label for="friend-latitude">Tolerancja</label>
-                            <input type="number" class="input-field" id="friend-latitude" value="0.5" min="0" max="1" step="0.1"><br>
-                            <label for="friend-sharpness">Ostrość</label>
-                            <input type="number" class="input-field" id="friend-sharpness" value="5"><br>
+                            <input type="radio" name="info-sharing-mode" value="individual" id="individual" checked="checked">
+                            <label for="individual">Individualna</label><br>
+                            <input type="radio" name="info-sharing-mode" value="central" id="central">
+                            <label for="central">Centralna</label><br>
                         </div>
-                        <p>Sposób wymiany informacji</p>
+                        <p>Forma komunikacji między uzytkownikami</p>
                         <div class="input-group">
-                            <input type="radio" name="info-sharing-mode" value="one-to-one" id="one-to-one">
-                            <label for="one-to-one">Jeden do jednego</label><br>
-                            <input type="radio" name="info-sharing-mode" value="one-to-many" id="one-to-many">
-                            <label for="one-to-many">Jeden do wielu</label><br>
+                            <input type="radio" name="inter-user-sharing-mode" value="to_one_random" id="to_one_random" checked="checked">
+                            <label for="to_one_random">Jeden do jednego</label><br>
+                            <input type="radio" name="inter-user-sharing-mode" value="to_all" id="to_all">
+                            <label for="to_all">Jeden do wielu</label><br>
+                        </div>
+                        <p>Funkcja akceptacji</p>
+                        <div class="input-group">
+                            <label for="acc-latitude">Tolerancja</label>
+                            <input type="number" class="input-field" id="acc-latitude" value="0.5" min="0" max="1" step="0.1"><br>
+                            <label for="acc-sharpness">Ostrość</label>
+                            <input type="number" class="input-field" id="acc-sharpness" value="5"><br>
                         </div>
                         <div style="margin-bottom: 5px;">
                             <button type="button">Zapisz parametry</button>

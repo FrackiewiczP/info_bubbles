@@ -51,19 +51,17 @@ class TripleFilterModel(Model):
         )
 
         for i in range(self.num_of_users):
-            initial_position = np.random.rand(2) * 2 - 1
 
             a = UserAgent(
                 i,
                 self,
-                initial_position,
                 self.memory_size,
                 user_latitudes[i],
                 self.sharpness_parameter,
             )
             users[i] = a
 
-            user_positions[i] = initial_position
+            user_positions[i] = a.user_position
 
         self.website = Website(
             users,

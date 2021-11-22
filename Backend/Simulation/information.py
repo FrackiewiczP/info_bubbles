@@ -28,7 +28,7 @@ class Information:
         return self.__data[1:3]
 
     def to_numpy(self):
-        return self.__data.reshape((1, 3))
+        return self.__data.reshape((1, 3)).copy()
 
     def get_id(self):
         return self.__data[0]

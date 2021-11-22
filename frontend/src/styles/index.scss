@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+$blue-text: rgba(0, 221, 255, 1);
+$dark-background: black;
+
+body{
+    font-family: 'Lato', sans-serif;
+    color: $blue-text;
+    background-color: black;
+}
+
+button{
+    display: block;
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: $blue-text;
+    background-color: black;
+    border: 3px solid $blue-text;
+    border-radius: 10px;
+    transition: 1s;
+}
+button:hover {
+    background-color:$blue-text;
+    color:black;
+    cursor: pointer;
+}
+
+button:disabled,
+button[disabled]{
+border: 1px solid #999999;
+background-color: #cccccc;
+color: #666666;
+}

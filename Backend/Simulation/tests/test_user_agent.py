@@ -22,6 +22,7 @@ def test_overflowing_memory():
     memory = UserAgent.Memory(first_info_bit=inf1, mem_capacity=memory_capacity)
     for i in range(10):
         inf = Information()
+        print(inf.get_id())
         memory.add_new_info_bit(inf)
 
     assert memory.get_size() == memory_capacity
@@ -35,6 +36,7 @@ def test_replacing_info_when_memory_is_full():
     memory.add_new_info_bit(inf2)
     assert memory.get_size() == memory_capacity
     assert inf2.get_id() in memory.get_info_bits_ids()
+    assert inf1.get_id() not in memory.get_info_bits_ids()
 
 
 def test_calculating_mean_info_position():
@@ -53,8 +55,15 @@ def test_calculating_mean_info_position():
 
 
 def test_trying_to_integrate_info_second_time_fails(mocker):
-    # latitude so high that he tries to integrate every info_bit
-    user = UserAgent(0, mocker.MagicMock(), 10, 1, 20)
-    inf = Information()
-    assert user.try_to_integrate_info_bit(inf)
+
+    user = UserAgent(
+        unique_id=0,
+        model=mocker.MagicMock(),
+        memory_capacity=10,
+        user_latitude=1,
+        user_sharpness=20,
+    )
+
+    # trying to integrate inf that he already has
+    inf = Information(user.get_random_information().to_numpy())
     assert not user.try_to_integrate_info_bit(inf)

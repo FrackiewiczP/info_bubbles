@@ -51,7 +51,6 @@ class TripleFilterModel(Model):
         )
 
         for i in range(self.num_of_users):
-
             a = UserAgent(
                 i,
                 self,

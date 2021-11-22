@@ -7,11 +7,11 @@ const ParameterInputRadio= (props) => (
             {props.groupName}
         </div>
         <div class="border">
-            {props.values.map((value, index) => {
+            {props.options.map((value, index) => {
                 return(
                     <div class="single-option" key={index}>
                         <div class="label">{value.label}</div>
-                        <input type="radio" name={props.name} value={value.value} onChange={props.handleOnChange}/>
+                        <input type="radio" name={props.name} value={value.value} onChange={props.handleOnChange} checked={value.value === props.value}/>
                     </div>
                 );
             })}

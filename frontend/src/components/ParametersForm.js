@@ -48,9 +48,10 @@ class ParametersForm extends React.Component{
                 />
                 <ParameterInputRadio
                     name={ParametersNames.COMMUNICATION_FORM}
+                    value={this.props.parameters[ParametersNames.COMMUNICATION_FORM]}
                     groupName="Komunikacja serwisu"
                     handleOnChange={this.props.parametersHandlers[ParametersNames.COMMUNICATION_FORM]} 
-                    values={
+                    options={
                         [
                             {
                                 label: "Indywidualna",
@@ -65,9 +66,10 @@ class ParametersForm extends React.Component{
                 />
                 <ParameterInputRadio
                     name={ParametersNames.INTER_USER_COMMUNICATION_FORM}
+                    value={this.props.parameters[ParametersNames.INTER_USER_COMMUNICATION_FORM]}
                     groupName="Komunikacja między użytkownikami"
                     handleOnChange={this.props.parametersHandlers[ParametersNames.INTER_USER_COMMUNICATION_FORM]} 
-                    values={
+                    options={
                         [
                             {
                                 label: "Do jednego przyjaciela",

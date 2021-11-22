@@ -7,8 +7,8 @@ class SimulationParameters{
         number_of_links=10,
         mem_capacity=10,
         friend_lose_prob=0.1,
-        communication_form=CommunicationMode.CENTRAL,
-        inter_user_communication_form=UsersCommunicationMode.TO_ALL,
+        communication_form=CommunicationMode.INDIVIDUAL,
+        inter_user_communication_form=UsersCommunicationMode.TO_ONE_RANDOM,
         acc_latitude=0.1,
         acc_sharpness=20,
     ){

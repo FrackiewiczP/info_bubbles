@@ -1,6 +1,5 @@
 name: Run simulation tests
 on:
-  workflow_dispatch:
   push:
     branches:
       - master

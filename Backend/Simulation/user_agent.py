@@ -16,7 +16,6 @@ class UserAgent(Agent):
         self,
         unique_id,
         model,
-        initial_position,
         memory_capacity,
         user_latitude,
         user_sharpness,
@@ -25,7 +24,6 @@ class UserAgent(Agent):
         self.user_friends = list()
         self.user_latitude = user_latitude
         self.user_sharpness = user_sharpness
-        self.user_position = initial_position
         self.info_count = 0
 
         self.user_memory = self.Memory(Information(), memory_capacity)

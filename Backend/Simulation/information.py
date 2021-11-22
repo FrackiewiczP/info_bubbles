@@ -25,7 +25,7 @@ class Information:
         self.__data = data.reshape(3)
 
     def get_position(self):
-        return self.__data[1:2]
+        return self.__data[1:3]
 
     def to_numpy(self):
         return self.__data.reshape((1, 3))

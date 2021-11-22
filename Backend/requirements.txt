@@ -30,6 +30,8 @@ poyo==0.5.0
 py==1.11.0
 pyparsing==2.4.7
 pytest==6.2.5
+pytest-cov==3.0.0
+pytest-mock==3.6.1
 python-dateutil==2.8.2
 python-slugify==5.0.2
 pytz==2021.3

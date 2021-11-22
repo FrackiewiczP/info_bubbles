@@ -77,7 +77,6 @@ class UserAgent(Agent):
             :rtype: numpy.ndarray
 
             """
-
             return np.mean(self.info_bits[:, 1:3], axis=0)
 
         def get_random_information(self):

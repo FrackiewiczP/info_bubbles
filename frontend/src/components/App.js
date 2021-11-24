@@ -20,6 +20,7 @@ class App extends React.Component
             isSocketConnected: false,
             choosingParameters: false,
             simulationParameters: new SimulationParameters(),
+            waitingForSimulation: false,
         }
 
         this.parametersHandlers = {};
@@ -59,6 +60,7 @@ class App extends React.Component
                         currentSimulationData={this.state.currentSimulationData}
                         isSocketConnected={this.state.isSocketConnected}
                         maxStep={this.state.maxStep}
+                        waitingForSimulation={this.state.waitingForSimulation}
                         handleCurrentStepChange={this.handleCurrentStepChange}
                         handleChooseParametersButton={this.handleChooseParametersButton}
                         handleStartSimulationButton={this.handleStartSimulationButton}
@@ -81,6 +83,7 @@ class App extends React.Component
             currentSimulationData: data[0],
             currentStep: 1,
             maxStep: data[1],
+            waitingForSimulation: false,
         });
     }
 
@@ -102,6 +105,7 @@ class App extends React.Component
     }
 
     handleStartSimulationButton = () => {
+        this.setState({waitingForSimulation: true});
         this.socket.emit(
             "start_simulation",
             this.state.simulationParameters);

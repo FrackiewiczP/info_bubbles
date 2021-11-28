@@ -25,7 +25,8 @@ def test_central_communication(mocker):
     # number of unique inf among users that moved is equal to their
     # number ( one starting knowledge) + one central information passed by
     # CentralCommunication
-    assert len(info_ids) == len(users_to_move) + 1
+    if not len(users_to_move) == 0:
+        assert len(info_ids) == len(users_to_move) + 1
 
 
 def test_individual_communication(mocker):

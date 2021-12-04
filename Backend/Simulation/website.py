@@ -7,30 +7,34 @@ Class representing
 
 """
 
+from enum import Enum
 import random
 import tracemalloc
-
-
+from enum import Enum
 from numpy.core import numeric
 from integration_function import check_integration
 import communication_types
 import numpy as np
-
+from collections import defaultdict
 import time
 
+class InitialFriendsLinksTypes(Enum):
+    RANDOM_NON_DIRECTED =1
 
 class InitialFriendLinks:
     @staticmethod
-    def create_random_friend_links(users: dict, no_of_links: int):
-        no_of_users = len(users)
+    def create_random_non_directed_friends_links(no_of_users: int, no_of_links: int):
         tracemalloc.start()
         vertices = list(range(no_of_users))
         ranks = dict.fromkeys(vertices, 0)
+        users_friends =  dict.fromkeys(vertices)
+        for i in users_friends:
+            users_friends[i] = list()
         links = list()
         while len(vertices) > 1:
             new_link = np.random.choice(vertices, size=2, replace=False)
-            users[new_link[0]].user_friends.append(new_link[1])
-            users[new_link[1]].user_friends.append(new_link[0])
+            users_friends[new_link[0]].append(new_link[1])
+            users_friends[new_link[1]].append(new_link[0])
             links.append((new_link[0], new_link[1]))
             ranks[new_link[0]] += 1
             ranks[new_link[1]] += 1
@@ -42,26 +46,31 @@ class InitialFriendLinks:
         current, peak = tracemalloc.get_traced_memory()
         print(f"Peak memory usage was {peak / 10 ** 6} MB")
         tracemalloc.stop()
-        return links
+        return links, users_friends
 
+class InterUserCommunicationTypes(Enum):
+    TO_ONE_RANDOM = 1
+    TO_ALL = 2
 
 class InterUserCommunication:
     @staticmethod
-    def send_info_to_random_friend(users: dict, user_id: int):
-        friends = users[user_id].user_friends
+    def send_info_to_random_friend(users: dict, user_id: int, user_friends: list):
         info = users[user_id].get_random_information()
-        friend = random.choice(friends)
         users_to_move = set()
+        try:
+            friend = random.choice(user_friends)
+        except IndexError:
+            # user_friends is empty
+            return users_to_move
         if users[friend].try_to_integrate_info_bit(info):
             users_to_move.add(friend)
         return users_to_move
 
     @staticmethod
-    def send_info_to_all_friends(users: dict, user_id: int):
-        friends = users[user_id].user_friends
+    def send_info_to_all_friends(users: dict, user_id: int, user_friends: list):
         info = users[user_id].get_random_information()
         users_to_move = set()
-        for friend in friends:
+        for friend in user_friends:
             if users[friend].try_to_integrate_info_bit(info):
                 users_to_move.add(friend)
         return users_to_move
@@ -81,18 +90,22 @@ class Website:
         self.unfriend_chance = unfriend_chance
         self.links = list()
         self.users = users
+
         self.user_positions = user_positions
 
         match initial_connections:
-            case "random" : self.links = InitialFriendLinks.create_random_friend_links(users, no_of_links)
-
+            case InitialFriendsLinksTypes.RANDOM_NON_DIRECTED :
+                self.links, self.users_friends = InitialFriendLinks.create_random_non_directed_friends_links(len(users), no_of_links)
         match communication_mode:
-            case "individual" : self.communication_form = communication_types.IndividualCommunication(users)
-            case "central" : self.communication_form = communication_types.CentralCommunication(users)
-
+            case communication_types.CommunicationTypes.CENTRAL :
+                 self.communication_form = communication_types.IndividualCommunication(users)
+            case communication_types.CommunicationTypes.INDIVIDUAL :
+                 self.communication_form = communication_types.CentralCommunication(users)
         match users_communication_mode:
-            case "to_one_random" : self.users_communication = InterUserCommunication.send_info_to_random_friend
-            case "to_all" : self.users_communication = InterUserCommunication.send_info_to_all_friends
+            case InterUserCommunicationTypes.TO_ONE_RANDOM :
+                 self.users_communication = InterUserCommunication.send_info_to_random_friend
+            case InterUserCommunicationTypes.TO_ALL :
+                 self.users_communication = InterUserCommunication.send_info_to_all_friends
 
     def step(self):
         start_time = time.time()
@@ -103,7 +116,7 @@ class Website:
         np.random.shuffle(users_order)
         for i in users_order:
             users_to_moved = users_to_moved.union(
-                self.users_communication(self.users, i)
+                self.users_communication(self.users, i, self.users_friends[i])
             )
         print("sending time  --- %s seconds ---" % (time.time() - start_time))
         start_time = time.time()
@@ -141,13 +154,13 @@ class Website:
         Perform unfriending and create new friendship
         """
         # unfriending
-        self.users[user1_id].user_friends.remove(user2_id)
-        self.users[user2_id].user_friends.remove(user1_id)
+        self.users_friends[user1_id].remove(user2_id)
+        self.users_friends[user2_id].remove(user1_id)
         # creating new friendship
         possible_new_friends = set()
-        for friend in self.users[user1_id].user_friends:
+        for friend in self.users_friends[user1_id]:
             possible_new_friends = possible_new_friends.union(
-                set(self.users[friend].user_friends)
+                set(self.users_friends[friend])
             )
         if user2_id in possible_new_friends:
             possible_new_friends.remove(user2_id)
@@ -160,6 +173,6 @@ class Website:
             new_friend = random.choice(possible_new_friends)
         else:
             new_friend = random.choice(tuple(possible_new_friends))
-        self.users[user1_id].user_friends.append(new_friend)
-        self.users[new_friend].user_friends.append(user1_id)
+        self.users_friends[user1_id].append(new_friend)
+        self.users_friends[new_friend].append(user1_id)
         self.links.append((new_friend, user1_id))

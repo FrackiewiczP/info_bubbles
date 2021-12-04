@@ -14,6 +14,12 @@ List of classes:
 """
 
 from information import Information
+from enum import Enum
+
+
+class CommunicationTypes(Enum):
+    INDIVIDUAL = 1
+    CENTRAL = 2
 
 
 class Communication:

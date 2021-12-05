@@ -6,7 +6,7 @@ from model import TripleFilterModel
 if __name__ == "__main__":
     number_of_agents = 1000
 
-    number_of_steps = 1000
+    number_of_steps = 100
 
     model = TripleFilterModel(number_of_agents)
 

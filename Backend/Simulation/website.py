@@ -1,7 +1,7 @@
 """
 Module with website class
 
-Class representing
+Class representing website - environment where users learn new informations
 
 
 

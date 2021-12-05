@@ -21,6 +21,10 @@ import time
 class InitialFriendsLinksTypes(Enum):
     RANDOM_NON_DIRECTED =1
 
+class InterUserCommunicationTypes(Enum):
+    TO_ONE_RANDOM = 1
+    TO_ALL = 2
+
 class InitialFriendLinks:
     @staticmethod
     def create_random_non_directed_friends_links(no_of_users: int, no_of_links: int):
@@ -47,10 +51,6 @@ class InitialFriendLinks:
         print(f"Peak memory usage was {peak / 10 ** 6} MB")
         tracemalloc.stop()
         return links, users_friends
-
-class InterUserCommunicationTypes(Enum):
-    TO_ONE_RANDOM = 1
-    TO_ALL = 2
 
 class InterUserCommunication:
     @staticmethod
@@ -109,18 +109,18 @@ class Website:
 
     def step(self):
         start_time = time.time()
-        users_to_moved = self.communication_form.integrate_new_info()
+        users_to_move = self.communication_form.integrate_new_info()
         print("communicating time  --- %s seconds ---" % (time.time() - start_time))
         start_time = time.time()
         users_order = list(self.users.keys())
         np.random.shuffle(users_order)
         for i in users_order:
-            users_to_moved = users_to_moved.union(
+            users_to_move = users_to_move.union(
                 self.users_communication(self.users, i, self.users_friends[i])
             )
         print("sending time  --- %s seconds ---" % (time.time() - start_time))
         start_time = time.time()
-        for moved_user_id in users_to_moved:
+        for moved_user_id in users_to_move:
             user = self.users[moved_user_id]
             current_position = user.update_position()
             self.user_positions[user.unique_id] = current_position

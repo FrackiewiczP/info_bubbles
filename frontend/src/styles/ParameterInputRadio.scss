@@ -1,0 +1,39 @@
+@import './index.scss';
+$margin-bottom: 10px;
+
+.ParameterInputRadio{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: $margin-bottom;
+
+    .group-label{
+        align-self: center;
+    }
+    
+
+    .border{
+        width: 30%;
+        padding: 0;
+        border-width: 2px;
+        border-style: solid;
+        border-color: $blue-text;
+    }
+
+    .single-option{
+        input{
+            display: block;
+            align-self: center;
+        }
+        .label{
+            max-width: 50%;
+            min-width: 50%;
+            padding-left: 10px;
+            padding-bottom: 5px;
+            padding-top: 5px;
+        }
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-content: center;
+    }
+}

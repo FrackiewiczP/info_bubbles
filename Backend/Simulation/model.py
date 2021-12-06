@@ -11,8 +11,8 @@ List of models:
 import numpy as np
 import pandas as pd
 from mesa import Model
-from website import Website
-from user_agent import UserAgent
+from Simulation.website import Website
+from Simulation.user_agent import UserAgent
 
 
 class TripleFilterModel(Model):
@@ -86,3 +86,10 @@ class TripleFilterModel(Model):
         df = df.drop(["position"], axis=1)
         df["step"] = list(range(self.iterations + 1)) * self.num_of_users
         df.to_csv("positions.csv")
+    
+    def get_output(self):
+        ret = {}
+        for step in self.user_positions_in_prev:
+            ret[step] = {key: value.tolist() for key, value in self.user_positions_in_prev[step].items()}
+        return ret
+

@@ -6,9 +6,9 @@ Module with agents representing users implementations
 
 import numpy as np
 from mesa import Agent
-from information import Information
+from Simulation.information import Information
 
-from integration_function import check_integration
+from Simulation.integration_function import check_integration
 
 
 class UserAgent(Agent):

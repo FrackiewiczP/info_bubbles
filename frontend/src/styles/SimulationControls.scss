@@ -1,0 +1,19 @@
+@import './index.scss';
+
+$margin-bottom: 20px;
+
+.SimulationControls{
+    min-width: 10%;
+    width: 30%;
+
+    input{
+        width: 100%;
+        margin-bottom: $margin-bottom;
+    }
+    .simulation-step{
+        text-align: center;
+    }
+    button{
+        margin-bottom: $margin-bottom;
+    }
+}

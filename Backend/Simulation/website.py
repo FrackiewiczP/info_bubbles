@@ -12,8 +12,8 @@ import tracemalloc
 
 
 from numpy.core import numeric
-from integration_function import check_integration
-import communication_types
+from Simulation.integration_function import check_integration
+import Simulation.communication_types as communication_types
 import numpy as np
 
 import time
@@ -115,7 +115,7 @@ class Website:
         start_time = time.time()
         self.find_links_to_remove()
         print("unfriending time --- %s seconds ---" % (time.time() - start_time))
-        return self.user_positions
+        return dict(self.user_positions)
 
     def find_links_to_remove(self):
         for link in self.links:

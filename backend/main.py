@@ -2,12 +2,17 @@ import asyncio
 import socketio
 import uvicorn
 import random
+from pymongo import MongoClient
 
 from Simulation.simulation import Simulation
 
 sio = socketio.AsyncServer(cors_allowed_origins='*', async_mode='asgi')
 app = socketio.ASGIApp(sio)
+client = MongoClient("mongodb://mongodb:27017")
 simulations = {}
+
+# Test connection to db
+# print(client.server_info())
 
 def parse_data_from_frontend(data):
     return Simulation(
@@ -63,4 +68,4 @@ async def start_simulation(sid, data):
     await sio.emit('simulation_finished', [result, data["number_of_steps"]], room=sid)
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="127.0.0.1", port=5000, log_level="info")
+    uvicorn.run("main:app", host="0.0.0.0", port=5000, log_level="info")

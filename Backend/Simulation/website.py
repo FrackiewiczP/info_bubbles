@@ -27,9 +27,8 @@ class InterUserCommunicationTypes(Enum):
 
 class InitialFriendLinks:
     @staticmethod
-    def create_random_non_directed_friends_links(no_of_users: int, no_of_links: int):
+    def create_random_non_directed_friends_links(vertices: list, no_of_links: int):
         tracemalloc.start()
-        vertices = list(range(no_of_users))
         ranks = dict.fromkeys(vertices, 0)
         users_friends =  dict.fromkeys(vertices)
         for i in users_friends:
@@ -95,7 +94,7 @@ class Website:
 
         match initial_connections:
             case InitialFriendsLinksTypes.RANDOM_NON_DIRECTED :
-                self.links, self.users_friends = InitialFriendLinks.create_random_non_directed_friends_links(len(users), no_of_links)
+                self.links, self.users_friends = InitialFriendLinks.create_random_non_directed_friends_links(list(self.users.keys()), no_of_links)
         match communication_mode:
             case communication_types.CommunicationTypes.CENTRAL :
                  self.communication_form = communication_types.IndividualCommunication(users)

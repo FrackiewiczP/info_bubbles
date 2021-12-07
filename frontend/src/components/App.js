@@ -30,7 +30,7 @@ class App extends React.Component
 
         console.log(this.parametersHandlers);
 
-        this.socket = io("http://0.0.0.0:5000");
+        this.socket = io("http://localhost:5000");
         this.socket.on("connect", () => {
             console.log("Connected");
             this.handleSocketConnected();

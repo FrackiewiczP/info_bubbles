@@ -16,11 +16,11 @@ class App extends React.Component
             size: window.innerWidth/2.5 < 300 ? 300 : window.innerWidth/2.5,
             currentStep: 0,
             maxStep: 0,
-            currentSimulationData: null,
+            currentStepData: null,
             isSocketConnected: false,
             choosingParameters: false,
             simulationParameters: new SimulationParameters(),
-            waitingForSimulation: false,
+            waitingForSimulation: true,
         }
 
         this.parametersHandlers = {};
@@ -42,6 +42,9 @@ class App extends React.Component
         this.socket.on("simulation_finished", (data) => {
             this.handleSimulationFinished(data);
         });
+        this.socket.on("simulation_step_sent", (data) => {
+            this.handleSimulationStepReceived(data);
+        });
     }
 
     render(){
@@ -57,7 +60,7 @@ class App extends React.Component
                     : <Simulation
                         size={this.state.size}
                         currentStep={this.state.currentStep}
-                        currentSimulationData={this.state.currentSimulationData}
+                        currentStepData={this.state.currentStepData}
                         isSocketConnected={this.state.isSocketConnected}
                         maxStep={this.state.maxStep}
                         waitingForSimulation={this.state.waitingForSimulation}
@@ -78,17 +81,23 @@ class App extends React.Component
     }
 
     handleSimulationFinished(data){
-        console.log("Simulation finished")
+        console.log("Simulation finished");
         this.setState({
-            currentSimulationData: data[0],
-            currentStep: 1,
-            maxStep: data[1],
+            maxStep: data,
             waitingForSimulation: false,
+        });
+    }
+
+    handleSimulationStepReceived(data){
+        console.log("Simulation step received")
+        this.setState({
+            currentStepData: data
         });
     }
 
     handleCurrentStepChange = (event) => {
         this.setState({currentStep: event.target.value});
+        this.socket.emit("simulation_step_requested", event.target.value)
     }
 
     handleChooseParametersButton = () => {

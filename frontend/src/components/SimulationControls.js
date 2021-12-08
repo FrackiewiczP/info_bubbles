@@ -7,7 +7,7 @@ const SimulationControls = (props) => (
         <button onClick={props.handleChooseParametersButton}>Wybierz Parametry</button>
         <button onClick={props.handleStartSimulationButton} disabled={!props.isSocketConnected}>Rozpocznij symulację</button>
         <div className="simulation-step">Krok symulacji: {props.currentStep}</div>
-        <input type="range" value={props.currentStep} min={1} max={props.maxStep} onChange={props.handleCurrentStepChange} disabled={props.currentSimulationData == null}></input>
+        <input type="range" value={props.currentStep} min={1} max={props.maxStep} onChange={props.handleCurrentStepChange}></input>
         <ConnectionIndicator isSocketConnected={props.isSocketConnected}/>
     </div>
 )

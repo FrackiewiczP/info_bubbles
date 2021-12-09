@@ -13,7 +13,7 @@ List of classes:
 
 """
 
-from information import Information
+from Simulation.information import Information
 
 
 class Communication:

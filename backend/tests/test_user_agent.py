@@ -1,5 +1,6 @@
 from src.Simulation.user_agent import UserAgent
 from src.Simulation.information import Information
+
 import numpy as np
 
 

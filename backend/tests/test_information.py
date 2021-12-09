@@ -1,5 +1,4 @@
 from src.Simulation.information import Information
-import numpy as np
 
 
 def test_id_uniqueness():

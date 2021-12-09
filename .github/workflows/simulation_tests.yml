@@ -21,7 +21,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r Backend/requirements.txt
       - name: Run tests with pytest
-        run: pytest -x --cov=Backend/Simulation Backend/Simulation/tests | tee pytest-coverage.txt
+        run: pytest  --cov=Backend/Simulation Backend/Simulation/tests && | tee pytest-coverage.txt
       - name: Comment coverage
         uses: coroo/pytest-coverage-commentator@v1.0.2
 

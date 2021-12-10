@@ -61,12 +61,9 @@ class TripleFilterModel(Model):
         )
 
         for i in range(self.number_of_agents):
-            initial_position = np.random.rand(2) * 2 - 1
-
             a = UserAgent(
                 i,
                 self,
-                initial_position,
                 self.mem_capacity,
                 user_latitudes[i],
                 self.acc_sharpness,

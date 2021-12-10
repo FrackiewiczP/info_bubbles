@@ -1,4 +1,4 @@
-import integration_function
+import Simulation.integration_function as integration_function
 import numpy as np
 
 

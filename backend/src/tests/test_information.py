@@ -1,4 +1,4 @@
-from information import Information
+from src.Simulation.information import Information
 import numpy as np
 
 

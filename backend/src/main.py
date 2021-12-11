@@ -7,15 +7,15 @@ from pymongo import MongoClient
 from DatabaseConnection.database_connector import DatabaseConnector
 from DatabaseConnection.database_connector import CONNECTION_STRING, COLLECTION_NAME, DATABASE_NAME
 from Simulation.model import TripleFilterModel
+from Simulation.simulation_runner import SimulationRunner
 
 sio = socketio.AsyncServer(cors_allowed_origins='*', async_mode='asgi')
 app = socketio.ASGIApp(sio)
 db_reader = DatabaseConnector(CONNECTION_STRING, DATABASE_NAME, COLLECTION_NAME)
 
 def parse_data_from_frontend(socket_id, data):
-    return TripleFilterModel(
+    model = TripleFilterModel(
         number_of_agents=data["number_of_agents"],
-        number_of_steps=data["number_of_steps"],
         number_of_links=data["number_of_links"],
         mem_capacity=data["mem_capacity"],
         friend_lose_prob=data["friend_lose_prob"],
@@ -23,9 +23,14 @@ def parse_data_from_frontend(socket_id, data):
         inter_user_communication_form=data["inter_user_communication_form"],
         acc_latitude=data["acc_latitude"],
         acc_sharpness=data["acc_sharpness"],
-        db_connector=DatabaseConnector(CONNECTION_STRING, DATABASE_NAME, COLLECTION_NAME),
-        socket_id=socket_id,
     )
+    return SimulationRunner(
+        data["number_of_steps"],
+        model,
+        DatabaseConnector(CONNECTION_STRING, DATABASE_NAME, COLLECTION_NAME),
+        sio,
+        socket_id,
+        )
 
 def perform_simulation(socket_id, data):
     model = parse_data_from_frontend(socket_id, data)

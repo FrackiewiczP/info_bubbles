@@ -1,5 +1,5 @@
-from src.Simulation.user_agent import UserAgent
-from src.Simulation import communication_types
+from Simulation.user_agent import UserAgent
+from Simulation import communication_types
 
 
 def test_central_communication(mocker):

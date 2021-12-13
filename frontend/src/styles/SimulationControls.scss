@@ -6,14 +6,26 @@ $margin-bottom: 20px;
     min-width: 10%;
     width: 30%;
 
-    input{
+    input[type="number"]{
         width: 100%;
         margin-bottom: $margin-bottom;
+        text-align: center;
+        background-color: $dark-background;
+        color: $blue-text;
+        border: 3px solid $blue-text;
+        border-radius: 10px;
+        box-sizing:border-box
     }
     .simulation-step{
         text-align: center;
     }
     button{
+        margin-bottom: $margin-bottom;
+    }
+    .ConnectionIndicator{
+        margin-bottom: $margin-bottom;
+    }
+    .ProgressIndicator{
         margin-bottom: $margin-bottom;
     }
 }

@@ -30,6 +30,7 @@ class Simulation extends React.Component{
                         handleCurrentStepChange={this.props.handleCurrentStepChange}
                         handleChooseParametersButton={this.props.handleChooseParametersButton}
                         handleStartSimulationButton={this.props.handleStartSimulationButton}
+                        lastStepReceived={this.props.lastStepReceived}
                         />
                 </div>
             );
@@ -60,18 +61,6 @@ class Simulation extends React.Component{
         this.clearCanvas(ctx);
         for(const u in data){
             this.addUser(data[u][0], data[u][1], ctx);
-        }
-
-        if(this.props.waitingForSimulation)
-        {
-            ctx.rect(0,0, this.props.size, this.props.size);
-            ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
-            ctx.fill();
-           
-            ctx.font = '48px sans-serif';
-            ctx.textAlign = "center"
-            ctx.fillStyle = "rgba(255, 255, 255)"
-            ctx.fillText('Proszę czekać', this.props.size/2, this.props.size/2);
         }
     }
 }

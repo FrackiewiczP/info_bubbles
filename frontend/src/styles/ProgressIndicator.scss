@@ -1,0 +1,8 @@
+.ProgressIndicator{
+    display: flex;
+    justify-content: space-between;
+
+    .simulation-progress{
+        align-self: flex-end;
+    }
+}

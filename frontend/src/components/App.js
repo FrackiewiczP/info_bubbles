@@ -14,13 +14,13 @@ class App extends React.Component
 
         this.state = {
             size: window.innerWidth/2.5 < 300 ? 300 : window.innerWidth/2.5,
-            currentStep: 0,
-            maxStep: 0,
+            currentStep: null,
+            lastStepReceived: null,
+            maxStep: null,
             currentStepData: null,
             isSocketConnected: false,
             choosingParameters: false,
             simulationParameters: new SimulationParameters(),
-            waitingForSimulation: true,
         }
 
         this.parametersHandlers = {};
@@ -39,11 +39,14 @@ class App extends React.Component
             console.log("Disconnected");
             this.handleSocketDisconnected();
         });
-        this.socket.on("simulation_finished", (data) => {
-            this.handleSimulationFinished(data);
-        });
         this.socket.on("simulation_step_sent", (data) => {
             this.handleSimulationStepReceived(data);
+        });
+        this.socket.on("simulation_step_finished", (data) => {
+            this.handleSimulationStepFinished(data);
+        });
+        this.socket.on("simulation_already_running", () => {
+            console.log("Simulation already running");
         });
     }
 
@@ -63,7 +66,7 @@ class App extends React.Component
                         currentStepData={this.state.currentStepData}
                         isSocketConnected={this.state.isSocketConnected}
                         maxStep={this.state.maxStep}
-                        waitingForSimulation={this.state.waitingForSimulation}
+                        lastStepReceived={this.state.lastStepReceived}
                         handleCurrentStepChange={this.handleCurrentStepChange}
                         handleChooseParametersButton={this.handleChooseParametersButton}
                         handleStartSimulationButton={this.handleStartSimulationButton}
@@ -80,16 +83,16 @@ class App extends React.Component
         this.setState({isSocketConnected: false});
     }
 
-    handleSimulationFinished(data){
-        console.log("Simulation finished");
+    handleSimulationStepFinished(data){
         this.setState({
-            maxStep: data,
-            waitingForSimulation: false,
-        });
+            currentStepData: data["step_data"],
+            lastStepReceived: data["step_number"],
+            currentStep: data["step_number"],
+            maxStep: this.state.simulationParameters.number_of_steps
+        })
     }
 
     handleSimulationStepReceived(data){
-        console.log("Simulation step received")
         this.setState({
             currentStepData: data
         });
@@ -114,7 +117,6 @@ class App extends React.Component
     }
 
     handleStartSimulationButton = () => {
-        this.setState({waitingForSimulation: true});
         this.socket.emit(
             "start_simulation",
             this.state.simulationParameters);

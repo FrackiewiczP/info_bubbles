@@ -12,6 +12,7 @@ from Simulation.simulation_runner import SimulationRunner
 sio = socketio.AsyncServer(cors_allowed_origins='*', async_mode='asgi')
 app = socketio.ASGIApp(sio)
 db_reader = DatabaseConnector(CONNECTION_STRING, DATABASE_NAME, COLLECTION_NAME)
+current_simulations = set()
 
 def parse_data_from_frontend(socket_id, data):
     model = TripleFilterModel(
@@ -32,9 +33,14 @@ def parse_data_from_frontend(socket_id, data):
         socket_id,
         )
 
-def perform_simulation(socket_id, data):
+async def perform_simulation(socket_id, data):
+    if(socket_id in current_simulations):
+        await sio.emit("simulation_already_running")
+        return
+    current_simulations.add(socket_id)
     model = parse_data_from_frontend(socket_id, data)
-    model.run_simulation()
+    await model.run_simulation()
+    current_simulations.remove(socket_id)
 
 @sio.event
 async def connect(sid, environ):
@@ -48,13 +54,11 @@ def disconnect(sid):
 async def start_simulation(sid, data):
     print(sid)
     print(data)
-    perform_simulation(sid, data)
-    await sio.emit('simulation_finished', data["number_of_steps"], room=sid)
+    await perform_simulation(sid, data)
 
 @sio.event
 async def simulation_step_requested(sid, step_num):
     step = db_reader.get_simulation_step(sid, int(step_num))
-    print(f"Socket {sid} requested step {step_num}")
     await sio.emit("simulation_step_sent", step)
 
 if __name__ == "__main__":

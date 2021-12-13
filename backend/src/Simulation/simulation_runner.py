@@ -15,7 +15,7 @@ class SimulationRunner:
         self.socket_id = socket_id
         self.__iterations = 0
     
-    def run_simulation(self):
+    async def run_simulation(self):
         start_time = time()
         tracemalloc.start()
 
@@ -25,6 +25,7 @@ class SimulationRunner:
             self.__iterations += 1
             current_step_data = self.model.step()
             self.save_to_database(current_step_data)
+            await self.send_to_socket(current_step_data)
 
         print("total  --- %s seconds ---" % (time() - start_time))
         current, peak = tracemalloc.get_traced_memory()
@@ -34,3 +35,11 @@ class SimulationRunner:
     def save_to_database(self, current_step_data):
         current_step_data_with_string_keys = {str(key): list(value) for (key,value) in current_step_data.items()}
         self.db_connector.save_simulation_step(self.socket_id, self.__iterations, current_step_data_with_string_keys)
+
+    async def send_to_socket(self, current_step_data):
+        current_step_data_with_list_values = {key: list(value) for (key,value) in current_step_data.items()}
+        data_to_send = {
+            "step_number": self.__iterations,
+            "step_data": current_step_data_with_list_values
+        }
+        await self.socket_server.emit("simulation_step_finished", data_to_send, room=self.socket_id)

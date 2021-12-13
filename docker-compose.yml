@@ -1,12 +1,15 @@
 version: "3.9"
 services:
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      target: dev
     container_name: info_bubbles_backend
     depends_on:
       - mongodb
     ports:
       - 5000:5000
+      - 8888:8888
   frontend:
     build: ./frontend
     container_name: info_bubbles_frontend

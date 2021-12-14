@@ -1,4 +1,6 @@
 import React from 'react';
+import axios from 'axios';
+import FileSaver from 'file-saver';
 import '../styles/Title.scss'
 import Title from './Title';
 import Simulation from './Simulation';
@@ -70,6 +72,7 @@ class App extends React.Component
                         handleCurrentStepChange={this.handleCurrentStepChange}
                         handleChooseParametersButton={this.handleChooseParametersButton}
                         handleStartSimulationButton={this.handleStartSimulationButton}
+                        handleDownloadSimulationButton={this.handleDownloadSimulationButton}
                     />}
             </div>
         );
@@ -121,6 +124,14 @@ class App extends React.Component
             "start_simulation",
             this.state.simulationParameters);
         console.log("Event sent");
+    }
+
+    handleDownloadSimulationButton = async () => {
+        axios.get("http://localhost:5000/simulation", {
+            responseType: 'blob',
+        })
+        .then(response => FileSaver.saveAs(response.data, "main.py"))
+        .catch(response => console.log("Failure downloading a file"));
     }
 }
 

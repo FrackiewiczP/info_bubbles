@@ -1,8 +1,12 @@
 import asyncio
+import fastapi
 import socketio
 import uvicorn
 import random
 from pymongo import MongoClient
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from starlette.responses import FileResponse
 
 from DatabaseConnection.database_connector import DatabaseConnector
 from DatabaseConnection.database_connector import (
@@ -15,8 +19,17 @@ from Simulation.simulation_runner import SimulationRunner
 from Simulation.communication_types import CommunicationType
 from Simulation.website import InterUserCommunicationTypes
 
-sio = socketio.AsyncServer(cors_allowed_origins="*", async_mode="asgi")
-app = socketio.ASGIApp(sio)
+sio = socketio.AsyncServer(cors_allowed_origins='*', async_mode='asgi')
+
+fastapi_app = FastAPI()
+fastapi_app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app = socketio.ASGIApp(sio, other_asgi_app=fastapi_app)
 db_reader = DatabaseConnector(CONNECTION_STRING, DATABASE_NAME, COLLECTION_NAME)
 current_simulations = set()
 
@@ -82,6 +95,11 @@ async def start_simulation(sid, data):
 async def simulation_step_requested(sid, step_num):
     step = db_reader.get_simulation_step(sid, int(step_num))
     await sio.emit("simulation_step_sent", step)
+
+@fastapi_app.get("/simulation")
+def get_simulation():
+    print("Simulation step requested")
+    return FileResponse(path="./main.py", media_type="application/octet-stream", filename="main.py")
 
 
 if __name__ == "__main__":

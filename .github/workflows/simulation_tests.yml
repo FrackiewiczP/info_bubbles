@@ -19,12 +19,12 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r Backend/requirements.txt
+          pip install -r backend/requirements.txt
       - name: Run tests with pytest
         run: |
           set -e
           set -o pipefail
-          pytest  --cov=Backend/Simulation Backend/Simulation/tests | tee pytest-coverage.txt
+          pytest  --cov=backend/src/tests | tee pytest-coverage.txt
       - name: Comment coverage
         uses: coroo/pytest-coverage-commentator@v1.0.2
 

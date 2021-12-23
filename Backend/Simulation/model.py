@@ -11,7 +11,8 @@ List of models:
 import numpy as np
 import pandas as pd
 from mesa import Model
-from website import Website, InitialFriendsLinksTypes, InterUserCommunicationTypes
+from website import Website, InterUserCommunicationTypes
+from friend_links import FriendsLinksTypes
 from communication_types import CommunicationTypes
 from user_agent import UserAgent
 
@@ -32,7 +33,7 @@ class TripleFilterModel(Model):
         number_of_links=10,
         link_delete_prob=0.01,
         inter_user_communication_form=InterUserCommunicationTypes.TO_ONE_RANDOM,
-        initial_connections=InitialFriendsLinksTypes.RANDOM_NON_DIRECTED,
+        initial_connections=FriendsLinksTypes.RANDOM_NON_DIRECTED,
         sd_of_user_latitudes=0.2,
     ):
 

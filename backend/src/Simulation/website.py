@@ -9,12 +9,12 @@ Class representing website - environment where users learn new informations
 
 from enum import Enum
 import random
-from enum import Enum
-from numpy.core import numeric
+import numpy as np
+import time
 from Simulation.integration_function import check_integration
 import Simulation.communication_types as communication_types
 import numpy as np
-from friend_links import FriendLinks, FriendsLinksTypes
+from Simulation.friend_links import FriendLinks, FriendsLinksTypes
 import time
 
 
@@ -51,7 +51,7 @@ class Website:
         self,
         users: dict,
         no_of_links: int,
-        unfriend_chance: numeric,
+        unfriend_chance: float,
         initial_connections: str,
         communication_mode: str,
         users_communication_mode: str,

@@ -1,7 +1,6 @@
 from enum import Enum
 import tracemalloc
 import numpy as np
-from integration_function import check_integration
 import random
 
 

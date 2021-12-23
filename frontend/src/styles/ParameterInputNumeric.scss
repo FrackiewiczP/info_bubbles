@@ -1,0 +1,12 @@
+$margin-bottom: 10px;
+
+.ParameterInputNumeric{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: $margin-bottom;
+
+    input{
+        display: block;
+        width: 30%;
+    }
+}

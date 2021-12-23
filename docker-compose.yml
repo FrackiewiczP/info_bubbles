@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  backend:
+    build:
+      context: ./backend
+      target: dev
+    container_name: info_bubbles_backend
+    depends_on:
+      - mongodb
+    ports:
+      - 5000:5000
+      - 8888:8888
+  frontend:
+    build: ./frontend
+    container_name: info_bubbles_frontend
+    depends_on:
+      - backend
+    ports:
+      - 3000:3000
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo_info_bubbles:/data/db
+volumes:
+  mongo_info_bubbles:
+    driver: local

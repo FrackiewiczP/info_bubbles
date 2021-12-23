@@ -97,9 +97,9 @@ class Website:
                 self.links, self.users_friends = InitialFriendLinks.create_random_non_directed_friends_links(list(self.users.keys()), no_of_links)
         match communication_mode:
             case communication_types.CommunicationTypes.CENTRAL :
-                 self.communication_form = communication_types.IndividualCommunication(users)
-            case communication_types.CommunicationTypes.INDIVIDUAL :
                  self.communication_form = communication_types.CentralCommunication(users)
+            case communication_types.CommunicationTypes.INDIVIDUAL :
+                 self.communication_form = communication_types.IndividualCommunication(users)
         match users_communication_mode:
             case InterUserCommunicationTypes.TO_ONE_RANDOM :
                  self.users_communication = InterUserCommunication.send_info_to_random_friend

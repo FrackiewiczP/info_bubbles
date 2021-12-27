@@ -47,7 +47,7 @@ class FriendLinks:
         if user1_id in possible_new_friends:
             possible_new_friends.remove(user1_id)
         if len(possible_new_friends) == 0:
-            possible_new_friends = list(range(len(self.users)))
+            possible_new_friends = list(self.__users_friends.keys())
             possible_new_friends.remove(user1_id)
             possible_new_friends.remove(user2_id)
             new_friend = random.choice(possible_new_friends)

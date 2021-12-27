@@ -13,7 +13,7 @@ import pandas as pd
 from mesa import Model
 from Simulation.website import Website, InterUserCommunicationTypes
 from Simulation.friend_links import FriendsLinksTypes
-from Simulation.communication_types import CommunicationTypes
+from Simulation.communication_types import CommunicationType
 from Simulation.user_agent import UserAgent
 
 
@@ -26,7 +26,7 @@ class TripleFilterModel(Model):
     def __init__(
         self,
         num_of_users,
-        communication_form=CommunicationTypes.INDIVIDUAL,
+        communication_form=CommunicationType.INDIVIDUAL,
         latitude_of_acceptance=0.5,
         sharpness_parameter=20,
         memory_size=10,
@@ -77,14 +77,7 @@ class TripleFilterModel(Model):
         self.user_positions_in_prev[0] = dict(user_positions)
 
     def step(self):
-        self.iterations += 1
-        self.user_positions_in_prev[self.iterations] = self.website.step()
-
-    def save_output(self):
-        df = pd.DataFrame.from_dict(self.user_positions_in_prev, orient="index")
-        df = df.melt(value_vars=df.columns, value_name="position", var_name="agent_id")
-        df["x_pos"] = df.position.apply(lambda x: x[0])
-        df["y_pos"] = df.position.apply(lambda x: x[1])
-        df = df.drop(["position"], axis=1)
-        df["step"] = list(range(self.iterations + 1)) * self.num_of_users
-        df.to_csv("positions.csv")
+        # website.step returns a dict, where
+        # key - userId
+        # value - 1x2 numpy array with user's position
+        return self.website.step()

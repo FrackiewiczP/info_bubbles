@@ -12,6 +12,8 @@ from DatabaseConnection.database_connector import (
 )
 from Simulation.model import TripleFilterModel
 from Simulation.simulation_runner import SimulationRunner
+from Simulation.communication_types import CommunicationType
+from Simulation.website import InterUserCommunicationTypes
 
 sio = socketio.AsyncServer(cors_allowed_origins="*", async_mode="asgi")
 app = socketio.ASGIApp(sio)
@@ -20,13 +22,23 @@ current_simulations = set()
 
 
 def parse_data_from_frontend(socket_id, data):
+    match data["communication_form"]:
+        case "individual":
+            communication_form = CommunicationType.INDIVIDUAL
+        case "central":
+            communication_form = CommunicationType.CENTRAL
+    match data["inter_user_communication_form"]:
+        case "to_one_random":
+            inter_user_communication_form= InterUserCommunicationTypes.TO_ONE_RANDOM
+        case "to_all":
+            inter_user_communication_form = InterUserCommunicationTypes.TO_ALL
     model = TripleFilterModel(
         num_of_users=data["number_of_agents"],
         number_of_links=data["number_of_links"],
         memory_size=data["mem_capacity"],
         link_delete_prob=data["friend_lose_prob"],
-        communication_form=data["communication_form"],
-        inter_user_communication_form=data["inter_user_communication_form"],
+        communication_form=communication_form,
+        inter_user_communication_form=inter_user_communication_form,
         latitude_of_acceptance=data["acc_latitude"],
         sharpness_parameter=data["acc_sharpness"],
     )

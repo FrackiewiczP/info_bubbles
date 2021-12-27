@@ -66,9 +66,9 @@ class Website:
             case FriendsLinksTypes.RANDOM_NON_DIRECTED :
                 self.friend_links = FriendLinks(FriendsLinksTypes.RANDOM_NON_DIRECTED, list(self.users.keys()), no_of_links)
         match communication_mode:
-            case communication_types.CommunicationTypes.CENTRAL :
+            case communication_types.CommunicationType.CENTRAL :
                  self.communication_form = communication_types.CentralCommunication(users)
-            case communication_types.CommunicationTypes.INDIVIDUAL :
+            case communication_types.CommunicationType.INDIVIDUAL :
                  self.communication_form = communication_types.IndividualCommunication(users)
         match users_communication_mode:
             case InterUserCommunicationTypes.TO_ONE_RANDOM :

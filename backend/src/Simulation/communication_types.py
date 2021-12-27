@@ -17,7 +17,7 @@ from enum import Enum
 from Simulation.information import Information
 
 
-class CommunicationTypes(Enum):
+class CommunicationType(Enum):
     INDIVIDUAL = 1
     CENTRAL = 2
 

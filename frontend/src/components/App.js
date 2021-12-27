@@ -127,10 +127,10 @@ class App extends React.Component
     }
 
     handleDownloadSimulationButton = async () => {
-        axios.get("http://localhost:5000/simulation", {
+        axios.get("http://localhost:5000/simulation?socket_id="+this.socket.id, {
             responseType: 'blob',
         })
-        .then(response => FileSaver.saveAs(response.data, "main.py"))
+        .then(response => FileSaver.saveAs(response.data, "simulation.csv"))
         .catch(response => console.log("Failure downloading a file"));
     }
 }

@@ -112,8 +112,8 @@ class FilterDistantCommunication(Communication):
 
     def generate_distant_position(self, user_position, user_latitude):
         while True:
-            position = np.random.sample(2)
+            position = np.random.sample(2) * 2 - 1
             if (position[0] - user_position[0]) ** 2 + (
                 position[1] - user_position[1]
-            ) ** 2 <= user_latitude ** 2:
+            ) ** 2 > user_latitude ** 2:
                 return position

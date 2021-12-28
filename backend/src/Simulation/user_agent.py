@@ -21,7 +21,6 @@ class UserAgent(Agent):
         user_sharpness,
     ):
         super().__init__(unique_id, model)
-        self.user_friends = list()
         self.user_latitude = user_latitude
         self.user_sharpness = user_sharpness
         self.info_count = 0

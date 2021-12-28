@@ -13,7 +13,13 @@ List of classes:
 
 """
 
+from enum import Enum
 from Simulation.information import Information
+
+
+class CommunicationType(Enum):
+    INDIVIDUAL = 1
+    CENTRAL = 2
 
 
 class Communication:

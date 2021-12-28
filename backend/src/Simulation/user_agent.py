@@ -21,12 +21,12 @@ class UserAgent(Agent):
         user_sharpness,
     ):
         super().__init__(unique_id, model)
-        self.user_latitude = user_latitude
-        self.user_sharpness = user_sharpness
+        self.latitude = user_latitude
+        self.sharpness = user_sharpness
         self.info_count = 0
 
-        self.user_memory = self.Memory(Information(), memory_capacity)
-        self.user_position = self.user_memory.calculate_user_position()
+        self.memory = self.Memory(Information(), memory_capacity)
+        self.position = self.memory.calculate_user_position()
 
     class Memory:
         """
@@ -94,7 +94,7 @@ class UserAgent(Agent):
             return self.info_bits[:, 0]
 
     def get_random_information(self):
-        return self.user_memory.get_random_information()
+        return self.memory.get_random_information()
 
     def update_position(self):
         """
@@ -103,7 +103,7 @@ class UserAgent(Agent):
         :return: new user position on political spectrum
         :rtype: numpy.ndarray
         """
-        self.user_position = self.user_memory.calculate_user_position()
+        self.user_position = self.memory.calculate_user_position()
 
         return self.user_position
 
@@ -124,15 +124,15 @@ class UserAgent(Agent):
         """
 
         # if user already knows this info
-        if info_bit.get_id() in self.user_memory.get_info_bits_ids():
+        if info_bit.get_id() in self.memory.get_info_bits_ids():
             return False
         if check_integration(
-            self.user_position,
-            info_bit.get_position(),
-            self.user_latitude,
-            self.user_sharpness,
+            self.position,
+            info_bit.position,
+            self.latitude,
+            self.sharpness,
         ):
-            self.user_memory.add_new_info_bit(info_bit)
+            self.memory.add_new_info_bit(info_bit)
             return True
         else:
             return False

@@ -56,18 +56,20 @@ class IndividualCommunication(Communication):
     In each simulation step it returns different new Information for every user
     """
 
-    def integrate_new_info(self):
+    def integrate_new_info(self, information_position_func=None):
         users_to_move = set()
         for user_id in self.users:
             u = self.users[user_id]
             info = Information()
+            if information_position_func != None:
+                info.position = information_position_func(u.position, u.latitude)
             u.try_to_integrate_info_bit(info)
             if u.try_to_integrate_info_bit(info):
                 users_to_move.add(user_id)
         return users_to_move
 
 
-class FilterCloseCommunication(Communication):
+class FilterCloseCommunication(IndividualCommunication):
     """
     Filter close form od communication.
 
@@ -76,14 +78,7 @@ class FilterCloseCommunication(Communication):
     """
 
     def integrate_new_info(self):
-        users_to_move = set()
-        for user_id in self.users:
-            u = self.users[user_id]
-            info = Information()
-            info.position = self.generate_close_position(u.position, u.latitude)
-            if u.try_to_integrate_info_bit(info):
-                users_to_move.add(user_id)
-        return users_to_move
+        super().integrate_new_info(self.generate_close_position)
 
     def generate_close_position(self, user_position, user_latitude):
         alpha = math.pi * np.random.rand() * 2
@@ -92,7 +87,7 @@ class FilterCloseCommunication(Communication):
         return np.array([x_position, y_position])
 
 
-class FilterDistantCommunication(Communication):
+class FilterDistantCommunication(IndividualCommunication):
     """
     Filter distant form od communication.
 
@@ -101,14 +96,7 @@ class FilterDistantCommunication(Communication):
     """
 
     def integrate_new_info(self):
-        users_to_move = set()
-        for user_id in self.users:
-            u = self.users[user_id]
-            info = Information()
-            info.position = self.generate_distant_position(u.position, u.latitude)
-            if u.try_to_integrate_info_bit(info):
-                users_to_move.add(user_id)
-        return users_to_move
+        super().integrate_new_info(self.generate_distant_position())
 
     def generate_distant_position(self, user_position, user_latitude):
         while True:

@@ -59,17 +59,18 @@ class FriendLinks:
 
     @staticmethod
     def create_random_non_directed_friends_links(vertices: list, no_of_links: int,procent_of_the_same_group:int,no_of_grups:int):
-        in_each_group = int(len(vertices) / no_of_grups)
-        in_same_group = int((no_of_links * procent_of_the_same_group) / 100)
+        no_of_links = no_of_links / 2
+        in_each_group = (len(vertices) / no_of_grups)
+        in_same_group = ((no_of_links * procent_of_the_same_group) / 100)
         # TODO błąd przy niemożliwości spełnienia warunków
         graph = np.zeros((len(vertices), len(vertices)))
         for gr in range(no_of_grups):
-            start = gr * in_each_group  # włącznie
-            stop = (gr + 1) * in_each_group  # wyłacznie
+            start = int(gr * in_each_group)  # włącznie
+            stop = int((gr + 1) * in_each_group)  # wyłacznie
             if gr == no_of_grups:
                 stop = len(vertices)
             # in the same group
-            for po in range(in_same_group):
+            for po in range(int(in_same_group * (stop - start))):
                 a = 0
                 b = 0
                 while a == b or graph[a, b] == 1:
@@ -83,7 +84,7 @@ class FriendLinks:
                 choice.extend(range(0, start))
             if gr != no_of_grups:
                 choice.extend(range(stop, len(vertices)))
-            for po in range(no_of_links - in_same_group):
+            for po in range(int((no_of_links - in_same_group) * (stop - start))):
                 lin = [0, 0]
                 while lin[1] == lin[0] or graph[lin[0], lin[1]] == 1:
                     lin = random.sample(choice, k=2)

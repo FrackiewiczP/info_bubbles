@@ -2,8 +2,8 @@ from Simulation.friend_links import FriendLinks
 
 
 def test_creating_initial_connections_random__non_directed():
-    no_of_links = 8
-    no_of_users = 200
+    no_of_links = 4
+    no_of_users = 100
     no_of_groups = 4
     percent = 80
 
@@ -12,7 +12,8 @@ def test_creating_initial_connections_random__non_directed():
     )
 
     # is number of links ok
-    assert len(links) == no_of_links * no_of_users
+    assert len(links) > (no_of_links * no_of_users / 2) - (len(links) * 0.1)
+    assert len(links) < (no_of_links * no_of_users / 2) + (len(links) * 0.1)
     for it in users_friends:
         for it2 in users_friends[it]:
             # there is no links to myself

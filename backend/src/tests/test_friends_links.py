@@ -12,8 +12,8 @@ def test_creating_initial_connections_random__non_directed():
     )
 
     # is number of links ok
-    assert len(links) > (no_of_links * no_of_users / 2) - (len(links) * 0.1)
-    assert len(links) < (no_of_links * no_of_users / 2) + (len(links) * 0.1)
+    assert len(links) > (no_of_links * no_of_users) - (len(links) * 0.1)
+    assert len(links) < (no_of_links * no_of_users) + (len(links) * 0.1)
     for it in users_friends:
         for it2 in users_friends[it]:
             # there is no links to myself

@@ -24,7 +24,7 @@ jobs:
         run: |
           set -e
           set -o pipefail
-          pytest  --cov=backend/src/tests | tee pytest-coverage.txt
+          pytest --cov=backend/src/tests | tee pytest-coverage.txt
       - name: Comment coverage
         uses: coroo/pytest-coverage-commentator@v1.0.2
 

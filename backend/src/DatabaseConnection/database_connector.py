@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+import pymongo
 
 CONNECTION_STRING="mongodb://mongodb:27017"
 DATABASE_NAME="info_bubbles"
@@ -28,3 +29,15 @@ class DatabaseConnector:
     
     def delete_previous_simulation_of_socket(self, socket_id):
         self.__collection.delete_many({SOCKET_ID_KEY: socket_id})
+    
+    def get_number_of_steps_for_socket(self, socket_id):
+        res = self.__collection.find_one(
+            {
+                SOCKET_ID_KEY: socket_id,
+            },
+            sort=[(STEP_NUM_KEY, pymongo.DESCENDING)]
+        )
+        if res is None:
+            return None
+        else:
+            return res[STEP_NUM_KEY]

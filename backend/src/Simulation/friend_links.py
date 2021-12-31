@@ -10,13 +10,13 @@ class FriendsLinksTypes(Enum):
 
 class FriendLinks:
     def __init__(
-        self, links_type: FriendsLinksTypes, vertices: list, no_of_links: int
+            self, links_type: FriendsLinksTypes, vertices: list, no_of_links: int,procent_of_the_same_group:int,no_of_grups:int
     ) -> None:
         if links_type == FriendsLinksTypes.RANDOM_NON_DIRECTED:
             (
                 self.__links,
                 self.__users_friends,
-            ) = self.create_random_non_directed_friends_links(vertices, no_of_links)
+            ) = self.create_random_non_directed_friends_links(vertices, no_of_links,procent_of_the_same_group,no_of_grups)
 
     @property
     def links(self):
@@ -58,26 +58,48 @@ class FriendLinks:
         self.__links.append((new_friend, user1_id))
 
     @staticmethod
-    def create_random_non_directed_friends_links(vertices: list, no_of_links: int):
-        tracemalloc.start()
-        ranks = dict.fromkeys(vertices, 0)
+    def create_random_non_directed_friends_links(vertices: list, no_of_links: int,procent_of_the_same_group:int,no_of_grups:int):
+        in_each_group = int(len(vertices) / no_of_grups)
+        in_same_group = int((no_of_links * procent_of_the_same_group) / 100)
+        # TODO błąd przy niemożliwości spełnienia warunków
+        graph = np.zeros((len(vertices), len(vertices)))
+        for gr in range(no_of_grups):
+            start = gr * in_each_group  # włącznie
+            stop = (gr + 1) * in_each_group  # wyłacznie
+            if gr == no_of_grups:
+                stop = len(vertices)
+            # in the same group
+            for po in range(in_same_group):
+                a = 0
+                b = 0
+                while a == b or graph[a, b] == 1:
+                    a = random.randrange(start, stop)
+                    b = random.randrange(start, stop)
+                graph[a, b] = 1
+                graph[b, a] = 1
+            # in different groups
+            choice = list()
+            if gr != 0:
+                choice.extend(range(0, start))
+            if gr != no_of_grups:
+                choice.extend(range(stop, len(vertices)))
+            for po in range(no_of_links - in_same_group):
+                lin = [0, 0]
+                while lin[1] == lin[0] or graph[lin[0], lin[1]] == 1:
+                    lin = random.sample(choice, k=2)
+                graph[lin[0], lin[1]] = 1
+                graph[lin[1], lin[0]] = 1
+        # tu zmenić na to co zwracamy
+        links = list()
         users_friends = dict.fromkeys(vertices)
         for i in users_friends:
             users_friends[i] = list()
-        links = list()
-        while len(vertices) > 1:
-            new_link = np.random.choice(vertices, size=2, replace=False)
-            users_friends[new_link[0]].append(new_link[1])
-            users_friends[new_link[1]].append(new_link[0])
-            links.append((new_link[0], new_link[1]))
-            ranks[new_link[0]] += 1
-            ranks[new_link[1]] += 1
-            if ranks[new_link[0]] == no_of_links:
-                vertices.remove(new_link[0])
-            if ranks[new_link[1]] == no_of_links:
-                vertices.remove(new_link[1])
-
-        current, peak = tracemalloc.get_traced_memory()
-        print(f"Peak memory usage was {peak / 10 ** 6} MB")
-        tracemalloc.stop()
+        for x in range(len(vertices)):
+            for y in range(len(vertices)):
+                if (graph[x, y] == 1):
+                    users_friends[vertices[x]].append(vertices[y])
+        for x in range(len(vertices)):
+            for y in range(x, len(vertices)):
+                if(graph[x,y]==1):
+                    links.append((vertices[x], vertices[y]))
         return links, users_friends

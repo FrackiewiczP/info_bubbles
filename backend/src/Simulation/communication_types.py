@@ -78,7 +78,7 @@ class FilterCloseCommunication(IndividualCommunication):
     """
 
     def integrate_new_info(self):
-        super().integrate_new_info(self.generate_close_position)
+        return super().integrate_new_info(self.generate_close_position)
 
     def generate_close_position(self, user_position, user_latitude):
         r = user_latitude * math.sqrt(np.random.rand())
@@ -105,7 +105,7 @@ class FilterDistantCommunication(IndividualCommunication):
     """
 
     def integrate_new_info(self):
-        super().integrate_new_info(self.generate_distant_position)
+        return super().integrate_new_info(self.generate_distant_position)
 
     def generate_distant_position(self, user_position, user_latitude):
         while True:

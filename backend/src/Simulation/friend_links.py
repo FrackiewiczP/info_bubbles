@@ -10,13 +10,13 @@ class FriendsLinksTypes(Enum):
 
 class FriendLinks:
     def __init__(
-            self, links_type: FriendsLinksTypes, vertices: list, no_of_links: int,procent_of_the_same_group:int,no_of_grups:int
+            self, links_type: FriendsLinksTypes, vertices: list, no_of_links: int,percent_of_the_same_group:int,no_of_groups:int
     ) -> None:
         if links_type == FriendsLinksTypes.RANDOM_NON_DIRECTED:
             (
                 self.__links,
                 self.__users_friends,
-            ) = self.create_random_non_directed_friends_links(vertices, no_of_links,procent_of_the_same_group,no_of_grups)
+            ) = self.create_random_non_directed_friends_links(vertices, no_of_links,percent_of_the_same_group, no_of_groups)
 
     @property
     def links(self):
@@ -62,8 +62,11 @@ class FriendLinks:
         no_of_links = no_of_links / 2
         in_each_group = (len(vertices) / no_of_grups)
         in_same_group = ((no_of_links * procent_of_the_same_group) / 100)
-        # TODO błąd przy niemożliwości spełnienia warunków
-        graph = np.zeros((len(vertices), len(vertices)))
+        if in_each_group < in_same_group or in_each_group < no_of_links - in_same_group:
+            raise Exception("bad paramets")
+        graph = dict()
+        for x in range(len(vertices)):
+            graph[x] = dict()
         for gr in range(no_of_grups):
             start = int(gr * in_each_group)  # włącznie
             stop = int((gr + 1) * in_each_group)  # wyłacznie
@@ -73,11 +76,16 @@ class FriendLinks:
             for po in range(int(in_same_group * (stop - start))):
                 a = 0
                 b = 0
-                while a == b or graph[a, b] == 1:
+                while a == b:
                     a = random.randrange(start, stop)
                     b = random.randrange(start, stop)
-                graph[a, b] = 1
-                graph[b, a] = 1
+                    try:
+                        if graph[a][b] == 1:
+                            a = b
+                    except KeyError:
+                        pass
+                graph[a][b] = 1
+                graph[b][a] = 1
             # in different groups
             choice = list()
             if gr != 0:
@@ -86,21 +94,24 @@ class FriendLinks:
                 choice.extend(range(stop, len(vertices)))
             for po in range(int((no_of_links - in_same_group) * (stop - start))):
                 lin = [0, 0]
-                while lin[1] == lin[0] or graph[lin[0], lin[1]] == 1:
+                while lin[1] == lin[0]:
                     lin = random.sample(choice, k=2)
-                graph[lin[0], lin[1]] = 1
-                graph[lin[1], lin[0]] = 1
-        # tu zmenić na to co zwracamy
+                    try:
+                        if graph[lin[0]][lin[1]] == 1:
+                            lin[1] = lin[0]
+                    except KeyError:
+                        pass
+                graph[lin[0]][lin[1]] = 1
+                graph[lin[1]][lin[0]] = 1
+
+        # translating to user keys
         links = list()
         users_friends = dict.fromkeys(vertices)
         for i in users_friends:
             users_friends[i] = list()
-        for x in range(len(vertices)):
-            for y in range(len(vertices)):
-                if (graph[x, y] == 1):
-                    users_friends[vertices[x]].append(vertices[y])
-        for x in range(len(vertices)):
-            for y in range(x, len(vertices)):
-                if(graph[x,y]==1):
-                    links.append((vertices[x], vertices[y]))
+        for k,v in graph.items():
+            for x in v.keys():
+                users_friends[vertices[k]].append(vertices[x])
+                if x < k:
+                    links.append((vertices[x], vertices[k]))
         return links, users_friends

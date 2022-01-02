@@ -8,12 +8,12 @@ def test_creating_initial_connections_random__non_directed():
     percent = 80
 
     links, users_friends = FriendLinks.create_random_non_directed_friends_links(
-        list(range(200)), no_of_links, percent, no_of_groups
+        list(range(no_of_users)), no_of_links, percent, no_of_groups
     )
 
     # is number of links ok
-    assert len(links) > (no_of_links * no_of_users) - (len(links) * 0.1)
-    assert len(links) < (no_of_links * no_of_users) + (len(links) * 0.1)
+    assert len(links) > (no_of_links * no_of_users / 2) - (len(links) * 0.1)
+    assert len(links) < (no_of_links * no_of_users / 2) + (len(links) * 0.1)
     for it in users_friends:
         for it2 in users_friends[it]:
             # there is no links to myself

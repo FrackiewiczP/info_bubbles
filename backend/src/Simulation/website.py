@@ -116,7 +116,7 @@ class Website:
         latitude = self.users[user1_id].user_latitude
         sharpness = self.users[user1_id].user_sharpness
         if check_integration(user1_pos, user2_pos, latitude, sharpness):
-            return True
-        return False
+            return False
+        return True
 
     

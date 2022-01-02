@@ -35,8 +35,8 @@ class TripleFilterModel(Model):
         inter_user_communication_form=InterUserCommunicationTypes.TO_ONE_RANDOM,
         initial_connections=FriendsLinksTypes.RANDOM_NON_DIRECTED,
         sd_of_user_latitudes=0.2,
-        procent_of_the_same_group = 80,
-        no_of_groups =4
+        percent_of_the_same_group=80,
+        no_of_groups=4
     ):
 
         self.num_of_users = num_of_users
@@ -74,7 +74,7 @@ class TripleFilterModel(Model):
             communication_form,
             inter_user_communication_form,
             user_positions,
-            procent_of_the_same_group,
+            percent_of_the_same_group,
             no_of_groups
         )
 

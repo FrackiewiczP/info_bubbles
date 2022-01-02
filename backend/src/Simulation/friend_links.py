@@ -16,11 +16,15 @@ class FriendLinks:
             (
                 self.__links,
                 self.__users_friends,
+                self.__user_groups
             ) = self.create_random_non_directed_friends_links(vertices, no_of_links,percent_of_the_same_group, no_of_groups)
-
     @property
     def links(self):
         return self.__links
+
+    @property
+    def groups(self):
+        return self.__user_groups
 
     def __getitem__(self, user_id):
         return self.__users_friends[user_id]
@@ -58,19 +62,21 @@ class FriendLinks:
         self.__links.append((new_friend, user1_id))
 
     @staticmethod
-    def create_random_non_directed_friends_links(vertices: list, no_of_links: int,procent_of_the_same_group:int,no_of_grups:int):
+    def create_random_non_directed_friends_links(vertices: list, no_of_links: int, percent_of_the_same_group:int, no_of_groups:int):
         no_of_links = no_of_links / 2
-        in_each_group = (len(vertices) / no_of_grups)
-        in_same_group = ((no_of_links * procent_of_the_same_group) / 100)
+        in_each_group = (len(vertices) / no_of_groups)
+        in_same_group = ((no_of_links * percent_of_the_same_group) / 100)
         if in_each_group < in_same_group or in_each_group < no_of_links - in_same_group:
             raise Exception("bad paramets")
         graph = dict()
+        users_in_groups = dict()
         for x in range(len(vertices)):
             graph[x] = dict()
-        for gr in range(no_of_grups):
+        for gr in range(no_of_groups):
             start = int(gr * in_each_group)  # włącznie
             stop = int((gr + 1) * in_each_group)  # wyłacznie
-            if gr == no_of_grups:
+            users_in_groups[gr] = list(vertices[start:stop])
+            if gr == no_of_groups:
                 stop = len(vertices)
             # in the same group
             for po in range(int(in_same_group * (stop - start))):
@@ -90,7 +96,7 @@ class FriendLinks:
             choice = list()
             if gr != 0:
                 choice.extend(range(0, start))
-            if gr != no_of_grups:
+            if gr != no_of_groups:
                 choice.extend(range(stop, len(vertices)))
             for po in range(int((no_of_links - in_same_group) * (stop - start))):
                 lin = [0, 0]
@@ -114,4 +120,4 @@ class FriendLinks:
                 users_friends[vertices[k]].append(vertices[x])
                 if x < k:
                     links.append((vertices[x], vertices[k]))
-        return links, users_friends
+        return links, users_friends, users_in_groups

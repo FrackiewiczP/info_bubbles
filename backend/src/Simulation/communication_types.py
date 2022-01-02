@@ -138,12 +138,12 @@ class FilterDistantCommunication(IndividualCommunication):
                     y_position = np.random.rand() * (y_circle_2 + 1) - 1
                     return np.array([x_position, y_position])
                 if y_circle_2 <= -1:
-                    y_position = np.random.rand() * (1 - y_circle_1) - y_circle_1
+                    y_position = np.random.rand() * (1 - y_circle_1) + y_circle_1
                     return np.array([x_position, y_position])
                 # i can choose y cordiante "below circle" or "over a circle"
                 # I randomly choose which to return
                 if np.random.rand() < 0.5:
                     y_position = np.random.rand() * (y_circle_2 + 1) - 1
                     return np.array([x_position, y_position])
-                y_position = np.random.rand() * (1 - y_circle_1) - y_circle_1
+                y_position = np.random.rand() * (1 - y_circle_1) + y_circle_1
                 return np.array([x_position, y_position])

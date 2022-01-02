@@ -2,6 +2,9 @@ from Simulation.model import TripleFilterModel
 from Simulation.communication_types import CommunicationType
 from Simulation.website import InterUserCommunicationTypes
 
+# These tests are run manualy
+# They assure us that simulation runs without any runtime errors
+
 
 def run_model(num_of_steps: int, model: TripleFilterModel):
     for i in range(num_of_steps):

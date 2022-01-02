@@ -70,6 +70,10 @@ class Website:
                  self.communication_form = communication_types.CentralCommunication(users)
             case communication_types.CommunicationType.INDIVIDUAL :
                  self.communication_form = communication_types.IndividualCommunication(users)
+            case communication_types.CommunicationType.FILTER_DISTANT:
+                self.communication_form = communication_types.FilterDistantCommunication(users)
+            case communication_types.CommunicationType.FILTER_CLOSE:
+                self.communication_form = communication_types.FilterCloseCommunication(users)
         match users_communication_mode:
             case InterUserCommunicationTypes.TO_ONE_RANDOM :
                  self.users_communication = InterUserCommunication.send_info_to_random_friend

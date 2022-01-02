@@ -27,6 +27,10 @@ def parse_data_from_frontend(socket_id, data):
             communication_form = CommunicationType.INDIVIDUAL
         case "central":
             communication_form = CommunicationType.CENTRAL
+        case "filter_distant":
+            communication_form = CommunicationType.FILTER_DISTANT
+        case "filter_close":
+            communication_form = CommunicationType.FILTER_CLOSE
     match data["inter_user_communication_form"]:
         case "to_one_random":
             inter_user_communication_form= InterUserCommunicationTypes.TO_ONE_RANDOM

@@ -84,15 +84,9 @@ class FilterCloseCommunication(IndividualCommunication):
         r = user_latitude * math.sqrt(np.random.rand())
         alpha = math.pi * np.random.rand() * 2
         x_position = math.cos(alpha) * r + user_position[0]
-        if x_position < -1:
-            x_position = -1
-        if x_position > 1:
-            x_position = 1
+        x_position = math.min(math.max(-1, x_position), 1)
         y_position = math.sin(alpha) * r + user_position[1]
-        if y_position > 1:
-            y_position = 1
-        if y_position < -1:
-            y_position = -1
+        y_position = math.min(math.max(-1, y_position), 1)
         return np.array([x_position, y_position])
 
 

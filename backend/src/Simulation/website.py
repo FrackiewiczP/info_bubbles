@@ -11,6 +11,8 @@ from enum import Enum
 import random
 import numpy as np
 import time
+
+from numpy.core.fromnumeric import mean
 from Simulation.integration_function import check_integration
 import Simulation.communication_types as communication_types
 import numpy as np
@@ -89,6 +91,7 @@ class Website:
             )
         print("sending time  --- %s seconds ---" % (time.time() - start_time))
         start_time = time.time()
+        prev_positions = dict(self.user_positions)
         for moved_user_id in users_to_move:
             user = self.users[moved_user_id]
             current_position = user.update_position()
@@ -97,10 +100,20 @@ class Website:
         start_time = time.time()
         self.find_links_to_remove()
         print("unfriending time --- %s seconds ---" % (time.time() - start_time))
-        return dict(self.user_positions)
+        mean_fluctuation = self.calculate_mean_fluctuation(prev_positions)
+        return dict(self.user_positions), list(self.links), mean_fluctuation
+    
+    @property
+    def links(self):
+        return self.friend_links.links
+
+    def calculate_mean_fluctuation(self, prev_positions: dict):
+        fluctuations = [ np.linalg.norm(self.user_positions[key] - prev_positions[key] ) for key in self.user_positions.keys()]
+        mean_fluctuation = sum(fluctuations)/ len(fluctuations)
+        return mean_fluctuation
 
     def find_links_to_remove(self):
-        for link in self.friend_links.links:
+        for link in self.links:
             if np.random.rand(1) <= self.unfriend_chance:
                 if self.try_to_unfriend_users(link[0], link[1]):
                     self.friend_links.delete_link(link)

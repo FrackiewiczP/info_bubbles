@@ -1,4 +1,3 @@
-
 from time import time
 import socketio
 import tracemalloc
@@ -9,12 +8,12 @@ from DatabaseConnection.database_connector import DatabaseConnector
 class SimulationRunner:
     def __init__(self, number_of_steps, model, db_connector, socket_server, socket_id):
         self.number_of_steps = number_of_steps
-        self.model:TripleFilterModel = model
-        self.db_connector:DatabaseConnector = db_connector
-        self.socket_server:socketio.AsyncServer = socket_server
+        self.model: TripleFilterModel = model
+        self.db_connector: DatabaseConnector = db_connector
+        self.socket_server: socketio.AsyncServer = socket_server
         self.socket_id = socket_id
         self.__iterations = 0
-    
+
     async def run_simulation(self):
         start_time = time()
         tracemalloc.start()
@@ -31,15 +30,21 @@ class SimulationRunner:
         current, peak = tracemalloc.get_traced_memory()
         print(f"Peak memory usage was {peak / 10 ** 6} MB")
         tracemalloc.stop()
-    
+
     def save_to_database(self, current_step_data):
-        current_step_data_with_string_keys = {str(key): list(value) for (key,value) in current_step_data.items()}
-        self.db_connector.save_simulation_step(self.socket_id, self.__iterations, current_step_data_with_string_keys)
+        self.db_connector.save_simulation_step(
+            self.socket_id, self.__iterations, current_step_data
+        )
 
     async def send_to_socket(self, current_step_data):
-        current_step_data_with_list_values = {key: list(value) for (key,value) in current_step_data.items()}
+        current_step_data_with_list_values = {
+            key: list(value)
+            for (key, value) in current_step_data.users_positions.items()
+        }
         data_to_send = {
             "step_number": self.__iterations,
-            "step_data": current_step_data_with_list_values
+            "step_data": current_step_data_with_list_values,
         }
-        await self.socket_server.emit("simulation_step_finished", data_to_send, room=self.socket_id)
+        await self.socket_server.emit(
+            "simulation_step_finished", data_to_send, room=self.socket_id
+        )

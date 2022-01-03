@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 import pymongo
+from Simulation.model import StepData
 
 CONNECTION_STRING = "mongodb://mongodb:27017"
 DATABASE_NAME = "info_bubbles"
@@ -30,7 +31,7 @@ class DatabaseConnector:
             fluctuation_collection_name
         ]
 
-    def save_simulation_step(self, socket_id, step_num, data_to_add):
+    def save_simulation_step(self, socket_id, step_num, data_to_add: StepData):
         pos_to_add = {
             SOCKET_ID_KEY: socket_id,
             STEP_NUM_KEY: step_num,

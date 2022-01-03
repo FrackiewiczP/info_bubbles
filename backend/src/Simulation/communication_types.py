@@ -103,8 +103,9 @@ class FilterDistantCommunication(IndividualCommunication):
 
     def generate_distant_position(self, user_position, user_latitude):
         while True:
-            # it may occur that on certain random x cordinate it won't be
-            # possible to choose y cordinate outside a cricle, tat's why it's inside while loop
+            # if it is possible to find y_position for x_position generated below
+            # then function will return such x,y position
+            # if not then x_position will be generated again
             x_position = np.random.rand() * 2 - 1
             distance_to_center = abs(x_position - user_position[0])
             if distance_to_center > user_latitude:

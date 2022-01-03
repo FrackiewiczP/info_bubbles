@@ -22,9 +22,9 @@ def test_creating_from_ndarray_and_getters():
     data = np.array([id, x_cord, y_cord])
     inf = Information(data)
     assert inf.get_id() == id
-    assert inf.get_position()[0] == x_cord
-    assert inf.get_position()[1] == y_cord
-    assert inf.get_position().shape == (2,)
+    assert inf.position[0] == x_cord
+    assert inf.position[1] == y_cord
+    assert inf.position.shape == (2,)
 
 
 def test_eq():

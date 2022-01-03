@@ -24,8 +24,13 @@ class Information:
 
         self.__data = data.reshape(3)
 
-    def get_position(self):
+    @property
+    def position(self):
         return self.__data[1:3]
+
+    @position.setter
+    def position(self, pos):
+        self.__data[1:3] = pos
 
     def to_numpy(self):
         return self.__data.reshape((1, 3)).copy()

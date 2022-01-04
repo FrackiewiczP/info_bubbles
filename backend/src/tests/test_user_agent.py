@@ -42,11 +42,11 @@ def test_replacing_info_when_memory_is_full():
 def test_calculating_mean_info_position():
     no_of_inf = 10
     inf1 = Information()
-    positions = [inf1.get_position()]
+    positions = [inf1.position]
     memory = UserAgent.Memory(first_info_bit=inf1, mem_capacity=no_of_inf)
     for i in range(no_of_inf - 1):
         inf = Information()
-        positions.append(inf.get_position())
+        positions.append(inf.position)
         memory.add_new_info_bit(inf)
     total_x = sum(position[0] for position in positions)
     total_y = sum(position[1] for position in positions)

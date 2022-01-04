@@ -64,7 +64,7 @@ class TripleFilterModel(Model):
             )
             users[i] = a
 
-            user_positions[i] = a.user_position
+            user_positions[i] = a.position
 
         self.website = Website(
             users,

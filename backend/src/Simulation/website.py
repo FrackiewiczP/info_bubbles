@@ -72,6 +72,10 @@ class Website:
                  self.communication_form = communication_types.CentralCommunication(users)
             case communication_types.CommunicationType.INDIVIDUAL :
                  self.communication_form = communication_types.IndividualCommunication(users)
+            case communication_types.CommunicationType.FILTER_DISTANT:
+                self.communication_form = communication_types.FilterDistantCommunication(users)
+            case communication_types.CommunicationType.FILTER_CLOSE:
+                self.communication_form = communication_types.FilterCloseCommunication(users)
         match users_communication_mode:
             case InterUserCommunicationTypes.TO_ONE_RANDOM :
                  self.users_communication = InterUserCommunication.send_info_to_random_friend
@@ -111,10 +115,10 @@ class Website:
         """
         Check if one user wants to unfriend other
         """
-        user1_pos = self.users[user1_id].user_position
-        user2_pos = self.users[user2_id].user_position
-        latitude = self.users[user1_id].user_latitude
-        sharpness = self.users[user1_id].user_sharpness
+        user1_pos = self.users[user1_id].position
+        user2_pos = self.users[user2_id].position
+        latitude = self.users[user1_id].latitude
+        sharpness = self.users[user1_id].sharpness
         if check_integration(user1_pos, user2_pos, latitude, sharpness):
             return False
         return True

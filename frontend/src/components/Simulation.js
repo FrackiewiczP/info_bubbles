@@ -30,6 +30,7 @@ class Simulation extends React.Component{
                         handleCurrentStepChange={this.props.handleCurrentStepChange}
                         handleChooseParametersButton={this.props.handleChooseParametersButton}
                         handleStartSimulationButton={this.props.handleStartSimulationButton}
+                        handleDownloadSimulationButton={this.props.handleDownloadSimulationButton}
                         lastStepReceived={this.props.lastStepReceived}
                         />
                 </div>

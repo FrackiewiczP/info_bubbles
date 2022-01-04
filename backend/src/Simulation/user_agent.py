@@ -85,8 +85,8 @@ class UserAgent(Agent):
             )
 
         def get_info_bits_ids(self):
-            if self.size == 0:
-                return list()
+            # if self.size == 0:
+            #     return list()
             return self.info_bits[: self.size, 0]
 
     def get_random_information(self):

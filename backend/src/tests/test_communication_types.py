@@ -19,7 +19,7 @@ def test_central_communication(mocker):
     users_to_move = central.integrate_new_info()
     info_ids = set()
     for i in users_to_move:
-        assert users[i].memory.get_size() == 2
+        assert users[i].memory.size == 1
         for id in users[i].memory.get_info_bits_ids():
             info_ids.add(id)
 
@@ -27,7 +27,7 @@ def test_central_communication(mocker):
     # number ( one starting knowledge) + one central information passed by
     # CentralCommunication
     if not len(users_to_move) == 0:
-        assert len(info_ids) == len(users_to_move) + 1
+        assert len(info_ids) == 1
 
 
 def test_individual_communication(mocker):
@@ -46,14 +46,14 @@ def test_individual_communication(mocker):
     users_to_move = central.integrate_new_info()
     info_ids = set()
     for i in users_to_move:
-        assert users[i].memory.get_size() == 2
+        assert users[i].memory.size == 1
         for id in users[i].memory.get_info_bits_ids():
             info_ids.add(id)
 
     # number of unique inf among users that moved is equal to 2*their
     # number (one starting knowledge + one individual information passed by
     # IndividualCommunication_
-    assert len(info_ids) == 2 * len(users_to_move)
+    assert len(info_ids) == len(users_to_move)
 
 
 def test_filter_close_communication():

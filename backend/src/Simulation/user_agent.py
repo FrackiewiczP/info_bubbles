@@ -25,27 +25,19 @@ class UserAgent(Agent):
         self.sharpness = user_sharpness
         self.info_count = 0
 
-        self.memory = self.Memory(Information(), memory_capacity)
-        self.position = self.memory.calculate_user_position()
+        self.memory = self.Memory(memory_capacity)
+        # self.position = self.memory.calculate_user_position()
+        self.position = np.random.rand(2) * 2 - 1
 
     class Memory:
         """
         Internal class representing user memory and providing methods to modify and read it
         """
 
-        def __init__(self, first_info_bit: Information, mem_capacity: int):
+        def __init__(self, mem_capacity: int):
             self.mem_capacity = mem_capacity
-            self.info_bits = first_info_bit.to_numpy()
-
-        def get_size(self):
-            """
-            Returns number of info_bits currently saved in memory
-
-            :return:   number of info_bits in memory
-            :rtype: int
-            """
-
-            return self.info_bits.shape[0]
+            self.info_bits = np.zeros(shape=(mem_capacity, 3))
+            self.size = 0
 
         def add_new_info_bit(self, info_bit: Information):
 
@@ -57,16 +49,16 @@ class UserAgent(Agent):
             on political spectrum
             :type info_bit: numpy.ndarray
             """
+
             # removing random info_bit if memory is full
 
-            if self.get_size() >= self.mem_capacity:
+            if self.size >= self.mem_capacity:
                 info_bit_to_remove = np.random.randint(self.mem_capacity)
                 self.info_bits[info_bit_to_remove] = info_bit.to_numpy()
             # appending memory with new info otherwise
             else:
-                self.info_bits = np.concatenate(
-                    [self.info_bits, info_bit.to_numpy()], axis=0
-                )
+                self.info_bits[self.size] = info_bit.to_numpy()
+                self.size += 1
 
         def calculate_user_position(self):
             """
@@ -76,7 +68,7 @@ class UserAgent(Agent):
             :rtype: numpy.ndarray
 
             """
-            return np.mean(self.info_bits[:, 1:3], axis=0)
+            return np.mean(self.info_bits[: self.size, 1:3], axis=0)
 
         def get_random_information(self):
             """
@@ -86,12 +78,16 @@ class UserAgent(Agent):
             :rtype: Information
 
             """
+            if self.size == 0:
+                return None
             return Information(
-                self.info_bits[np.random.randint(self.get_size()), :].reshape((1, 3))
+                self.info_bits[np.random.randint(self.size), :].reshape((1, 3))
             )
 
         def get_info_bits_ids(self):
-            return self.info_bits[:, 0]
+            if self.size == 0:
+                return list()
+            return self.info_bits[: self.size, 0]
 
     def get_random_information(self):
         return self.memory.get_random_information()

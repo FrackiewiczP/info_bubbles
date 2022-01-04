@@ -56,6 +56,8 @@ class Website:
         communication_mode: str,
         users_communication_mode: str,
         user_positions: dict,
+        percent_of_the_same_group: int,
+        no_of_groups: int
     ):
         self.unfriend_chance = unfriend_chance
         self.users = users
@@ -64,7 +66,7 @@ class Website:
 
         match initial_connections:
             case FriendsLinksTypes.RANDOM_NON_DIRECTED :
-                self.friend_links = FriendLinks(FriendsLinksTypes.RANDOM_NON_DIRECTED, list(self.users.keys()), no_of_links)
+                self.friend_links = FriendLinks(FriendsLinksTypes.RANDOM_NON_DIRECTED, list(self.users.keys()), no_of_links, percent_of_the_same_group,no_of_groups)
         match communication_mode:
             case communication_types.CommunicationType.CENTRAL :
                  self.communication_form = communication_types.CentralCommunication(users)
@@ -118,7 +120,7 @@ class Website:
         latitude = self.users[user1_id].latitude
         sharpness = self.users[user1_id].sharpness
         if check_integration(user1_pos, user2_pos, latitude, sharpness):
-            return True
-        return False
+            return False
+        return True
 
     

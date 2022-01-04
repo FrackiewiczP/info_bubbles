@@ -13,7 +13,7 @@ import numpy as np
 import time
 
 from numpy.core.fromnumeric import mean
-from Simulation.integration_function import check_integration
+from Simulation.integration_function import check_link_integration
 import Simulation.communication_types as communication_types
 import numpy as np
 from Simulation.friend_links import FriendLinks, FriendsLinksTypes
@@ -124,9 +124,8 @@ class Website:
 
     def find_links_to_remove(self):
         for link in self.links:
-            if np.random.rand(1) <= self.unfriend_chance:
-                if self.try_to_unfriend_users(link[0], link[1]):
-                    self.friend_links.delete_link(link)
+            if self.try_to_unfriend_users(link[0], link[1]):
+                self.friend_links.delete_link(link)
 
     def try_to_unfriend_users(self, user1_id: int, user2_id: int):
         """
@@ -136,7 +135,7 @@ class Website:
         user2_pos = self.users[user2_id].position
         latitude = self.users[user1_id].latitude
         sharpness = self.users[user1_id].sharpness
-        if check_integration(user1_pos, user2_pos, latitude, sharpness):
+        if check_link_integration(user1_pos, user2_pos, latitude, sharpness, self.unfriend_chance):
             return False
         return True
 

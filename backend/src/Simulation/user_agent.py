@@ -25,26 +25,26 @@ class UserAgent(Agent):
         self.sharpness = user_sharpness
         self.info_count = 0
 
-        self.memory = self.Memory(Information(), memory_capacity)
-        self.position = self.memory.calculate_user_position()
-        self.mean_info_dist = self.memory.calculate_mean_distance(self.position)
+        self.memory = self.Memory(memory_capacity)
+        # self.position = self.memory.calculate_user_position()
+        self.position = np.random.rand(2) * 2 - 1
 
     class Memory:
         """
         Internal class representing user memory and providing methods to modify and read it
         """
 
-        def __init__(self, first_info_bit: Information, mem_capacity: int):
+        def __init__(self, mem_capacity: int):
             self.mem_capacity = mem_capacity
             self.info_bits = np.zeros(shape=(mem_capacity, 3))
             self.size = 0
-            self.add_new_info_bit(first_info_bit)
 
         def add_new_info_bit(self, info_bit: Information):
 
             """
             Saves new info_bit in user memory, if memory is full
             it replace one random info_bit from memory with the new one.
+
             :param info_bit: matrix with information id and coordinates
             on political spectrum
             :type info_bit: numpy.ndarray
@@ -63,16 +63,20 @@ class UserAgent(Agent):
         def calculate_user_position(self):
             """
             Calculates user position based on positions of info_bits in user memory
+
             :return: new user position on political spectrum
             :rtype: numpy.ndarray
+
             """
             return np.mean(self.info_bits[: self.size, 1:3], axis=0)
 
         def get_random_information(self):
             """
             Creates Information based on random row from info_bits
+
             :return: New Information based on existing one
             :rtype: Information
+
             """
             if self.size == 0:
                 return None
@@ -81,15 +85,9 @@ class UserAgent(Agent):
             )
 
         def get_info_bits_ids(self):
-            # if self.size == 0:
-            #     return list()
+            if self.size == 0:
+                return list()
             return self.info_bits[: self.size, 0]
-
-        def calculate_mean_distance(self, position):
-            distances = np.linalg.norm(
-                self.info_bits[: self.size, 1:3] - position, axis=1
-            )
-            return np.mean(distances)
 
     def get_random_information(self):
         return self.memory.get_random_information()
@@ -101,9 +99,9 @@ class UserAgent(Agent):
         :return: new user position on political spectrum
         :rtype: numpy.ndarray
         """
-        self.position = self.memory.calculate_user_position()
-        self.mean_info_dist = self.memory.calculate_mean_distance(self.position)
-        return self.position
+        self.user_position = self.memory.calculate_user_position()
+
+        return self.user_position
 
     def try_to_integrate_info_bit(self, info_bit: Information):
 

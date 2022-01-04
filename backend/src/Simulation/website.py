@@ -30,6 +30,8 @@ class InterUserCommunication:
     def send_info_to_random_friend(users: dict, user_id: int, user_friends: list):
         info = users[user_id].get_random_information()
         users_to_move = set()
+        if info is None:
+            return users_to_move
         try:
             friend = random.choice(user_friends)
         except IndexError:
@@ -43,6 +45,8 @@ class InterUserCommunication:
     def send_info_to_all_friends(users: dict, user_id: int, user_friends: list):
         info = users[user_id].get_random_information()
         users_to_move = set()
+        if info is None:
+            return users_to_move
         for friend in user_friends:
             if users[friend].try_to_integrate_info_bit(info):
                 users_to_move.add(friend)

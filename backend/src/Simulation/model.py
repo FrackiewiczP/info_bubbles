@@ -81,7 +81,26 @@ class TripleFilterModel(Model):
         self.user_positions_in_prev[0] = dict(user_positions)
 
     def step(self):
-        # website.step returns a dict, where
+        # website.step returns 3 things:
+        # 1. dict, where
         # key - userId
         # value - 1x2 numpy array with user's position
-        return self.website.step()
+        # 2. list of every link in simulation
+        #   every element is pair of userID between which link exist
+        # 3. mean fluctuation of users in step
+
+        return StepData(self.website.step())
+
+
+class StepData:
+    """
+    Class representing data from one simulation step
+
+    """
+
+    def __init__(self, data) -> None:
+        self.users_positions = {
+            str(key): list(value) for (key, value) in data[0].items()
+        }
+        self.links = [(int(link[0]), int(link[1])) for link in data[1]]
+        self.mean_fluctuation = float(data[2])

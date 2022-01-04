@@ -1,41 +1,73 @@
 from pymongo import MongoClient
 import pymongo
+from Simulation.model import StepData
 
-CONNECTION_STRING="mongodb://mongodb:27017"
-DATABASE_NAME="info_bubbles"
-COLLECTION_NAME="simulations"
-SOCKET_ID_KEY="socket_id"
-STEP_NUM_KEY="step_num"
-DATA_KEY="data"
+CONNECTION_STRING = "mongodb://mongodb:27017"
+DATABASE_NAME = "info_bubbles"
+POSITIONS_COLLECTION_NAME = "positons"
+LINKS_COLLECTION_NAME = "links"
+FLUCTUATION_COLLECTION_NAME = "fluctuation"
+SOCKET_ID_KEY = "socket_id"
+STEP_NUM_KEY = "step_num"
+DATA_KEY = "data"
+
 
 class DatabaseConnector:
-    def __init__(self, connection_string, db_name, collection_name):
-        self.__collection = MongoClient(connection_string)[db_name][collection_name]
-    
-    def save_simulation_step(self, socket_id, step_num, data_to_add):
-        to_add = {
+    def __init__(
+        self,
+        connection_string,
+        db_name,
+        positions_collection_name,
+        links_collection_name,
+        fluctuation_collection_name,
+    ):
+        self.__positions_collection = MongoClient(connection_string)[db_name][
+            positions_collection_name
+        ]
+        self.__links_collection = MongoClient(connection_string)[db_name][
+            links_collection_name
+        ]
+        self.__fluctuation_collection = MongoClient(connection_string)[db_name][
+            fluctuation_collection_name
+        ]
+
+    def save_simulation_step(self, socket_id, step_num, data_to_add: StepData):
+        pos_to_add = {
             SOCKET_ID_KEY: socket_id,
             STEP_NUM_KEY: step_num,
-            DATA_KEY: data_to_add,
+            DATA_KEY: data_to_add.users_positions,
         }
-        self.__collection.insert_one(to_add)
+        self.__positions_collection.insert_one(pos_to_add)
+        links_to_add = {
+            SOCKET_ID_KEY: socket_id,
+            STEP_NUM_KEY: step_num,
+            DATA_KEY: data_to_add.links,
+        }
+        self.__links_collection.insert_one(links_to_add)
+        fluc_to_add = {
+            SOCKET_ID_KEY: socket_id,
+            STEP_NUM_KEY: step_num,
+            DATA_KEY: data_to_add.mean_fluctuation,
+        }
+        self.__fluctuation_collection.insert_one(fluc_to_add)
 
     def get_simulation_step(self, socket_id, step_num):
-        return self.__collection.find_one(
+        return self.__positions_collection.find_one(
             {
                 SOCKET_ID_KEY: socket_id,
                 STEP_NUM_KEY: step_num,
-            })[DATA_KEY]
-    
+            }
+        )[DATA_KEY]
+
     def delete_previous_simulation_of_socket(self, socket_id):
-        self.__collection.delete_many({SOCKET_ID_KEY: socket_id})
-    
+        self.__positions_collection.delete_many({SOCKET_ID_KEY: socket_id})
+
     def get_number_of_steps_for_socket(self, socket_id):
-        res = self.__collection.find_one(
+        res = self.__positions_collection.find_one(
             {
                 SOCKET_ID_KEY: socket_id,
             },
-            sort=[(STEP_NUM_KEY, pymongo.DESCENDING)]
+            sort=[(STEP_NUM_KEY, pymongo.DESCENDING)],
         )
         if res is None:
             return None

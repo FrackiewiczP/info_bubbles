@@ -14,7 +14,9 @@ from starlette.responses import FileResponse
 from DatabaseConnection.database_connector import DatabaseConnector
 from DatabaseConnection.database_connector import (
     CONNECTION_STRING,
-    COLLECTION_NAME,
+    POSITIONS_COLLECTION_NAME,
+    LINKS_COLLECTION_NAME,
+    FLUCTUATION_COLLECTION_NAME,
     DATABASE_NAME,
 )
 from Simulation.model import TripleFilterModel
@@ -34,7 +36,7 @@ fastapi_app.add_middleware(
 )
 
 app = socketio.ASGIApp(sio, other_asgi_app=fastapi_app)
-db_reader = DatabaseConnector(CONNECTION_STRING, DATABASE_NAME, COLLECTION_NAME)
+db_reader = DatabaseConnector(CONNECTION_STRING, DATABASE_NAME, POSITIONS_COLLECTION_NAME, LINKS_COLLECTION_NAME, FLUCTUATION_COLLECTION_NAME)
 current_simulations = set()
 
 
@@ -66,7 +68,7 @@ def parse_data_from_frontend(socket_id, data):
     return SimulationRunner(
         data["number_of_steps"],
         model,
-        DatabaseConnector(CONNECTION_STRING, DATABASE_NAME, COLLECTION_NAME),
+        DatabaseConnector(CONNECTION_STRING, DATABASE_NAME, POSITIONS_COLLECTION_NAME, LINKS_COLLECTION_NAME, FLUCTUATION_COLLECTION_NAME),
         sio,
         socket_id,
     )

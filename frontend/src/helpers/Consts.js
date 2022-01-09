@@ -8,4 +8,10 @@ const UsersCommunicationMode={
     TO_ALL: "to_all",
 }
 
-export {CommunicationMode, UsersCommunicationMode};
+const MainViewState={
+    SIMULATION_VIEW: 1,
+    CHOOSING_PARAMETERS: 2,
+    CHARTS_VIEW: 3,
+}
+
+export {CommunicationMode, UsersCommunicationMode, MainViewState};

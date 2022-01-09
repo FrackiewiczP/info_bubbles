@@ -64,6 +64,8 @@ def parse_data_from_frontend(socket_id, data):
         inter_user_communication_form=inter_user_communication_form,
         latitude_of_acceptance=data["acc_latitude"],
         sharpness_parameter=data["acc_sharpness"],
+        percent_of_the_same_group=data["percent_of_the_same_group"],
+        no_of_groups=data["no_of_groups"]
     )
     return SimulationRunner(
         data["number_of_steps"],
@@ -96,8 +98,7 @@ def disconnect(sid):
 
 @sio.event
 async def start_simulation(sid, data):
-    print(sid)
-    print(data)
+    print(f"Socket {sid} requested simulation with data {data}")
     await perform_simulation(sid, data)
 
 

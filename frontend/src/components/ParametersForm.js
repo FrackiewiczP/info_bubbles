@@ -46,6 +46,16 @@ class ParametersForm extends React.Component{
                     value={this.props.parameters[ParametersNames.ACC_SHARPNESS]}
                     handleOnChange={this.props.parametersHandlers[ParametersNames.ACC_SHARPNESS]}    
                 />
+                <ParameterInputNumeric
+                    label="Liczba grup"
+                    value={this.props.parameters[ParametersNames.NO_OF_GROUPS]}
+                    handleOnChange={this.props.parametersHandlers[ParametersNames.NO_OF_GROUPS]}    
+                />
+                <ParameterInputNumeric
+                    label="Procent znajomych w tej samej grupie"
+                    value={this.props.parameters[ParametersNames.PERCENT_OF_THE_SAME_GROUP]}
+                    handleOnChange={this.props.parametersHandlers[ParametersNames.PERCENT_OF_THE_SAME_GROUP]}    
+                />
                 <ParameterInputRadio
                     name={ParametersNames.COMMUNICATION_FORM}
                     value={this.props.parameters[ParametersNames.COMMUNICATION_FORM]}

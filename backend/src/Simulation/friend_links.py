@@ -73,8 +73,8 @@ class FriendLinks:
         for x in range(len(vertices)):
             graph[x] = dict()
         for gr in range(no_of_groups):
-            start = int(gr * in_each_group)  # włącznie
-            stop = int((gr + 1) * in_each_group)  # wyłacznie
+            start = int(gr * in_each_group)  # inclusive
+            stop = int((gr + 1) * in_each_group)  # exclusive
             users_in_groups[gr] = list(vertices[start:stop])
             if gr == no_of_groups:
                 stop = len(vertices)

@@ -62,13 +62,15 @@ class SimulationRunner:
                 )
                 distances[str(link[0])].append(distance)
                 distances[str(link[1])].append(distance)
-            mean_distances = list()
+            number_of_dist = 0
+            sum_of_mean_dists = 0
             for id in distances:
                 try:
-                    mean_distances.append(sum(distances[id]) / len(distances[id]))
+                    sum_of_mean_dists += sum(distances[id]) / len(distances[id])
+                    number_of_dist += 1
                 except ZeroDivisionError:
                     continue
-            mean_distance_in_step = sum(mean_distances) / len(mean_distances)
+            mean_distance_in_step = sum_of_mean_dists / number_of_dist
             self.db_connector.save_mean_distance_to_friends(
                 self.socket_id, i, mean_distance_in_step
             )

@@ -11,7 +11,7 @@ def test_addding_info_bit_to_memory():
     memory.add_new_info_bit(inf2)
     memory.add_new_info_bit(inf3)
 
-    assert memory.get_size() == 3
+    assert memory.size == 3
     assert inf2.get_id() in memory.get_info_bits_ids()
     assert inf3.get_id() in memory.get_info_bits_ids()
 
@@ -25,7 +25,7 @@ def test_overflowing_memory():
         print(inf.get_id())
         memory.add_new_info_bit(inf)
 
-    assert memory.get_size() == memory_capacity
+    assert memory.size == memory_capacity
 
 
 def test_replacing_info_when_memory_is_full():
@@ -34,7 +34,7 @@ def test_replacing_info_when_memory_is_full():
     memory = UserAgent.Memory(first_info_bit=inf1, mem_capacity=memory_capacity)
     inf2 = Information()
     memory.add_new_info_bit(inf2)
-    assert memory.get_size() == memory_capacity
+    assert memory.size == memory_capacity
     assert inf2.get_id() in memory.get_info_bits_ids()
     assert inf1.get_id() not in memory.get_info_bits_ids()
 

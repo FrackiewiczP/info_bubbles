@@ -100,7 +100,7 @@ class Website:
         prev_positions = dict(self.user_positions)
         for moved_user_id in users_to_move:
             user = self.users[moved_user_id]
-            current_position = user.update_position()
+            current_position, current_mean_dist = user.update_position()
             self.user_positions[user.unique_id] = current_position
         print("recalculating time--- %s seconds ---" % (time.time() - start_time))
         start_time = time.time()

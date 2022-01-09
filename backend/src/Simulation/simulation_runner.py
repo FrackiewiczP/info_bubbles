@@ -55,16 +55,18 @@ class SimulationRunner:
             links = self.db_connector.get_links_from_step(self.socket_id, i)
             print(type(links))
             user_positions = self.db_connector.get_simulation_step(self.socket_id, i)
-            distances = {id: [] for id in user_positions.keys()}
+            distances = {str(id): [] for id in user_positions.keys()}
             for link in links:
                 distance = np.linalg.norm(
-                    user_positions[link[0]] - user_positions[link[1]]
+                    np.array(user_positions[str(link[0])])
+                    - np.array(user_positions[str(link[1])])
                 )
-                distances[link[0]].append(distance)
-                distances[link[1]].append(distance)
+                distances[str(link[0])].append(distance)
+                distances[str(link[1])].append(distance)
             mean_distances = list()
             for id in distances:
-                mean_distances.append(sum(distances[id]) / len(distances[id]))
+                if len(distances[id]) != 0:
+                    mean_distances.append(sum(distances[id]) / len(distances[id]))
             mean_distance_in_step = sum(mean_distances) / len(mean_distances)
             self.db_connector.save_mean_distance_to_friends(
                 self.socket_id, i, mean_distance_in_step

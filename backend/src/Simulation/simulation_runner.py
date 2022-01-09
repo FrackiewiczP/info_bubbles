@@ -53,7 +53,6 @@ class SimulationRunner:
     async def calculate_mean_distance_to_friends(self):
         for i in range(1, self.number_of_steps + 1):
             links = self.db_connector.get_links_from_step(self.socket_id, i)
-            print(type(links))
             user_positions = self.db_connector.get_simulation_step(self.socket_id, i)
             distances = {str(id): [] for id in user_positions.keys()}
             for link in links:

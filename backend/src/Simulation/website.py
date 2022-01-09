@@ -136,7 +136,7 @@ class Website:
         latitude = self.users[user1_id].latitude
         sharpness = self.users[user1_id].sharpness
         if check_link_integration(user1_pos, user2_pos, latitude, sharpness, self.unfriend_chance):
-            return False
-        return True
+            return True
+        return False
 
     

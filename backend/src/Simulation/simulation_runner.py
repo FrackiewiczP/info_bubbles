@@ -2,6 +2,7 @@ from time import time
 import socketio
 import tracemalloc
 from Simulation.model import TripleFilterModel
+import numpy as np
 from DatabaseConnection.database_connector import DatabaseConnector
 
 
@@ -48,3 +49,23 @@ class SimulationRunner:
         await self.socket_server.emit(
             "simulation_step_finished", data_to_send, room=self.socket_id
         )
+
+    async def calculate_mean_distance_to_friends(self):
+        for i in range(1, self.number_of_steps + 1):
+            links = self.db_connector.get_links_from_step(self.socket_id, i)
+            print(type(links))
+            user_positions = self.db_connector.get_simulation_step(self.socket_id, i)
+            distances = {id: [] for id in user_positions.keys()}
+            for link in links:
+                distance = np.linalg.norm(
+                    user_positions[link[0]] - user_positions[link[1]]
+                )
+                distances[link[0]].append(distance)
+                distances[link[1]].append(distance)
+            mean_distances = list()
+            for id in distances:
+                mean_distances.append(sum(distances[id]) / len(distances[id]))
+            mean_distance_in_step = sum(mean_distances) / len(mean_distances)
+            self.db_connector.save_mean_distance_to_friends(
+                self.socket_id, i, mean_distance_in_step
+            )

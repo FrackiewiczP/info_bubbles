@@ -36,7 +36,7 @@ class TripleFilterModel(Model):
         initial_connections=FriendsLinksTypes.RANDOM_NON_DIRECTED,
         sd_of_user_latitudes=0.2,
         percent_of_the_same_group=80,
-        no_of_groups=4
+        no_of_groups=4,
     ):
 
         self.num_of_users = num_of_users
@@ -75,7 +75,7 @@ class TripleFilterModel(Model):
             inter_user_communication_form,
             user_positions,
             percent_of_the_same_group,
-            no_of_groups
+            no_of_groups,
         )
 
         self.user_positions_in_prev[0] = dict(user_positions)
@@ -104,3 +104,4 @@ class StepData:
         }
         self.links = [(int(link[0]), int(link[1])) for link in data[1]]
         self.mean_fluctuation = float(data[2])
+        self.mean_dist_to_infos = float(data[3])

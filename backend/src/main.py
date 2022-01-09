@@ -82,6 +82,7 @@ async def perform_simulation(socket_id, data):
     current_simulations.add(socket_id)
     model = parse_data_from_frontend(socket_id, data)
     await model.run_simulation()
+    # TODO : move calculating mean distance to friends to seperate event
     await model.calculate_mean_distance_to_friends()
     current_simulations.remove(socket_id)
 

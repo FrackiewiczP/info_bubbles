@@ -70,7 +70,10 @@ class SimulationRunner:
                     number_of_dist += 1
                 except ZeroDivisionError:
                     continue
-            mean_distance_in_step = sum_of_mean_dists / number_of_dist
+            try:
+                mean_distance_in_step = sum_of_mean_dists / number_of_dist
+            except ZeroDivisionError:
+                mean_distance_in_step = 0
             self.db_connector.save_mean_distance_to_friends(
                 self.socket_id, i, mean_distance_in_step
             )

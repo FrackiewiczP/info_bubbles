@@ -92,7 +92,7 @@ class ParametersForm extends React.Component{
                         ]
                     }
                 />
-                <button onClick={this.props.handleChooseParametersButton}>Widok symulacji</button>
+                <button onClick={this.props.handleSeeSimulationButton}>Widok symulacji</button>
             </div>
         );
     }

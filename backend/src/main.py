@@ -18,6 +18,7 @@ from DatabaseConnection.database_connector import (
     LINKS_COLLECTION_NAME,
     FLUCTUATION_COLLECTION_NAME,
     FRIEND_MEAN_DIST_COLLECTION_NAME,
+    INFO_MEAN_DIST_COLLECTION_NAME,
     DATABASE_NAME,
 )
 from Simulation.model import TripleFilterModel
@@ -26,7 +27,7 @@ from Simulation.communication_types import CommunicationType
 from Simulation.website import InterUserCommunicationTypes
 from FileSaver.csv_saver import CsvSaver
 
-sio = socketio.AsyncServer(cors_allowed_origins='*', async_mode='asgi')
+sio = socketio.AsyncServer(cors_allowed_origins="*", async_mode="asgi")
 
 fastapi_app = FastAPI()
 fastapi_app.add_middleware(
@@ -37,7 +38,15 @@ fastapi_app.add_middleware(
 )
 
 app = socketio.ASGIApp(sio, other_asgi_app=fastapi_app)
-db_reader = DatabaseConnector(CONNECTION_STRING, DATABASE_NAME, POSITIONS_COLLECTION_NAME, LINKS_COLLECTION_NAME, FLUCTUATION_COLLECTION_NAME,FRIEND_MEAN_DIST_COLLECTION_NAME)
+db_reader = DatabaseConnector(
+    CONNECTION_STRING,
+    DATABASE_NAME,
+    POSITIONS_COLLECTION_NAME,
+    LINKS_COLLECTION_NAME,
+    FLUCTUATION_COLLECTION_NAME,
+    FRIEND_MEAN_DIST_COLLECTION_NAME,
+    INFO_MEAN_DIST_COLLECTION_NAME,
+)
 current_simulations = set()
 
 
@@ -69,7 +78,15 @@ def parse_data_from_frontend(socket_id, data):
     return SimulationRunner(
         data["number_of_steps"],
         model,
-        DatabaseConnector(CONNECTION_STRING, DATABASE_NAME, POSITIONS_COLLECTION_NAME, LINKS_COLLECTION_NAME, FLUCTUATION_COLLECTION_NAME,FRIEND_MEAN_DIST_COLLECTION_NAME),
+        DatabaseConnector(
+            CONNECTION_STRING,
+            DATABASE_NAME,
+            POSITIONS_COLLECTION_NAME,
+            LINKS_COLLECTION_NAME,
+            FLUCTUATION_COLLECTION_NAME,
+            FRIEND_MEAN_DIST_COLLECTION_NAME,
+            INFO_MEAN_DIST_COLLECTION_NAME,
+        ),
         sio,
         socket_id,
     )
@@ -109,6 +126,7 @@ async def simulation_step_requested(sid, step_num):
     step = db_reader.get_simulation_step(sid, int(step_num))
     await sio.emit("simulation_step_sent", step)
 
+
 @fastapi_app.get("/simulation")
 def get_simulation(socket_id: str, background_tasks: BackgroundTasks):
     csv_saver = CsvSaver(db_reader)
@@ -123,10 +141,12 @@ def get_simulation(socket_id: str, background_tasks: BackgroundTasks):
         path=filename,
         media_type="application/octet-stream",
         filename=filename,
-        )
+    )
+
 
 def delete_file(path):
     os.remove(path)
+
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=5000, log_level="info")

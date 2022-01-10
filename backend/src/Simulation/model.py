@@ -78,8 +78,6 @@ class TripleFilterModel(Model):
             no_of_groups,
         )
 
-        self.user_positions_in_prev[0] = dict(user_positions)
-
     def step(self):
         # website.step returns 3 things:
         # 1. dict, where
@@ -88,6 +86,7 @@ class TripleFilterModel(Model):
         # 2. list of every link in simulation
         #   every element is pair of userID between which link exist
         # 3. mean fluctuation of users in step
+        # 4. mean mean distance to infos from user position
 
         return StepData(self.website.step())
 

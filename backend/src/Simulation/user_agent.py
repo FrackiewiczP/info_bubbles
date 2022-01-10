@@ -103,7 +103,7 @@ class UserAgent(Agent):
         """
         self.position = self.memory.calculate_user_position()
         self.mean_info_dist = self.memory.calculate_mean_distance(self.position)
-        return self.position, self.mean_info_dist
+        return self.position
 
     def try_to_integrate_info_bit(self, info_bit: Information):
 

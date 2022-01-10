@@ -54,6 +54,23 @@ def test_calculating_mean_info_position():
     assert memory.calculate_user_position()[1] == (total_y / no_of_inf)
 
 
+def test_calculating_mean_info_dist():
+    no_of_inf = 10
+    inf1 = Information()
+    positions = [inf1.position]
+    memory = UserAgent.Memory(first_info_bit=inf1, mem_capacity=no_of_inf)
+    for i in range(no_of_inf - 1):
+        inf = Information()
+        positions.append(inf.position)
+        memory.add_new_info_bit(inf)
+    user_position = memory.calculate_user_position()
+    mean_info_dist = 0
+    for i in range(no_of_inf):
+        mean_info_dist += np.linalg.norm(positions[i] - user_position)
+    mean_info_dist /= i + 1
+    assert memory.calculate_mean_distance(user_position) == mean_info_dist
+
+
 def test_trying_to_integrate_info_second_time_fails(mocker):
 
     user = UserAgent(

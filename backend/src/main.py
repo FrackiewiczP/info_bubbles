@@ -115,11 +115,13 @@ async def connect(sid, environ):
 def disconnect(sid):
     print("disconnect ", sid)
 
-
 @sio.event
 async def start_simulation(sid, data):
     print(f"Socket {sid} requested simulation with data {data}")
-    await perform_simulation(sid, data)
+    if not ValidateData(data):
+        await sio.emit("error", "Data is invalid", room=sid)
+    else:
+        await perform_simulation(sid, data)
 
 @sio.event
 async def simulation_step_requested(sid, step_num):
@@ -133,13 +135,13 @@ async def simulation_stats_requested(sid, data):
     await sio.emit("simulation_stats_sent", ret, room=sid)
 
 @fastapi_app.get("/simulation")
-def get_simulation(socket_id: str, background_tasks: BackgroundTasks):
+async def get_simulation(socket_id: str, background_tasks: BackgroundTasks):
     csv_saver = CsvSaver(db_reader)
     filename = f"{socket_id}.csv"
 
     # Send back 404, if a simulation for given socket_id haven't been run
     if not csv_saver.save_simulation_to_file(socket_id, filename):
-        raise HTTPException(status_code=404, detail="Simulation not found")
+        await sio.emit("error", "Simulation haven't been run", room=socket_id)
 
     background_tasks.add_task(delete_file, filename)
     return FileResponse(
@@ -152,6 +154,8 @@ def get_simulation(socket_id: str, background_tasks: BackgroundTasks):
 def delete_file(path):
     os.remove(path)
 
+def ValidateData(data):
+    return True
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=5000, log_level="info")

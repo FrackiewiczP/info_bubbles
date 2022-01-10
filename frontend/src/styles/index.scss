@@ -8,26 +8,30 @@ body{
     background-color: black;
 }
 
-button{
-    display: block;
-    width: 100%;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    color: $blue-text;
-    background-color: black;
-    border: 3px solid $blue-text;
-    border-radius: 10px;
-    transition: 1s;
-}
-button:hover {
-    background-color:$blue-text;
-    color:black;
-    cursor: pointer;
+.App{
+    button{
+        display: block;
+        width: 100%;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        color: $blue-text;
+        background-color: black;
+        border: 3px solid $blue-text;
+        border-radius: 10px;
+        transition: 1s;
+    }
+    button:hover {
+        background-color:$blue-text;
+        color:black;
+        cursor: pointer;
+    }
+    
+    button:disabled,
+    button[disabled]{
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+    }
 }
 
-button:disabled,
-button[disabled]{
-border: 1px solid #999999;
-background-color: #cccccc;
-color: #666666;
-}
+

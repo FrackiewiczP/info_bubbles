@@ -79,7 +79,7 @@ class TripleFilterModel(Model):
         )
 
     def step(self):
-        # website.step returns 3 things:
+        # website.step returns 4 things:
         # 1. dict, where
         # key - userId
         # value - 1x2 numpy array with user's position

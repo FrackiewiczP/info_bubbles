@@ -10,6 +10,7 @@ import io from "socket.io-client";
 import SimulationParameters from '../helpers/SimulationParameters';
 import { ConvertingFunctions } from '../helpers/SimulationParameters';
 import { MainViewState } from '../helpers/Consts';
+import StatisticsChartData from '../helpers/StatisticsChartData';
 
 class App extends React.Component
 {
@@ -22,6 +23,7 @@ class App extends React.Component
             lastStepReceived: null,
             maxStep: null,
             currentStepData: null,
+            statisticsChartData: new StatisticsChartData(null, null, null),
             isSocketConnected: false,
             mainViewState: MainViewState.SIMULATION_VIEW,
             simulationParameters: new SimulationParameters(),
@@ -43,6 +45,9 @@ class App extends React.Component
         });
         this.socket.on("simulation_step_sent", (data) => {
             this.handleSimulationStepReceived(data);
+        });
+        this.socket.on("simulation_stats_sent", (data) => {
+            this.handleSimulationStatsReceived(data);
         });
         this.socket.on("simulation_step_finished", (data) => {
             this.handleSimulationStepFinished(data);
@@ -78,6 +83,9 @@ class App extends React.Component
                         />
                         : <Statistics
                             handleSeeSimulationButton={this.getChangeViewHandler(MainViewState.SIMULATION_VIEW)}
+                            handleChangeShownStatistic={this.handleChangeShownStatistic}
+                            maxStep={this.state.maxStep}
+                            statisticsChartData={this.state.statisticsChartData}
                         />
                 }
             </div>
@@ -110,6 +118,26 @@ class App extends React.Component
     handleCurrentStepChange = (event) => {
         this.setState({currentStep: event.target.value});
         this.socket.emit("simulation_step_requested", event.target.value)
+    }
+
+    handleChangeShownStatistic = (event) => {
+        const currChartData = this.state.statisticsChartData;
+        const currMaxStep = this.state.maxStep;
+        this.setState({statisticsChartData: new StatisticsChartData(
+            currMaxStep,
+            currChartData.data.data,
+            parseInt(event.target.value))});
+        this.socket.emit("simulation_stats_requested", event.target.value)
+    }
+
+    handleSimulationStatsReceived(data)
+    {
+        const currchosenStatistic = this.state.statisticsChartData.chosenStatistic;
+        const currMaxStep = this.state.maxStep;
+        this.setState({statisticsChartData: new StatisticsChartData(
+            currMaxStep,
+            data,
+            currchosenStatistic)});
     }
 
     getChangeViewHandler = (state) => () => {

@@ -14,4 +14,23 @@ const MainViewState={
     CHARTS_VIEW: 3,
 }
 
-export {CommunicationMode, UsersCommunicationMode, MainViewState};
+const StatisticsNames={
+    FLUCTUATION: 1,
+    AVG_FRIEND_DIST: 2,
+    AVG_INFO_DIST: 3,
+}
+
+function StatisticToString(statistic){
+    switch (statistic){
+        case StatisticsNames.FLUCTUATION:
+            return "Fluktuacja";
+        case StatisticsNames.AVG_FRIEND_DIST:
+            return "Średnia odległość do przyjaciół";
+        case StatisticsNames.AVG_INFO_DIST:
+            return "Średnia odległość do informacji";
+        default:
+            return "";
+    }
+}
+
+export {CommunicationMode, UsersCommunicationMode, MainViewState, StatisticsNames, StatisticToString};

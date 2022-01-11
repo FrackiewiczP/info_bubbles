@@ -122,6 +122,9 @@ async def start_simulation(sid, data):
         await perform_simulation(sid, data)
     except:
         await sio.emit("error", "Data is invalid", room=sid)
+        current_simulations.remove(sid)
+    finally:
+        return
 
 
 @sio.event

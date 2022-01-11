@@ -70,7 +70,15 @@ class ParametersForm extends React.Component{
                             {
                                 label: "Centralna",
                                 value: CommunicationMode.CENTRAL,
-                            }
+                            },
+                            {
+                                label: "Filtr bliski",
+                                value: CommunicationMode.FILTER_CLOSE,
+                            },
+                            {
+                                label: "Filtr daleki",
+                                value: CommunicationMode.FILTER_DISTANT,
+                            },
                         ]
                     }
                 />

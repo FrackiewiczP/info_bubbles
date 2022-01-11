@@ -1,6 +1,8 @@
 const CommunicationMode={
     INDIVIDUAL: "individual",
     CENTRAL: "central",
+    FILTER_DISTANT: "filter_distant",
+    FILTER_CLOSE: "filter_close",
 }
 
 const UsersCommunicationMode={

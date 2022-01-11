@@ -132,8 +132,6 @@ async def simulation_stats_requested(sid, data):
     ret = db_reader.get_statistics_for_socket(sid, data)
     await sio.emit("simulation_stats_sent", ret, room=sid)
 
-
-
 @fastapi_app.get("/simulation")
 def get_simulation(socket_id: str, background_tasks: BackgroundTasks):
     csv_saver = CsvSaver(db_reader)

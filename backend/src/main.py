@@ -106,7 +106,8 @@ async def start_simulation(sid, data):
 @sio.event
 async def simulation_step_requested(sid, step_num):
     step = db_reader.get_simulation_step(sid, int(step_num))
-    await sio.emit("simulation_step_sent", step, room=sid)
+    links = db_reader.get_simulation_links(sid, int(step_num))
+    await sio.emit("simulation_step_sent", [step,links], room=sid)
 
 @sio.event
 async def simulation_stats_requested(sid, data):

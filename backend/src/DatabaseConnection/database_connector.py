@@ -58,6 +58,14 @@ class DatabaseConnector:
                 STEP_NUM_KEY: step_num,
             }
         )[DATA_KEY]
+    
+    def get_simulation_links(self, socket_id, step_num):
+        return self.__links_collection.find_one(
+            {
+                SOCKET_ID_KEY: socket_id,
+                STEP_NUM_KEY: step_num,
+            }
+        )[DATA_KEY] 
 
     def delete_previous_simulation_of_socket(self, socket_id):
         self.__positions_collection.delete_many({SOCKET_ID_KEY: socket_id})

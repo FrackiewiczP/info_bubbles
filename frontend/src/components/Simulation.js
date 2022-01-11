@@ -29,6 +29,7 @@ class Simulation extends React.Component{
                         isSocketConnected={this.props.isSocketConnected}
                         handleCurrentStepChange={this.props.handleCurrentStepChange}
                         handleChooseParametersButton={this.props.handleChooseParametersButton}
+                        handleSeeStatsButton={this.props.handleSeeStatsButton}
                         handleStartSimulationButton={this.props.handleStartSimulationButton}
                         handleDownloadSimulationButton={this.props.handleDownloadSimulationButton}
                         lastStepReceived={this.props.lastStepReceived}

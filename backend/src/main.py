@@ -17,6 +17,7 @@ from DatabaseConnection.database_connector import (
     POSITIONS_COLLECTION_NAME,
     LINKS_COLLECTION_NAME,
     FLUCTUATION_COLLECTION_NAME,
+    FRIEND_MEAN_DIST_COLLECTION_NAME,
     DATABASE_NAME,
 )
 from Simulation.model import TripleFilterModel
@@ -36,7 +37,7 @@ fastapi_app.add_middleware(
 )
 
 app = socketio.ASGIApp(sio, other_asgi_app=fastapi_app)
-db_reader = DatabaseConnector(CONNECTION_STRING, DATABASE_NAME, POSITIONS_COLLECTION_NAME, LINKS_COLLECTION_NAME, FLUCTUATION_COLLECTION_NAME)
+db_reader = DatabaseConnector(CONNECTION_STRING, DATABASE_NAME, POSITIONS_COLLECTION_NAME, LINKS_COLLECTION_NAME, FLUCTUATION_COLLECTION_NAME,FRIEND_MEAN_DIST_COLLECTION_NAME)
 current_simulations = set()
 
 
@@ -70,7 +71,7 @@ def parse_data_from_frontend(socket_id, data):
     return SimulationRunner(
         data["number_of_steps"],
         model,
-        DatabaseConnector(CONNECTION_STRING, DATABASE_NAME, POSITIONS_COLLECTION_NAME, LINKS_COLLECTION_NAME, FLUCTUATION_COLLECTION_NAME),
+        DatabaseConnector(CONNECTION_STRING, DATABASE_NAME, POSITIONS_COLLECTION_NAME, LINKS_COLLECTION_NAME, FLUCTUATION_COLLECTION_NAME,FRIEND_MEAN_DIST_COLLECTION_NAME),
         sio,
         socket_id,
     )
@@ -83,6 +84,8 @@ async def perform_simulation(socket_id, data):
     current_simulations.add(socket_id)
     model = parse_data_from_frontend(socket_id, data)
     await model.run_simulation()
+    # TODO : move calculating mean distance to friends to seperate event
+    await model.calculate_mean_distance_to_friends()
     current_simulations.remove(socket_id)
 
 

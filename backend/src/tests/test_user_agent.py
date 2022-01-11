@@ -68,7 +68,9 @@ def test_calculating_mean_info_dist():
     for i in range(no_of_inf):
         mean_info_dist += np.linalg.norm(positions[i] - user_position)
     mean_info_dist /= i + 1
-    assert memory.calculate_mean_distance(user_position) == mean_info_dist
+    assert round(memory.calculate_mean_distance(user_position), 7) == round(
+        mean_info_dist, 7
+    )
 
 
 def test_trying_to_integrate_info_second_time_fails(mocker):

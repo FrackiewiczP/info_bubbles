@@ -28,6 +28,7 @@ class UserAgent(Agent):
         self.memory = self.Memory(memory_capacity)
         # self.position = self.memory.calculate_user_position()
         self.position = np.random.rand(2) * 2 - 1
+        self.mean_info_dist = 0
 
     class Memory:
         """
@@ -89,6 +90,12 @@ class UserAgent(Agent):
             #     return list()
             return self.info_bits[: self.size, 0]
 
+        def calculate_mean_distance(self, position):
+            distances = np.linalg.norm(
+                self.info_bits[: self.size, 1:3] - position, axis=1
+            )
+            return np.mean(distances)
+
     def get_random_information(self):
         return self.memory.get_random_information()
 
@@ -100,7 +107,7 @@ class UserAgent(Agent):
         :rtype: numpy.ndarray
         """
         self.user_position = self.memory.calculate_user_position()
-
+        self.mean_info_dist = self.memory.calculate_mean_distance(self.position)
         return self.user_position
 
     def try_to_integrate_info_bit(self, info_bit: Information):

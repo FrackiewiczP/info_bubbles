@@ -70,6 +70,8 @@ class Website:
         match initial_connections:
             case FriendsLinksTypes.RANDOM_NON_DIRECTED :
                 self.friend_links = FriendLinks(FriendsLinksTypes.RANDOM_NON_DIRECTED, list(self.users.keys()), no_of_links, percent_of_the_same_group,no_of_groups)
+            case FriendsLinksTypes.RANDOM_DIRECTED:
+                self.friend_links = FriendLinks(FriendsLinksTypes.RANDOM_NON_DIRECTED, list(self.users.keys()), no_of_links,percent_of_the_same_group, no_of_groups)
         match communication_mode:
             case communication_types.CommunicationType.CENTRAL :
                  self.communication_form = communication_types.CentralCommunication(users)
@@ -137,7 +139,7 @@ class Website:
         for link in self.links:
             if np.random.rand(1) <= self.unfriend_chance:
                 if self.try_to_unfriend_users(link[0], link[1]):
-                    self.friend_links.delete_link(link)
+                    self.friend_links.delet(link)
 
     def try_to_unfriend_users(self, user1_id: int, user2_id: int):
         """

@@ -11,7 +11,7 @@ def test_addding_info_bit_to_memory():
     memory.add_new_info_bit(inf2)
     memory.add_new_info_bit(inf3)
 
-    assert memory.get_size() == 3
+    assert memory.size == 3
     assert inf2.get_id() in memory.get_info_bits_ids()
     assert inf3.get_id() in memory.get_info_bits_ids()
 
@@ -25,7 +25,7 @@ def test_overflowing_memory():
         print(inf.get_id())
         memory.add_new_info_bit(inf)
 
-    assert memory.get_size() == memory_capacity
+    assert memory.size == memory_capacity
 
 
 def test_replacing_info_when_memory_is_full():
@@ -34,7 +34,7 @@ def test_replacing_info_when_memory_is_full():
     memory = UserAgent.Memory(first_info_bit=inf1, mem_capacity=memory_capacity)
     inf2 = Information()
     memory.add_new_info_bit(inf2)
-    assert memory.get_size() == memory_capacity
+    assert memory.size == memory_capacity
     assert inf2.get_id() in memory.get_info_bits_ids()
     assert inf1.get_id() not in memory.get_info_bits_ids()
 
@@ -52,6 +52,25 @@ def test_calculating_mean_info_position():
     total_y = sum(position[1] for position in positions)
     assert memory.calculate_user_position()[0] == (total_x / no_of_inf)
     assert memory.calculate_user_position()[1] == (total_y / no_of_inf)
+
+
+def test_calculating_mean_info_dist():
+    no_of_inf = 10
+    inf1 = Information()
+    positions = [inf1.position]
+    memory = UserAgent.Memory(first_info_bit=inf1, mem_capacity=no_of_inf)
+    for i in range(no_of_inf - 1):
+        inf = Information()
+        positions.append(inf.position)
+        memory.add_new_info_bit(inf)
+    user_position = memory.calculate_user_position()
+    mean_info_dist = 0
+    for i in range(no_of_inf):
+        mean_info_dist += np.linalg.norm(positions[i] - user_position)
+    mean_info_dist /= i + 1
+    assert round(memory.calculate_mean_distance(user_position), 7) == round(
+        mean_info_dist, 7
+    )
 
 
 def test_trying_to_integrate_info_second_time_fails(mocker):

@@ -76,7 +76,7 @@ class ParametersForm extends React.Component{
                                 value: CommunicationMode.FILTER_CLOSE,
                             },
                             {
-                                label: "Filtr Daleki",
+                                label: "Filtr daleki",
                                 value: CommunicationMode.FILTER_DISTANT,
                             },
                         ]

@@ -99,11 +99,7 @@ async def perform_simulation(socket_id, data):
         await sio.emit("simulation_already_running")
         return
     current_simulations.add(socket_id)
-    try:
-        model = parse_data_from_frontend(socket_id, data)
-    except:
-        await sio.emit("error", "Data is invalid", room=socket_id)
-        return
+    model = parse_data_from_frontend(socket_id, data)
     await model.run_simulation()
     # TODO : move calculating mean distance to friends to seperate event
     await model.calculate_mean_distance_to_friends()
@@ -122,10 +118,11 @@ def disconnect(sid):
 @sio.event
 async def start_simulation(sid, data):
     print(f"Socket {sid} requested simulation with data {data}")
-    if not ValidateData(data):
-        await sio.emit("error", "Data is invalid", room=sid)
-    else:
+    try:
         await perform_simulation(sid, data)
+    except:
+        await sio.emit("error", "Data is invalid", room=sid)
+
 
 @sio.event
 async def simulation_step_requested(sid, step_num):

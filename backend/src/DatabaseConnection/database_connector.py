@@ -121,9 +121,8 @@ class DatabaseConnector:
         match statistic:
             case 1:
                 return self.__fluctuation_collection
-            # TODO Uncomment after merging related PRs
-            # case 2:
-            #     return self.__friend_mean_dist_collection
-            # case 3:
-            #     return self.__info_mean_dist_collection
+            case 2:
+                return self.__friend_mean_dist_collection
+            case 3:
+                return self.__info_mean_dist_collection
 

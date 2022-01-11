@@ -81,7 +81,11 @@ async def perform_simulation(socket_id, data):
         await sio.emit("simulation_already_running")
         return
     current_simulations.add(socket_id)
-    model = parse_data_from_frontend(socket_id, data)
+    try:
+        model = parse_data_from_frontend(socket_id, data)
+    except:
+        await sio.emit("error", "Data is invalid", room=socket_id)
+        return
     await model.run_simulation()
     current_simulations.remove(socket_id)
 

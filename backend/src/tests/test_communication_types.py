@@ -19,7 +19,7 @@ def test_central_communication(mocker):
     users_to_move = central.integrate_new_info()
     info_ids = set()
     for i in users_to_move:
-        assert users[i].memory.get_size() == 2
+        assert users[i].memory.size == 2
         for id in users[i].memory.get_info_bits_ids():
             info_ids.add(id)
 
@@ -46,7 +46,7 @@ def test_individual_communication(mocker):
     users_to_move = central.integrate_new_info()
     info_ids = set()
     for i in users_to_move:
-        assert users[i].memory.get_size() == 2
+        assert users[i].memory.size == 2
         for id in users[i].memory.get_info_bits_ids():
             info_ids.add(id)
 

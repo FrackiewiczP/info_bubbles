@@ -24,6 +24,7 @@ class InterUserCommunicationTypes(Enum):
     TO_ONE_RANDOM = 1
     TO_ALL = 2
 
+
 class InterUserCommunication:
     @staticmethod
     def send_info_to_random_friend(users: dict, user_id: int, user_friends: list):
@@ -54,12 +55,12 @@ class Website:
         users: dict,
         no_of_links: int,
         unfriend_chance: float,
-        initial_connections: str,
-        communication_mode: str,
-        users_communication_mode: str,
+        initial_connections: FriendsLinksTypes,
+        communication_mode: communication_types.CommunicationType,
+        users_communication_mode: InterUserCommunicationTypes,
         user_positions: dict,
         percent_of_the_same_group: int,
-        no_of_groups: int
+        no_of_groups: int,
     ):
         self.unfriend_chance = unfriend_chance
         self.users = users
@@ -106,17 +107,31 @@ class Website:
         start_time = time.time()
         self.find_links_to_remove()
         print("unfriending time --- %s seconds ---" % (time.time() - start_time))
-        mean_fluctuation = self.calculate_mean_fluctuation(prev_positions)
-        return dict(self.user_positions), list(self.links), mean_fluctuation
-    
+        mean_fluctuation, mean_info_distance = self.calculate_user_statistics(
+            prev_positions
+        )
+        return (
+            dict(self.user_positions),
+            list(self.links),
+            mean_fluctuation,
+            mean_info_distance,
+        )
+
     @property
     def links(self):
         return self.friend_links.links
 
-    def calculate_mean_fluctuation(self, prev_positions: dict):
-        fluctuations = [ np.linalg.norm(self.user_positions[key] - prev_positions[key] ) for key in self.user_positions.keys()]
-        mean_fluctuation = sum(fluctuations)/ len(fluctuations)
-        return mean_fluctuation
+    def calculate_user_statistics(self, prev_positions: dict):
+        mean_fluctuation = 0
+        mean_info_distance = 0
+        for i, id in enumerate(self.user_positions):
+            mean_fluctuation += np.linalg.norm(
+                self.user_positions[id] - prev_positions[id]
+            )
+            mean_info_distance += self.users[id].mean_info_dist
+        mean_fluctuation /= i + 1
+        mean_info_distance /= i + 1
+        return mean_fluctuation, mean_info_distance
 
     def find_links_to_remove(self):
         for link in self.links:
@@ -135,5 +150,3 @@ class Website:
         if check_integration(user1_pos, user2_pos, latitude, sharpness):
             return False
         return True
-
-    

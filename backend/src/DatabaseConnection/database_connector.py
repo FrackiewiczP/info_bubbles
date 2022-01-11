@@ -105,3 +105,24 @@ class DatabaseConnector:
             return None
         else:
             return res[STEP_NUM_KEY]
+
+    def get_statistics_for_socket(self, socket_id, statistic):
+        collection = self.__statistic_to_collection(int(statistic))
+        result = collection.find(
+            {
+                SOCKET_ID_KEY: socket_id
+            },
+            sort=[(STEP_NUM_KEY, pymongo.ASCENDING)]
+        )
+        return [x[DATA_KEY] for x in result]
+
+
+    def __statistic_to_collection(self, statistic):
+        match statistic:
+            case 1:
+                return self.__fluctuation_collection
+            case 2:
+                return self.__friend_mean_dist_collection
+            case 3:
+                return self.__info_mean_dist_collection
+

@@ -121,11 +121,17 @@ async def start_simulation(sid, data):
     print(f"Socket {sid} requested simulation with data {data}")
     await perform_simulation(sid, data)
 
-
 @sio.event
 async def simulation_step_requested(sid, step_num):
     step = db_reader.get_simulation_step(sid, int(step_num))
-    await sio.emit("simulation_step_sent", step)
+    await sio.emit("simulation_step_sent", step, room=sid)
+
+@sio.event
+async def simulation_stats_requested(sid, data):
+    print(f"Socket {sid} requested simulation statistics for stat {data}")
+    ret = db_reader.get_statistics_for_socket(sid, data)
+    await sio.emit("simulation_stats_sent", ret, room=sid)
+
 
 
 @fastapi_app.get("/simulation")

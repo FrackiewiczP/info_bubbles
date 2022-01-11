@@ -5,9 +5,12 @@ import '../styles/Title.scss'
 import Title from './Title';
 import Simulation from './Simulation';
 import ParametersForm from './ParametersForm';
+import Statistics from './Statistics';
 import io from "socket.io-client";
 import SimulationParameters from '../helpers/SimulationParameters';
 import { ConvertingFunctions } from '../helpers/SimulationParameters';
+import { MainViewState } from '../helpers/Consts';
+import StatisticsChartData from '../helpers/StatisticsChartData';
 
 class App extends React.Component
 {
@@ -20,8 +23,9 @@ class App extends React.Component
             lastStepReceived: null,
             maxStep: null,
             currentStepData: null,
+            statisticsChartData: new StatisticsChartData(null, null, null),
             isSocketConnected: false,
-            choosingParameters: false,
+            mainViewState: MainViewState.SIMULATION_VIEW,
             simulationParameters: new SimulationParameters(),
         }
 
@@ -42,6 +46,9 @@ class App extends React.Component
         this.socket.on("simulation_step_sent", (data) => {
             this.handleSimulationStepReceived(data);
         });
+        this.socket.on("simulation_stats_sent", (data) => {
+            this.handleSimulationStatsReceived(data);
+        });
         this.socket.on("simulation_step_finished", (data) => {
             this.handleSimulationStepFinished(data);
         });
@@ -54,24 +61,33 @@ class App extends React.Component
         return (
             <div>
                 <Title/>
-                {this.state.choosingParameters
+                {this.state.mainViewState === MainViewState.CHOOSING_PARAMETERS
                     ? <ParametersForm
-                        handleChooseParametersButton={this.handleChooseParametersButton}
+                        handleSeeSimulationButton={this.getChangeViewHandler(MainViewState.SIMULATION_VIEW)}
                         parameters={this.state.simulationParameters}
                         parametersHandlers={this.parametersHandlers}
                     />
-                    : <Simulation
-                        size={this.state.size}
-                        currentStep={this.state.currentStep}
-                        currentStepData={this.state.currentStepData}
-                        isSocketConnected={this.state.isSocketConnected}
-                        maxStep={this.state.maxStep}
-                        lastStepReceived={this.state.lastStepReceived}
-                        handleCurrentStepChange={this.handleCurrentStepChange}
-                        handleChooseParametersButton={this.handleChooseParametersButton}
-                        handleStartSimulationButton={this.handleStartSimulationButton}
-                        handleDownloadSimulationButton={this.handleDownloadSimulationButton}
-                    />}
+                    : this.state.mainViewState === MainViewState.SIMULATION_VIEW 
+                        ? <Simulation
+                            size={this.state.size}
+                            currentStep={this.state.currentStep}
+                            currentStepData={this.state.currentStepData}
+                            isSocketConnected={this.state.isSocketConnected}
+                            maxStep={this.state.maxStep}
+                            lastStepReceived={this.state.lastStepReceived}
+                            handleCurrentStepChange={this.handleCurrentStepChange}
+                            handleChooseParametersButton={this.getChangeViewHandler(MainViewState.CHOOSING_PARAMETERS)}
+                            handleSeeStatsButton={this.getChangeViewHandler(MainViewState.CHARTS_VIEW)}
+                            handleStartSimulationButton={this.handleStartSimulationButton}
+                            handleDownloadSimulationButton={this.handleDownloadSimulationButton}
+                        />
+                        : <Statistics
+                            handleSeeSimulationButton={this.getChangeViewHandler(MainViewState.SIMULATION_VIEW)}
+                            handleChangeShownStatistic={this.handleChangeShownStatistic}
+                            maxStep={this.state.maxStep}
+                            statisticsChartData={this.state.statisticsChartData}
+                        />
+                }
             </div>
         );
     }
@@ -104,9 +120,28 @@ class App extends React.Component
         this.socket.emit("simulation_step_requested", event.target.value)
     }
 
-    handleChooseParametersButton = () => {
-        const choosingParameters = this.state.choosingParameters;
-        this.setState({choosingParameters: !choosingParameters});
+    handleChangeShownStatistic = (event) => {
+        const currChartData = this.state.statisticsChartData;
+        const currMaxStep = this.state.maxStep;
+        this.setState({statisticsChartData: new StatisticsChartData(
+            currMaxStep,
+            currChartData.data.data,
+            parseInt(event.target.value))});
+        this.socket.emit("simulation_stats_requested", event.target.value)
+    }
+
+    handleSimulationStatsReceived(data)
+    {
+        const currchosenStatistic = this.state.statisticsChartData.chosenStatistic;
+        const currMaxStep = this.state.maxStep;
+        this.setState({statisticsChartData: new StatisticsChartData(
+            currMaxStep,
+            data,
+            currchosenStatistic)});
+    }
+
+    getChangeViewHandler = (state) => () => {
+        this.setState({mainViewState: state});
     }
 
     prepareParameterHandler = (parameterName) => {

@@ -13,7 +13,7 @@ class FriendLinks:
     def __init__(
             self, links_type: FriendsLinksTypes, vertices: list, no_of_links: int,percent_of_the_same_group:int,no_of_groups:int
     ) -> None:
-        self.typ = links_type
+        self.type = links_type
         if links_type == FriendsLinksTypes.RANDOM_DIRECTED:
             (
                 self.__links,
@@ -37,13 +37,13 @@ class FriendLinks:
     def __getitem__(self, user_id):
         return self.__users_friends[user_id]
 
-    def delet(self,link: tuple[int]):
-        if(self.typ == FriendsLinksTypes.RANDOM_DIRECTED):
-            self.delete_link_direct(link)
-        if(self.typ == FriendsLinksTypes.RANDOM_NON_DIRECTED):
+    def delete(self,link: tuple[int]):
+        if(self.type == FriendsLinksTypes.RANDOM_DIRECTED):
+            self.delete_directed_link(link)
+        if(self.type == FriendsLinksTypes.RANDOM_NON_DIRECTED):
             self.delete_link(link)
 
-    def delete_link_direct(self, link: tuple[int]):
+    def delete_directed_link(self, link: tuple[int]):
         """
         Deletes link between user1 and user2 and creates a new link between user1
         and random friend of his friends

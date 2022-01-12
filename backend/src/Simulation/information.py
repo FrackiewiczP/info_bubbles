@@ -2,9 +2,18 @@ import numpy as np
 
 
 class IdGenerator:
+    """
+    Class reposinble for generating sequential unique Information id's
+    """
+
     __id = 0
 
-    def get():
+    def get() -> int:
+        """Returns new unique id
+
+        Returns:
+            int: unique id
+        """
         IdGenerator.__id += 1
         return IdGenerator.__id
 
@@ -14,7 +23,10 @@ class Information:
         """
         By default it creates new information in random position
 
-        But it is possible to pass ndarray of existing information to create copy
+        But it is possible to pass ndarray of existing Information to create copy
+
+        Args:
+            data (np.ndarray, optional): Array representing another Information that we want to create copy of. Defaults to None.
         """
 
         if data is None:
@@ -25,23 +37,44 @@ class Information:
         self.__data = data.reshape(3)
 
     @property
-    def position(self):
+    def position(self) -> np.ndarray:
+        """Returns position of Information
+
+        Returns:
+            np.ndarray: Cordinates of Information as numpy array
+        """
         return self.__data[1:3]
 
     @position.setter
     def position(self, pos):
         self.__data[1:3] = pos
 
-    def to_numpy(self):
+    def to_numpy(self) -> np.ndarray:
+        """Converts Information to numpy.ndarray
+
+        Returns:
+            np.ndarray: Numpy array representation of Information
+        """
         return self.__data.reshape((1, 3)).copy()
 
-    def get_id(self):
+    def get_id(self) -> int:
+        """Returns id of Information
+
+        Returns:
+            int: Id of Information
+        """
         return self.__data[0]
 
     def __eq__(self, other):
         return self.__data[0] == other.__data[0]
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """
+        Return text representation of Information
+
+        Returns:
+            str: Text representation of Information
+        """
         return (
             "{Information id:"
             + self.__data[0]

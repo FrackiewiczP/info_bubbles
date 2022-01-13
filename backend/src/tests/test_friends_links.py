@@ -38,8 +38,8 @@ def test_creating_initial_connections_random_directed():
     )
 
     # is number of links ok
-    assert len(links) > (no_of_links * no_of_users / 2) - (len(links) * 0.1)
-    assert len(links) < (no_of_links * no_of_users / 2) + (len(links) * 0.1)
+    assert len(links) > (no_of_links * no_of_users) - (len(links) * 0.1)
+    assert len(links) < (no_of_links * no_of_users) + (len(links) * 0.1)
     # is grups assign
     assert len(groups) == no_of_groups
     for it in users_friends:

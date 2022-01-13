@@ -169,7 +169,7 @@ class FriendLinks:
     @staticmethod
     def create_random_directed_friends_links(vertices: list, no_of_links: int, percent_of_the_same_group: int,
                                              no_of_groups: int):
-        no_of_links = no_of_links / 2
+        no_of_links = no_of_links
         in_each_group = (len(vertices) / no_of_groups)
         in_same_group = ((no_of_links * percent_of_the_same_group) / 100)
         if in_each_group < in_same_group or in_each_group < no_of_links - in_same_group:

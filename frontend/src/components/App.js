@@ -11,17 +11,24 @@ import SimulationParameters from '../helpers/SimulationParameters';
 import { ConvertingFunctions } from '../helpers/SimulationParameters';
 import { MainViewState } from '../helpers/Consts';
 import StatisticsChartData from '../helpers/StatisticsChartData';
+import {toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
 
 class App extends React.Component
 {
     constructor(props){
         super(props);
-
+        toast.configure(
+            "top-center",
+            5000
+        );
         this.state = {
             size: window.innerWidth/2.5 < 300 ? 300 : window.innerWidth/2.5,
             currentStep: null,
             lastStepReceived: null,
             maxStep: null,
+            currentGroups: null,
+            currentGroupCount: null,
             currentStepData: null,
             statisticsChartData: new StatisticsChartData(null, null, null),
             isSocketConnected: false,
@@ -55,11 +62,25 @@ class App extends React.Component
         this.socket.on("simulation_already_running", () => {
             console.log("Simulation already running");
         });
+        this.socket.on("groups_for_simulation_sent", (data) => {
+            this.handleGroupsForSimulationReceived(data);
+        })
+        this.socket.on("error", (data) => {
+            toast.error(data, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                });
+        });
     }
 
     render(){
         return (
-            <div>
+            <div className="App">
                 <Title/>
                 {this.state.mainViewState === MainViewState.CHOOSING_PARAMETERS
                     ? <ParametersForm
@@ -74,6 +95,8 @@ class App extends React.Component
                             currentStepData={this.state.currentStepData}
                             isSocketConnected={this.state.isSocketConnected}
                             maxStep={this.state.maxStep}
+                            currentGroups={this.state.currentGroups}
+                            currentGroupCount={this.state.currentGroupCount}
                             lastStepReceived={this.state.lastStepReceived}
                             handleCurrentStepChange={this.handleCurrentStepChange}
                             handleChooseParametersButton={this.getChangeViewHandler(MainViewState.CHOOSING_PARAMETERS)}
@@ -138,6 +161,14 @@ class App extends React.Component
             currMaxStep,
             data,
             currchosenStatistic)});
+    }
+
+    handleGroupsForSimulationReceived(data){
+        console.log(data)
+        this.setState({
+            currentGroups: data["groups"],
+            currentGroupCount: data["group_count"]
+        })
     }
 
     getChangeViewHandler = (state) => () => {

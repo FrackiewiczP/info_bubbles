@@ -115,11 +115,14 @@ async def connect(sid, environ):
 def disconnect(sid):
     print("disconnect ", sid)
 
-
 @sio.event
 async def start_simulation(sid, data):
     print(f"Socket {sid} requested simulation with data {data}")
+    if(ValidateData(data)):
+        await sio.emit("error", "Data is invalid", room=sid)
+        return
     await perform_simulation(sid, data)
+
 
 @sio.event
 async def simulation_step_requested(sid, step_num):
@@ -133,13 +136,13 @@ async def simulation_stats_requested(sid, data):
     await sio.emit("simulation_stats_sent", ret, room=sid)
 
 @fastapi_app.get("/simulation")
-def get_simulation(socket_id: str, background_tasks: BackgroundTasks):
+async def get_simulation(socket_id: str, background_tasks: BackgroundTasks):
     csv_saver = CsvSaver(db_reader)
     filename = f"{socket_id}.csv"
 
     # Send back 404, if a simulation for given socket_id haven't been run
     if not csv_saver.save_simulation_to_file(socket_id, filename):
-        raise HTTPException(status_code=404, detail="Simulation not found")
+        await sio.emit("error", "Simulation haven't been run", room=socket_id)
 
     background_tasks.add_task(delete_file, filename)
     return FileResponse(
@@ -152,6 +155,23 @@ def get_simulation(socket_id: str, background_tasks: BackgroundTasks):
 def delete_file(path):
     os.remove(path)
 
+def ValidateData(data):
+    number_of_agents = data["number_of_agents"]
+    percent_of_the_same_group = int(data["percent_of_the_same_group"])
+    no_of_groups = data["no_of_groups"]
+    number_of_links = data["number_of_links"]
+
+    no_of_links = (number_of_links *  number_of_agents/ 2)
+    links_on_group = (no_of_links/no_of_groups)
+    in_each_group = (number_of_agents / no_of_groups)
+    in_same_group_available = in_each_group * (in_each_group-1) /2
+    in_same_group =( (links_on_group * percent_of_the_same_group) / 100)
+    inter_group_available = (in_each_group * (number_of_agents - in_each_group))
+    inter_group_used = ( (links_on_group * (100-percent_of_the_same_group)) / 100)
+
+    if in_same_group >= in_same_group_available or inter_group_used >= inter_group_available:
+        return True
+    return False
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=5000, log_level="info")

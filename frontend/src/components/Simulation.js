@@ -2,6 +2,7 @@ import React from 'react';
 import '../styles/Simulation.scss'
 import SimulationControls from './SimulationControls';
 import 'animate.css';
+import ColorPaletteGenerator from '../helpers/ColorPaletteGenerator';
 
 class Simulation extends React.Component{
     constructor(props){
@@ -10,11 +11,13 @@ class Simulation extends React.Component{
     }
 
     componentDidMount(){
+        this.colorPalette = ColorPaletteGenerator.GetColorPalette(this.props.currentGroupCount);
         let ctx = this.canvasRef.current.getContext("2d");
         this.drawSimulationStep(this.props.currentStepData, ctx);
     }
 
     componentDidUpdate(){
+        this.colorPalette = ColorPaletteGenerator.GetColorPalette(this.props.currentGroupCount);
         let ctx = this.canvasRef.current.getContext("2d");
         this.drawSimulationStep(this.props.currentStepData, ctx);
     }
@@ -38,14 +41,14 @@ class Simulation extends React.Component{
             );
     }
 
-    addUser(x, y, ctx)
+    addUser(id, x, y, ctx)
     {
         let processData = (d, maxValue) => (d+1)*maxValue/2;
         const radius = 3;
 
         ctx.beginPath();
         ctx.arc(processData(x, this.props.size), processData(y, this.props.size), radius, 0, 2 * Math.PI, false);
-        ctx.fillStyle = "#FF0000";
+        ctx.fillStyle = this.colorPalette[this.props.currentGroups[id]];
         ctx.fill();
     }
 
@@ -62,7 +65,7 @@ class Simulation extends React.Component{
         }
         this.clearCanvas(ctx);
         for(const u in data){
-            this.addUser(data[u][0], data[u][1], ctx);
+            this.addUser(u, data[u][0], data[u][1], ctx);
         }
     }
 }

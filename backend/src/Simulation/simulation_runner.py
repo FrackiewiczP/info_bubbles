@@ -20,6 +20,7 @@ class SimulationRunner:
         tracemalloc.start()
 
         self.db_connector.delete_previous_simulation_of_socket(self.socket_id)
+        await self.send_groups_to_socket(self.model.website.friend_links.groups)
         for i in range(self.number_of_steps):
             print("--------------------" + str(i) + "----------------")
             self.__iterations += 1
@@ -77,3 +78,15 @@ class SimulationRunner:
             self.db_connector.save_mean_distance_to_friends(
                 self.socket_id, i, mean_distance_in_step
             )
+    
+    async def send_groups_to_socket(self, groups_data):
+        # Reformat to make dictionary, where key: agent_id, value: group_of_agent
+        data = {}
+        data["groups"] = {}
+        for (key, value) in groups_data.items():
+            for id in value:
+                data["groups"][id] = key
+        data["group_count"] = len(groups_data.keys())
+        await self.socket_server.emit(
+            "groups_for_simulation_sent", data, room=self.socket_id
+        )

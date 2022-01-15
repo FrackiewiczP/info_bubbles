@@ -118,13 +118,10 @@ def disconnect(sid):
 @sio.event
 async def start_simulation(sid, data):
     print(f"Socket {sid} requested simulation with data {data}")
-    try:
-        await perform_simulation(sid, data)
-    except:
+    if(ValidateData(data)):
         await sio.emit("error", "Data is invalid", room=sid)
-        current_simulations.remove(sid)
-    finally:
         return
+    await perform_simulation(sid, data)
 
 
 @sio.event
@@ -159,7 +156,22 @@ def delete_file(path):
     os.remove(path)
 
 def ValidateData(data):
-    return True
+    number_of_agents = data["number_of_agents"]
+    percent_of_the_same_group = int(data["percent_of_the_same_group"])
+    no_of_groups = data["no_of_groups"]
+    number_of_links = data["number_of_links"]
+
+    no_of_links = (number_of_links *  number_of_agents/ 2)
+    links_on_group = (no_of_links/no_of_groups)
+    in_each_group = (number_of_agents / no_of_groups)
+    in_same_group_available = in_each_group * (in_each_group-1) /2
+    in_same_group =( (links_on_group * percent_of_the_same_group) / 100)
+    inter_group_available = (in_each_group * (number_of_agents - in_each_group))
+    inter_group_used = ( (links_on_group * (100-percent_of_the_same_group)) / 100)
+
+    if in_same_group >= in_same_group_available or inter_group_used >= inter_group_available:
+        return True
+    return False
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=5000, log_level="info")

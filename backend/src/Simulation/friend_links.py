@@ -10,14 +10,23 @@ class FriendsLinksTypes(Enum):
 
 class FriendLinks:
     def __init__(
-            self, links_type: FriendsLinksTypes, vertices: list, no_of_links: int,percent_of_the_same_group:int,no_of_groups:int
+        self,
+        links_type: FriendsLinksTypes,
+        vertices: list,
+        no_of_links: int,
+        percent_of_the_same_group: int,
+        no_of_groups: int,
     ) -> None:
         if links_type == FriendsLinksTypes.RANDOM_NON_DIRECTED:
+            self.type = FriendsLinksTypes.RANDOM_NON_DIRECTED
             (
                 self.__links,
                 self.__users_friends,
-                self.__user_groups
-            ) = self.create_random_non_directed_friends_links(vertices, no_of_links,percent_of_the_same_group, no_of_groups)
+                self.__user_groups,
+            ) = self.create_random_non_directed_friends_links(
+                vertices, no_of_links, percent_of_the_same_group, no_of_groups
+            )
+
     @property
     def links(self):
         return self.__links
@@ -62,10 +71,15 @@ class FriendLinks:
         self.__links.append((new_friend, user1_id))
 
     @staticmethod
-    def create_random_non_directed_friends_links(vertices: list, no_of_links: int, percent_of_the_same_group:int, no_of_groups:int):
+    def create_random_non_directed_friends_links(
+        vertices: list,
+        no_of_links: int,
+        percent_of_the_same_group: int,
+        no_of_groups: int,
+    ):
         no_of_links = no_of_links / 2
-        in_each_group = (len(vertices) / no_of_groups)
-        in_same_group = ((no_of_links * percent_of_the_same_group) / 100)
+        in_each_group = len(vertices) / no_of_groups
+        in_same_group = (no_of_links * percent_of_the_same_group) / 100
         if in_each_group < in_same_group or in_each_group < no_of_links - in_same_group:
             raise Exception("bad parameters")
         graph = dict()
@@ -115,7 +129,7 @@ class FriendLinks:
         users_friends = dict.fromkeys(vertices)
         for i in users_friends:
             users_friends[i] = list()
-        for k,v in graph.items():
+        for k, v in graph.items():
             for x in v.keys():
                 users_friends[vertices[k]].append(vertices[x])
                 if x < k:

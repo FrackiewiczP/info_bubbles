@@ -145,7 +145,8 @@ class Website:
             if len(self.friend_links[link[0]]) != 0:
                 mean_friend_dist += distance / len(self.friend_links[link[0]])
                 users_with_friends.add(link[0])
-            if len(self.friend_links[link[1]]) != 0:
+
+            if len(self.friend_links[link[1]]) != 0 and self.friend_links.type == FriendsLinksTypes.RANDOM_NON_DIRECTED:
                 mean_friend_dist += distance / len(self.friend_links[link[1]])
                 users_with_friends.add(link[1])
         if len(users_with_friends) != 0:

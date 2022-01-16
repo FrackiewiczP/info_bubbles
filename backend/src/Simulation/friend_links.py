@@ -17,8 +17,8 @@ class FriendLinks:
         percent_of_the_same_group: int,
         no_of_groups: int,
     ) -> None:
+        self.type = links_type
         if links_type == FriendsLinksTypes.RANDOM_NON_DIRECTED:
-            self.type = FriendsLinksTypes.RANDOM_NON_DIRECTED
             (
                 self.__links,
                 self.__users_friends,

@@ -184,6 +184,21 @@ class App extends React.Component
     }
 
     handleStartSimulationButton = () => {
+        let val = this.validateParameters() //[0] - result, [1] - message
+        console.log(val[0]);
+        if(!val[0])
+        {
+            toast.error(val[1], {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                });
+            return;
+        }
         this.socket.emit(
             "start_simulation",
             this.state.simulationParameters);
@@ -196,6 +211,32 @@ class App extends React.Component
         })
         .then(response => FileSaver.saveAs(response.data, "simulation.csv"))
         .catch(response => console.log("Failure downloading a file"));
+    }
+
+    validateParameters = () => {
+        if(this.state.simulationParameters.number_of_agents < 0)
+            return [false, "Liczba agentów musi być większa od 0"];
+        if(this.state.simulationParameters.number_of_steps < 0)
+            return [false, "Liczba kroków musi być większa od 0"];
+        if(this.state.simulationParameters.number_of_links < 0)
+            return [false, "Liczba połączeń musi być większa od 0"];
+        if(this.state.simulationParameters.number_of_links > this.state.simulationParameters.number_of_agents - 1)
+            return [false, "Liczba połączeń nie może być większa niż liczba agentów"];
+        if(this.state.simulationParameters.mem_capacity < 0)
+            return [false, "Pojemność pamięci musi być większa od 0"];
+        if(this.state.simulationParameters.friend_lose_prob < 0 || this.state.simulationParameters.friend_lose_prob > 1)
+            return [false, "Prawdopodobieństwo utraty przyjaciela musi być liczbą z przedziału [0,1]"];
+        if(this.state.simulationParameters.acc_latitude < 0 || this.state.simulationParameters.acc_latitude > 1)
+            return [false, "Próg akceptacji musi być liczbą z przedziału [0,1]"];
+        if(this.state.simulationParameters.acc_sharpness < 0)
+            return [false, "Ostrość akceptacji musi być większa od 0"];
+        if(this.state.simulationParameters.percent_of_the_same_group < 0 || this.state.simulationParameters.percent_of_the_same_group > 100)
+            return [false, "Procent znajomych w tej samej grupie musi być liczbą z przedziału [0,100]"];
+        if(this.state.simulationParameters.no_of_groups < 0)
+            return [false, "Liczba grup musi być większa od zera"];
+        if(this.state.simulationParameters.no_of_groups > this.state.simulationParameters.number_of_agents)
+            return [false, "Liczba grup nie może być większa niż liczba agentów"];
+        return [true, ""]
     }
 }
 

@@ -4,7 +4,7 @@ import 'animate.css'
 import ParameterInputNumeric from './ParameterInputNumeric';
 import { ParametersNames } from '../helpers/SimulationParameters';
 import ParameterInputRadio from './ParameterInputRadio';
-import { CommunicationMode, UsersCommunicationMode } from '../helpers/Consts';
+import { CommunicationMode, UsersCommunicationMode, FriendsLinksTypes } from '../helpers/Consts';
 
 class ParametersForm extends React.Component{
     render(){
@@ -96,6 +96,24 @@ class ParametersForm extends React.Component{
                             {
                                 label: "Do wszystkich przyjaciół",
                                 value: UsersCommunicationMode.TO_ALL,
+                            }
+                        ]
+                    }
+                />
+                <ParameterInputRadio
+                    name={ParametersNames.INITIAL_CONNECTIONS}
+                    value={this.props.parameters[ParametersNames.INITIAL_CONNECTIONS]}
+                    groupName="Znajomości"
+                    handleOnChange={this.props.parametersHandlers[ParametersNames.INITIAL_CONNECTIONS]} 
+                    options={
+                        [
+                            {
+                                label: "Skierowane",
+                                value: FriendsLinksTypes.RANDOM_DIRECTED,
+                            },
+                            {
+                                label: "Nieskierowane",
+                                value: FriendsLinksTypes.RANDOM_NON_DIRECTED,
                             }
                         ]
                     }

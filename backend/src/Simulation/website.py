@@ -107,21 +107,26 @@ class Website:
         start_time = time.time()
         self.find_links_to_remove()
         print("unfriending time --- %s seconds ---" % (time.time() - start_time))
-        mean_fluctuation, mean_info_distance = self.calculate_user_statistics(
-            prev_positions
-        )
+        start_time = time.time()
+        (
+            mean_fluctuation,
+            mean_info_distance,
+            mean_friend_dist,
+        ) = self.calculate_users_statistics(prev_positions)
+        print("statistics time --- %s seconds ---" % (time.time() - start_time))
         return (
             dict(self.user_positions),
             list(self.links),
             mean_fluctuation,
             mean_info_distance,
+            mean_friend_dist,
         )
 
     @property
     def links(self):
         return self.friend_links.links
 
-    def calculate_user_statistics(self, prev_positions: dict):
+    def calculate_users_statistics(self, prev_positions: dict):
         mean_fluctuation = 0
         mean_info_distance = 0
         for i, id in enumerate(self.user_positions):
@@ -131,7 +136,21 @@ class Website:
             mean_info_distance += self.users[id].mean_info_dist
         mean_fluctuation /= i + 1
         mean_info_distance /= i + 1
-        return mean_fluctuation, mean_info_distance
+        mean_friend_dist = 0
+        users_with_friends = set()
+        for i, link in enumerate(self.links):
+            distance = np.linalg.norm(
+                self.user_positions[link[0]] - self.user_positions[link[1]]
+            )
+            if len(self.friend_links[link[0]]) != 0:
+                mean_friend_dist += distance / len(self.friend_links[link[0]])
+                users_with_friends.add(link[0])
+            if len(self.friend_links[link[1]]) != 0:
+                mean_friend_dist += distance / len(self.friend_links[link[1]])
+                users_with_friends.add(link[1])
+        if len(users_with_friends) != 0:
+            mean_friend_dist /= len(users_with_friends)
+        return mean_fluctuation, mean_info_distance, mean_friend_dist
 
     def find_links_to_remove(self):
         for link in self.links:

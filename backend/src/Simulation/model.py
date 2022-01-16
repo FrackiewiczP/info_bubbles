@@ -87,6 +87,7 @@ class TripleFilterModel(Model):
         #   every element is pair of userID between which link exist
         # 3. mean fluctuation of users in step
         # 4. mean mean distance to infos from user position
+        # 5. mean distance between user and his friends
 
         return StepData(self.website.step())
 
@@ -104,3 +105,4 @@ class StepData:
         self.links = [(int(link[0]), int(link[1])) for link in data[1]]
         self.mean_fluctuation = float(data[2])
         self.mean_dist_to_infos = float(data[3])
+        self.mean_friend_dist = float(data[4])

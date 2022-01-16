@@ -66,6 +66,12 @@ class DatabaseConnector:
             DATA_KEY: data_to_add.mean_dist_to_infos,
         }
         self.__info_mean_dist_collection.insert_one(mean_info_dist_to_add)
+        mean_friend_dist_to_add = {
+            SOCKET_ID_KEY: socket_id,
+            STEP_NUM_KEY: step_num,
+            DATA_KEY: data_to_add.mean_friend_dist,
+        }
+        self.__friend_mean_dist_collection.insert_one(mean_friend_dist_to_add)
 
     def save_mean_distance_to_friends(self, socket_id, step_num, data_to_add):
         friend_mean_dist_to_add = {

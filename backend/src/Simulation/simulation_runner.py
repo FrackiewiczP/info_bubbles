@@ -51,34 +51,6 @@ class SimulationRunner:
             "simulation_step_finished", data_to_send, room=self.socket_id
         )
 
-    async def calculate_mean_distance_to_friends(self):
-        for i in range(1, self.number_of_steps + 1):
-            links = self.db_connector.get_links_from_step(self.socket_id, i)
-            user_positions = self.db_connector.get_simulation_step(self.socket_id, i)
-            distances = {str(id): [] for id in user_positions.keys()}
-            for link in links:
-                distance = np.linalg.norm(
-                    np.array(user_positions[str(link[0])])
-                    - np.array(user_positions[str(link[1])])
-                )
-                distances[str(link[0])].append(distance)
-                distances[str(link[1])].append(distance)
-            number_of_dist = 0
-            sum_of_mean_dists = 0
-            for id in distances:
-                try:
-                    sum_of_mean_dists += sum(distances[id]) / len(distances[id])
-                    number_of_dist += 1
-                except ZeroDivisionError:
-                    continue
-            try:
-                mean_distance_in_step = sum_of_mean_dists / number_of_dist
-            except ZeroDivisionError:
-                mean_distance_in_step = 0
-            self.db_connector.save_mean_distance_to_friends(
-                self.socket_id, i, mean_distance_in_step
-            )
-    
     async def send_groups_to_socket(self, groups_data):
         # Reformat to make dictionary, where key: agent_id, value: group_of_agent
         data = {}

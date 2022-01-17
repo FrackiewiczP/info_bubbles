@@ -3,10 +3,10 @@ import '../styles/ParameterInputRadio.scss'
 
 const ParameterInputRadio= (props) => (
     <div className="ParameterInputRadio">
-        <div class="group-label">
+        <div className="group-label">
             {props.groupName}
         </div>
-        <div class="border">
+        <div className="border">
             {props.options.map((value, index) => {
                 return(
                     <div class="single-option" key={index}>

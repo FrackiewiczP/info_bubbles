@@ -26,6 +26,7 @@ from Simulation.simulation_runner import SimulationRunner
 from Simulation.communication_types import CommunicationType
 from Simulation.website import InterUserCommunicationTypes
 from FileSaver.csv_saver import CsvSaver
+from Simulation.friend_links import FriendsLinksTypes
 
 sio = socketio.AsyncServer(cors_allowed_origins="*", async_mode="asgi")
 
@@ -65,6 +66,11 @@ def parse_data_from_frontend(socket_id, data):
             inter_user_communication_form= InterUserCommunicationTypes.TO_ONE_RANDOM
         case "to_all":
             inter_user_communication_form = InterUserCommunicationTypes.TO_ALL
+    match data["initial_connections"]:
+        case "random_directed":
+            initial_connections = FriendsLinksTypes.RANDOM_DIRECTED
+        case "random_non_directed":
+            initial_connections = FriendsLinksTypes.RANDOM_NON_DIRECTED
     model = TripleFilterModel(
         num_of_users=data["number_of_agents"],
         number_of_links=data["number_of_links"],
@@ -72,6 +78,7 @@ def parse_data_from_frontend(socket_id, data):
         link_delete_prob=data["friend_lose_prob"],
         communication_form=communication_form,
         inter_user_communication_form=inter_user_communication_form,
+        initial_connections=initial_connections,
         latitude_of_acceptance=data["acc_latitude"],
         sharpness_parameter=data["acc_sharpness"],
         percent_of_the_same_group=data["percent_of_the_same_group"],

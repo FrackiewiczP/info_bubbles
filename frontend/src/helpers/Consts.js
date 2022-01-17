@@ -10,6 +10,11 @@ const UsersCommunicationMode={
     TO_ALL: "to_all",
 }
 
+const FriendsLinksTypes={
+    RANDOM_NON_DIRECTED: "random_non_directed",
+    RANDOM_DIRECTED: "random_directed",
+}
+
 const MainViewState={
     SIMULATION_VIEW: 1,
     CHOOSING_PARAMETERS: 2,
@@ -21,6 +26,8 @@ const StatisticsNames={
     AVG_FRIEND_DIST: 2,
     AVG_INFO_DIST: 3,
 }
+
+
 
 function StatisticToString(statistic){
     switch (statistic){
@@ -35,4 +42,4 @@ function StatisticToString(statistic){
     }
 }
 
-export {CommunicationMode, UsersCommunicationMode, MainViewState, StatisticsNames, StatisticToString};
+export {CommunicationMode, UsersCommunicationMode, MainViewState, StatisticsNames, StatisticToString, FriendsLinksTypes};

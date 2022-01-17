@@ -1,4 +1,4 @@
-import { CommunicationMode, UsersCommunicationMode } from "./Consts";
+import { CommunicationMode, FriendsLinksTypes, UsersCommunicationMode } from "./Consts";
 
 class SimulationParameters{
     constructor(
@@ -9,6 +9,7 @@ class SimulationParameters{
         friend_lose_prob=0.1,
         communication_form=CommunicationMode.INDIVIDUAL,
         inter_user_communication_form=UsersCommunicationMode.TO_ONE_RANDOM,
+        initial_connections=FriendsLinksTypes.RANDOM_NON_DIRECTED,
         acc_latitude=0.1,
         acc_sharpness=20,
         percent_of_the_same_group=80,
@@ -21,6 +22,7 @@ class SimulationParameters{
         this.friend_lose_prob=friend_lose_prob;
         this.communication_form=communication_form;
         this.inter_user_communication_form=inter_user_communication_form;
+        this.initial_connections=initial_connections;
         this.acc_latitude=acc_latitude;
         this.acc_sharpness=acc_sharpness;
         this.percent_of_the_same_group=percent_of_the_same_group;
@@ -52,6 +54,7 @@ const ParametersNames={
     ACC_SHARPNESS: 'acc_sharpness',
     PERCENT_OF_THE_SAME_GROUP: 'percent_of_the_same_group',
     NO_OF_GROUPS: 'no_of_groups',
+    INITIAL_CONNECTIONS: 'initial_connections',
 }
 
 const ConvertingFunctions={
@@ -62,6 +65,7 @@ const ConvertingFunctions={
     friend_lose_prob: x => parseFloat(x),
     communication_form: x => x,
     inter_user_communication_form: x => x,
+    initial_connections: x => x,
     acc_latitude: x => parseFloat(x),
     acc_sharpness: x => parseFloat(x),
     percent_of_the_same_group: x => parseFloat(x),

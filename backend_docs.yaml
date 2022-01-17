@@ -1,0 +1,91 @@
+asyncapi: 2.2.0
+info:
+  title: Info Bubbles Simulator - Serwer
+  version: 1.0.0
+channels:
+  simulation_already_running:
+    publish:
+      message:
+        name: simulation_already_running
+        description: Poprzednia symulacja klienta jeszcze się nie zakończyła
+  simulation_step_sent:
+    publish:
+      message:
+        name: simulation_step_sent
+        description: Wysłanie określonego kroku symulacji w odpowiedzi na żądanie klienta
+        payload:
+          type: array
+          items:
+            0:
+              type: object
+              additionalProperties:
+                type: array
+                items:
+                  type: integer
+                description: Współrzędne X i Y agenta
+            1:
+              type: array
+              items:
+                type: array
+                items:
+                  type: integer
+                  description: Id agentów, pomiędzy którymi istnieje znajomość
+  simulation_stats_sent:
+    publish:
+      message:
+        name: simulation_stats_sent
+        description: Wysłanie określonych statystyk symulacji w odpowiedzi na żądanie klienta
+        payload:
+          type: array
+          items:
+            type: number
+            description: Wartości wybranej statystyki w kolejnych krokach
+  simulation_step_finished:
+    publish:
+      message:
+        name: simulation_step_finished
+        description: Informacja dla klienta, że kolejny krok symulacji został zakończony, dodatkowo wysyłany jest aktualny stan symulacji.
+        payload:
+          type: object
+          additionalProperties: false
+          properties:
+            step_number:
+              type: integer
+            step_data:
+              type: object
+              additionalProperties:
+                type: array
+                items:
+                  type: integer
+                description: Współrzędne X i Y agenta
+            links_data:
+              type: array
+              items:
+                type: array
+                items:
+                  type: integer
+                  description: Id agentów, pomiędzy którymi istnieje znajomość
+  groups_for_simulation_sent:
+    publish:
+      message:
+        name: groups_for_simulation_sent
+        description: Wysłanie klientowi informacji o tym, w jakich grupach znajdują się poszczególni agenci.
+        payload:
+          type: object
+          additionalProperties: false
+          properties:
+            groups:
+              type: object
+              additionalProperties:
+                type: integer
+                description: Numer grupy agenta
+            groups_count:
+              type: integer
+  error:
+    publish:
+      message:
+        name: error
+        description: Wysłanie klientowi informacji o błędzie, wraz ze stosownym komunikatem
+        payload:
+          type: string
+          additionalProperties: false

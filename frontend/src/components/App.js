@@ -30,10 +30,12 @@ class App extends React.Component
             currentGroups: null,
             currentGroupCount: null,
             currentStepData: null,
+            currentStepLinks: null,
             statisticsChartData: new StatisticsChartData(null, null, null),
             isSocketConnected: false,
             mainViewState: MainViewState.SIMULATION_VIEW,
             simulationParameters: new SimulationParameters(),
+            showLinks: false,
         }
 
         this.parametersHandlers = {};
@@ -98,11 +100,14 @@ class App extends React.Component
                             currentGroups={this.state.currentGroups}
                             currentGroupCount={this.state.currentGroupCount}
                             lastStepReceived={this.state.lastStepReceived}
+                            showLinks={this.state.showLinks}
+                            currentStepLinks={this.state.currentStepLinks}
                             handleCurrentStepChange={this.handleCurrentStepChange}
                             handleChooseParametersButton={this.getChangeViewHandler(MainViewState.CHOOSING_PARAMETERS)}
                             handleSeeStatsButton={this.getChangeViewHandler(MainViewState.CHARTS_VIEW)}
                             handleStartSimulationButton={this.handleStartSimulationButton}
                             handleDownloadSimulationButton={this.handleDownloadSimulationButton}
+                            handleShowLinksButton={this.handleShowLinksButton}
                         />
                         : <Statistics
                             handleSeeSimulationButton={this.getChangeViewHandler(MainViewState.SIMULATION_VIEW)}
@@ -126,6 +131,7 @@ class App extends React.Component
     handleSimulationStepFinished(data){
         this.setState({
             currentStepData: data["step_data"],
+            currentStepLinks: data["links_data"],
             lastStepReceived: data["step_number"],
             currentStep: data["step_number"],
             maxStep: this.state.simulationParameters.number_of_steps
@@ -134,7 +140,8 @@ class App extends React.Component
 
     handleSimulationStepReceived(data){
         this.setState({
-            currentStepData: data
+            currentStepData: data[0],
+            currentStepLinks: data[1],
         });
     }
 
@@ -164,11 +171,15 @@ class App extends React.Component
     }
 
     handleGroupsForSimulationReceived(data){
-        console.log(data)
         this.setState({
             currentGroups: data["groups"],
             currentGroupCount: data["group_count"]
         })
+    }
+
+    handleShowLinksButton = () => {
+        const currShowLinksState = this.state.showLinks;
+        this.setState({showLinks: !currShowLinksState});
     }
 
     getChangeViewHandler = (state) => () => {

@@ -9,6 +9,7 @@ const SimulationControls = (props) => (
         <button onClick={props.handleSeeStatsButton}>Statystyki</button>
         <button onClick={props.handleStartSimulationButton} disabled={!props.isSocketConnected}>Rozpocznij symulację</button>
         <button onClick={props.handleDownloadSimulationButton}>Pobierz zapis symulacji</button>
+        <button onClick={props.handleShowLinksButton}>{props.showLinks ? "Nie rysuj połączeń" : "Rysuj połączenia"}</button>
         <div className="simulation-step">Krok symulacji</div>
         <input type="number" value={props.currentStep} min={1} max={props.lastStepReceived} onInput={props.handleCurrentStepChange}></input>
         <ConnectionIndicator className="ConnectionIndicator" isSocketConnected={props.isSocketConnected}/>

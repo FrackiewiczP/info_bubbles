@@ -13,13 +13,24 @@ class Simulation extends React.Component{
     componentDidMount(){
         this.colorPalette = ColorPaletteGenerator.GetColorPalette(this.props.currentGroupCount);
         let ctx = this.canvasRef.current.getContext("2d");
+        if(this.props.showLinks)
+        {
+            this.drawLinks(this.props.currentStepLinks, this.props.currentStepData, ctx);
+        }
         this.drawSimulationStep(this.props.currentStepData, ctx);
+
     }
 
     componentDidUpdate(){
         this.colorPalette = ColorPaletteGenerator.GetColorPalette(this.props.currentGroupCount);
         let ctx = this.canvasRef.current.getContext("2d");
+        this.clearCanvas(ctx);
+        if(this.props.showLinks)
+        {
+            this.drawLinks(this.props.currentStepLinks, this.props.currentStepData, ctx);
+        }
         this.drawSimulationStep(this.props.currentStepData, ctx);
+
     }
 
     render(){
@@ -30,6 +41,8 @@ class Simulation extends React.Component{
                         currentStep={this.props.currentStep}
                         maxStep={this.props.maxStep}
                         isSocketConnected={this.props.isSocketConnected}
+                        showLinks={this.props.showLinks}
+                        handleShowLinksButton={this.props.handleShowLinksButton}
                         handleCurrentStepChange={this.props.handleCurrentStepChange}
                         handleChooseParametersButton={this.props.handleChooseParametersButton}
                         handleSeeStatsButton={this.props.handleSeeStatsButton}
@@ -52,6 +65,14 @@ class Simulation extends React.Component{
         ctx.fill();
     }
 
+    addLink(x1,y1, x2, y2, ctx){
+        let processData = (d, maxValue) => (d+1)*maxValue/2;
+        ctx.beginPath();
+        ctx.moveTo(processData(x1, this.props.size), processData(y1, this.props.size));
+        ctx.lineTo(processData(x2, this.props.size), processData(y2, this.props.size));
+        ctx.stroke();
+    }
+
     clearCanvas(ctx)
     {
         ctx.clearRect(0, 0, this.props.size, this.props.size);
@@ -63,9 +84,23 @@ class Simulation extends React.Component{
         {
             return;
         }
-        this.clearCanvas(ctx);
         for(const u in data){
             this.addUser(u, data[u][0], data[u][1], ctx);
+        }
+    }
+
+    drawLinks(linksData, positionsData, ctx)
+    {
+        if(linksData == null || positionsData == null)
+        {
+            return;
+        }
+        for(const l in linksData){
+            let x1 = positionsData[linksData[l][0]][0];
+            let y1 = positionsData[linksData[l][0]][1];
+            let x2 = positionsData[linksData[l][1]][0];
+            let y2 = positionsData[linksData[l][1]][1];
+            this.addLink(x1,y1,x2,y2,ctx);
         }
     }
 }

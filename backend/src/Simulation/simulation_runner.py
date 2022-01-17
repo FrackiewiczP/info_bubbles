@@ -46,6 +46,7 @@ class SimulationRunner:
         data_to_send = {
             "step_number": self.__iterations,
             "step_data": current_step_data_with_list_values,
+            "links_data": current_step_data.links,
         }
         await self.socket_server.emit(
             "simulation_step_finished", data_to_send, room=self.socket_id

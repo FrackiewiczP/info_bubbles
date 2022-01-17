@@ -172,6 +172,12 @@ def ValidateData(data):
 
     communication_form = None
     inter_user_communication_form = None
+    initial_connections = None
+    match data["initial_connections"]:
+        case "random_directed":
+            initial_connections = FriendsLinksTypes.RANDOM_DIRECTED
+        case "random_non_directed":
+            initial_connections = FriendsLinksTypes.RANDOM_NON_DIRECTED
     match data["communication_form"]:
         case "individual":
             communication_form = CommunicationType.INDIVIDUAL
@@ -208,8 +214,8 @@ def ValidateData(data):
         return "percent in same group outside [0,100]"
     if latitude_of_acceptance < 0 or latitude_of_acceptance > 1:
         return "latitude of acceptance outside [0,1]"
-    if communication_form is None or inter_user_communication_form is None:
-        return "communication form or inter user communication form outside list of options"
+    if communication_form is None or inter_user_communication_form is None or initial_connections is None:
+        return "communication form or initial connections or inter user communication form outside list of options"
     if link_delete_prob < 0 or number_of_agents < 0 or no_of_groups < 0 or number_of_links < 0 or sharpness_parameter < 0 or memory_size < 0:
         return "minimal value is 0"
     return None

@@ -105,13 +105,12 @@ class Website:
             self.user_positions[user.unique_id] = current_position
         print("recalculating time--- %s seconds ---" % (time.time() - start_time))
         start_time = time.time()
-        self.find_links_to_remove()
+        mean_friend_dist= self.find_links_to_remove_and_calculate_friend_dist()
         print("unfriending time --- %s seconds ---" % (time.time() - start_time))
         start_time = time.time()
         (
             mean_fluctuation,
-            mean_info_distance,
-            mean_friend_dist,
+            mean_info_distance
         ) = self.calculate_users_statistics(prev_positions)
         print("statistics time --- %s seconds ---" % (time.time() - start_time))
         return (
@@ -136,9 +135,12 @@ class Website:
             mean_info_distance += self.users[id].mean_info_dist
         mean_fluctuation /= i + 1
         mean_info_distance /= i + 1
+        return mean_fluctuation, mean_info_distance
+
+    def find_links_to_remove_and_calculate_friend_dist(self):
         mean_friend_dist = 0
         users_with_friends = set()
-        for i, link in enumerate(self.links):
+        for link in self.links:
             distance = np.linalg.norm(
                 self.user_positions[link[0]] - self.user_positions[link[1]]
             )
@@ -149,15 +151,12 @@ class Website:
             if len(self.friend_links[link[1]]) != 0 and self.friend_links.type == FriendsLinksTypes.RANDOM_NON_DIRECTED:
                 mean_friend_dist += distance / len(self.friend_links[link[1]])
                 users_with_friends.add(link[1])
-        if len(users_with_friends) != 0:
-            mean_friend_dist /= len(users_with_friends)
-        return mean_fluctuation, mean_info_distance, mean_friend_dist
-
-    def find_links_to_remove(self):
-        for link in self.links:
             if np.random.rand(1) <= self.unfriend_chance:
                 if self.try_to_unfriend_users(link[0], link[1]):
                     self.friend_links.delete_link(link)
+        if len(users_with_friends) != 0:
+            mean_friend_dist /= len(users_with_friends)
+        return mean_friend_dist
 
     def try_to_unfriend_users(self, user1_id: int, user2_id: int):
         """

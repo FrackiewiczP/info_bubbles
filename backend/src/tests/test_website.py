@@ -46,7 +46,6 @@ def test_calculating_user_statistics(mocker):
     (
         mean_fluctuation_website,
         mean_info_dist_website,
-        _,
     ) = website.calculate_users_statistics(prev_positions)
     assert round(mean_fluctuation, 7) == round(mean_fluctuation_website, 7)
     assert round(mean_dist_to_infos, 7) == round(mean_info_dist_website, 7)

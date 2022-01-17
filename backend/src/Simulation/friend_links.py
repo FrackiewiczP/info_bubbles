@@ -5,7 +5,7 @@ import random
 
 
 class FriendsLinksTypes(Enum):
-    RANDOM_NON_DIRECTED = 1,
+    RANDOM_NON_DIRECTED = 1
     RANDOM_DIRECTED = 2
 
 
@@ -23,8 +23,10 @@ class FriendLinks:
             (
                 self.__links,
                 self.__users_friends,
-                self.__user_groups
-            ) = self.create_random_directed_friends_links(vertices, no_of_links,percent_of_the_same_group, no_of_groups)
+                self.__user_groups,
+            ) = self.create_random_directed_friends_links(
+                vertices, no_of_links, percent_of_the_same_group, no_of_groups
+            )
         if links_type == FriendsLinksTypes.RANDOM_NON_DIRECTED:
             (
                 self.__links,
@@ -45,10 +47,10 @@ class FriendLinks:
     def __getitem__(self, user_id):
         return self.__users_friends[user_id]
 
-    def delete(self,link: tuple[int]):
-        if(self.type == FriendsLinksTypes.RANDOM_DIRECTED):
+    def delete(self, link: tuple[int]):
+        if self.type == FriendsLinksTypes.RANDOM_DIRECTED:
             self.delete_directed_link(link)
-        if(self.type == FriendsLinksTypes.RANDOM_NON_DIRECTED):
+        if self.type == FriendsLinksTypes.RANDOM_NON_DIRECTED:
             self.delete_link(link)
 
     def delete_directed_link(self, link: tuple[int]):
@@ -71,6 +73,9 @@ class FriendLinks:
             possible_new_friends.remove(user2_id)
         if user1_id in possible_new_friends:
             possible_new_friends.remove(user1_id)
+        for friend in self.__users_friends[user1_id]:
+            if friend in possible_new_friends:
+                possible_new_friends.remove(friend)
         if len(possible_new_friends) == 0:
             possible_new_friends = list(self.__users_friends.keys())
             possible_new_friends.remove(user1_id)
@@ -180,11 +185,15 @@ class FriendLinks:
         return links, users_friends, users_in_groups
 
     @staticmethod
-    def create_random_directed_friends_links(vertices: list, no_of_links: int, percent_of_the_same_group: int,
-                                             no_of_groups: int):
+    def create_random_directed_friends_links(
+        vertices: list,
+        no_of_links: int,
+        percent_of_the_same_group: int,
+        no_of_groups: int,
+    ):
         no_of_links = no_of_links
-        in_each_group = (len(vertices) / no_of_groups)
-        in_same_group = ((no_of_links * percent_of_the_same_group) / 100)
+        in_each_group = len(vertices) / no_of_groups
+        in_same_group = (no_of_links * percent_of_the_same_group) / 100
         if in_each_group < in_same_group or in_each_group < no_of_links - in_same_group:
             raise Exception("bad parameters")
         graph = dict()

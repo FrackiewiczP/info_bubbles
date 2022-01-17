@@ -98,6 +98,11 @@ class FriendLinks:
         self.__users_friends[user1_id].remove(user2_id)
         self.__users_friends[user2_id].remove(user1_id)
         # creating new friendship
+        # 50% chance that user2 will have new friend
+        if np.random.rand(1) <= 0.5:
+            tmp = user1_id
+            user1_id = user2_id
+            user2_id = tmp
         possible_new_friends = set()
         for friend in self.__users_friends[user1_id]:
             possible_new_friends = possible_new_friends.union(

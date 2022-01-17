@@ -107,6 +107,9 @@ class FriendLinks:
             possible_new_friends.remove(user2_id)
         if user1_id in possible_new_friends:
             possible_new_friends.remove(user1_id)
+        for friend in self.__users_friends[user1_id]:
+            if friend in possible_new_friends:
+                possible_new_friends.remove(friend)
         if len(possible_new_friends) == 0:
             possible_new_friends = list(self.__users_friends.keys())
             possible_new_friends.remove(user1_id)

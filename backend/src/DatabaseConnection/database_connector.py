@@ -25,21 +25,32 @@ class DatabaseConnector:
         friend_mean_dist_collection_name,
         info_mean_dist_collection_name,
     ):
+        self.__all_collections = []
+
         self.__positions_collection = MongoClient(connection_string)[db_name][
             positions_collection_name
         ]
+        self.__all_collections.append(self.__positions_collection)
+
         self.__links_collection = MongoClient(connection_string)[db_name][
             links_collection_name
         ]
+        self.__all_collections.append(self.__links_collection)
+
         self.__fluctuation_collection = MongoClient(connection_string)[db_name][
             fluctuation_collection_name
         ]
+        self.__all_collections.append(self.__fluctuation_collection)
+        
         self.__friend_mean_dist_collection = MongoClient(connection_string)[db_name][
             friend_mean_dist_collection_name
         ]
+        self.__all_collections.append(self.__friend_mean_dist_collection)
+
         self.__info_mean_dist_collection = MongoClient(connection_string)[db_name][
             info_mean_dist_collection_name
         ]
+        self.__all_collections.append(self.__info_mean_dist_collection)
 
     def save_simulation_step(self, socket_id, step_num, data_to_add: StepData):
         pos_to_add = {
@@ -106,7 +117,8 @@ class DatabaseConnector:
         )[DATA_KEY]
 
     def delete_previous_simulation_of_socket(self, socket_id):
-        self.__positions_collection.delete_many({SOCKET_ID_KEY: socket_id})
+        for c in self.__all_collections:
+            c.delete_many({SOCKET_ID_KEY: socket_id})
 
     def get_number_of_steps_for_socket(self, socket_id):
         res = self.__positions_collection.find_one(

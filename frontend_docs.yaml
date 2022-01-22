@@ -1,0 +1,71 @@
+asyncapi: 2.2.0
+info:
+  title: Info Bubbles Simulator - Klient
+  version: 1.0.0
+channels:
+  start_simulation:
+    publish:
+      message:
+        name: start_simulation
+        description: Użytkownik zlecił wykonanie symulacji.
+        payload:
+          type: object
+          additionalProperties: false
+          properties:
+            number_of_agents:
+              type: integer
+            number_of_steps:
+              type: integer
+            number_of_links:
+              type: integer
+            mem_capacity:
+              type: integer
+            friend_lose_prob:
+              type: number
+              minimum: 0
+              maximum: 1
+            communication_form:
+              type: integer
+              enum:
+                - CommunicationMode.INDIVIDUAL
+                - CommunicationMode.CENTRAL
+                - CommunicationMode.FILTER_DISTANT
+                - CommunicationMode.FILTER_CLOSE
+            inter_user_communication_form:
+              type: integer
+              enum:
+                - UsersCommunicationMode.TO_ONE_RANDOM
+                - UsersCommunicationMode.TO_ALL
+            acc_latitude:
+              type: number
+              minimum: 0
+              maximum: 1
+            acc_sharpness:
+              type: number
+            percent_of_the_same_group:
+              type: number
+              minimum: 0
+              maximum: 1
+            no_of_groups:
+              type: integer
+  simulation_step_requested:
+    publish:
+      message:
+        name: simulation_step_requested
+        description: Użytkownik wysłał zapytanie o wybrany krok wykonanej ostatnio symulacji
+        payload:
+          type: integer
+          additionalProperties: false
+  simulation_stats_requested:
+    publish:
+      message:
+        name: simulation_stats_requested
+        description: Użytkownik wysłał zapytanie o pobranie wartości określonej statystyki ze wszystkich wykonanych kroków symulacji
+        payload:
+          type: integer
+          additionalProperties: false
+          enum:
+            - StatisticsNames.FLUCTUATION
+            - StatisticsNames.AVG_FRIEND_DIST
+            - StatisticsNames.AVG_INFO_DIST
+

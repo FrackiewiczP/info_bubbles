@@ -31,13 +31,13 @@ class ParametersForm extends React.Component{
                     max = {this.props.parameters[ParametersNames.NUMBER_OF_AGENTS]}  
                 />
                 <ParameterInputNumeric
-                    label="Pojemność pamięci użytkownika"
+                    label="Pojemność pamięci agenta"
                     value={this.props.parameters[ParametersNames.MEM_CAPACITY]}
                     handleOnChange={this.props.parametersHandlers[ParametersNames.MEM_CAPACITY]}
                     min = {0}   
                 />
                 <ParameterInputNumeric
-                    label="Prawdopodobieństwo utraty przyjaciela"
+                    label="Prawdopodobieństwo utraty znajomego"
                     value={this.props.parameters[ParametersNames.FRIEND_LOSE_PROB]}
                     handleOnChange={this.props.parametersHandlers[ParametersNames.FRIEND_LOSE_PROB]}
                     min = {0}
@@ -99,16 +99,16 @@ class ParametersForm extends React.Component{
                 <ParameterInputRadio
                     name={ParametersNames.INTER_USER_COMMUNICATION_FORM}
                     value={this.props.parameters[ParametersNames.INTER_USER_COMMUNICATION_FORM]}
-                    groupName="Komunikacja między użytkownikami"
+                    groupName="Komunikacja między agentami"
                     handleOnChange={this.props.parametersHandlers[ParametersNames.INTER_USER_COMMUNICATION_FORM]} 
                     options={
                         [
                             {
-                                label: "Do jednego przyjaciela",
+                                label: "Do jednego znajomego",
                                 value: UsersCommunicationMode.TO_ONE_RANDOM,
                             },
                             {
-                                label: "Do wszystkich przyjaciół",
+                                label: "Do wszystkich znajomych",
                                 value: UsersCommunicationMode.TO_ALL,
                             }
                         ]

@@ -198,13 +198,13 @@ def ValidateData(data):
     no_of_groups = data["no_of_groups"]
     number_of_links = data["number_of_links"]
 
-    no_of_links = (number_of_links * number_of_agents / 2)
-    links_on_group = (no_of_links / no_of_groups)
-    in_each_group = (number_of_agents / no_of_groups)
+    no_of_links = number_of_links * number_of_agents / 2
+    links_on_group = no_of_links / no_of_groups
+    in_each_group = number_of_agents / no_of_groups
     in_same_group_available = in_each_group * (in_each_group - 1) / 2
-    in_same_group = ((links_on_group * percent_of_the_same_group) / 100)
-    inter_group_available = (in_each_group * (number_of_agents - in_each_group))
-    inter_group_used = ((links_on_group * (100 - percent_of_the_same_group)) / 100)
+    in_same_group = (links_on_group * percent_of_the_same_group) / 100
+    inter_group_available = in_each_group * (number_of_agents - in_each_group)
+    inter_group_used = (links_on_group * (100 - percent_of_the_same_group)) / 100
 
     if in_same_group >= in_same_group_available or inter_group_used >= inter_group_available:
         return "Za dużo linków wewnątrz jednej grupy lub na zewnątrz niej"
@@ -214,10 +214,14 @@ def ValidateData(data):
         return "procent powinien być w przedziale [0,100]"
     if latitude_of_acceptance < 0 or latitude_of_acceptance > 1:
         return "próg akceptacji powinien być w przedziale [0,1]"
-    if communication_form is None or inter_user_communication_form is None or initial_connections is None:
-        return "Nieznana wartość Komunikacji serwisu lub Komunikacji mędzy użytkownikami lub Znajomościami"
+    if communication_form is None:
+        return "Nieznana wartość Komunikacji serwisu"
+    if inter_user_communication_form is None:
+        return "Nieznana wartość Komunikacji mędzy użytkownikami"
+    if initial_connections is None:
+        return "Nieznana wartość Znajomości"
     if number_of_agents < 0 or no_of_groups < 0 or number_of_links < 0 or sharpness_parameter < 0 or memory_size < 0:
-        return "minimalna wartość to 0"
+        return "minimalna wartość to 0, jedna z wartości paramterów które ustwiłeś jest mnijsza od 0, popraw to"
     if link_delete_prob < 0 or link_delete_prob> 1:
         return "prawdopodobieństwo starcenia przyjaciela powinno być z przedziału [0,1]"
     return None

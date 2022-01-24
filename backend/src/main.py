@@ -211,9 +211,9 @@ def ValidateData(data):
     if number_of_agents < no_of_groups:
         return "Za dużo grup w stosunku do liczby agnetów, zwiększ liczbę agentów ponad liczbę grup"
     if percent_of_the_same_group > 100 or percent_of_the_same_group < 0:
-        return "procent powinien być w przedziale [0,100]"
+        return "Procent powinien być w przedziale [0,100]"
     if latitude_of_acceptance < 0 or latitude_of_acceptance > 1:
-        return "próg akceptacji powinien być w przedziale [0,1]"
+        return "Próg akceptacji powinien być w przedziale [0,1]"
     if communication_form is None:
         return "Nieznana wartość Komunikacji serwisu"
     if inter_user_communication_form is None:
@@ -221,9 +221,9 @@ def ValidateData(data):
     if initial_connections is None:
         return "Nieznana wartość Znajomości"
     if number_of_agents < 0 or no_of_groups < 0 or number_of_links < 0 or sharpness_parameter < 0 or memory_size < 0:
-        return "minimalna wartość to 0, jedna z wartości paramterów które ustwiłeś jest mnijsza od 0, popraw to"
+        return "Minimalna wartość to 0, jedna z wartości paramterów które ustwiłeś jest mnijsza od 0, popraw to"
     if link_delete_prob < 0 or link_delete_prob> 1:
-        return "prawdopodobieństwo starcenia przyjaciela powinno być z przedziału [0,1]"
+        return "Prawdopodobieństwo starcenia przyjaciela powinno być z przedziału [0,1]"
     return None
 
 

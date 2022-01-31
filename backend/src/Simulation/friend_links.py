@@ -136,8 +136,6 @@ class FriendLinks:
         no_of_links = no_of_links / 2
         in_each_group = len(vertices) / no_of_groups
         in_same_group = (no_of_links * percent_of_the_same_group) / 100
-        if in_each_group < in_same_group or in_each_group < no_of_links - in_same_group:
-            raise Exception("bad parameters")
         graph = dict()
         users_in_groups = dict()
         for x in range(len(vertices)):
@@ -202,8 +200,6 @@ class FriendLinks:
         no_of_links = no_of_links
         in_each_group = len(vertices) / no_of_groups
         in_same_group = (no_of_links * percent_of_the_same_group) / 100
-        if in_each_group < in_same_group or in_each_group < no_of_links - in_same_group:
-            raise Exception("bad parameters")
         graph = dict()
         users_in_groups = dict()
         for x in range(len(vertices)):

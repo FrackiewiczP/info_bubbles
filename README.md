@@ -1,9 +1,9 @@
 # Authors
 
 
-Paweł Frąckiewicz
-Jan Janiszewski
-Ignacy Sujecki
+* Paweł Frąckiewicz
+* Jan Janiszewski
+* Ignacy Sujecki
 
 ## How to run
 
